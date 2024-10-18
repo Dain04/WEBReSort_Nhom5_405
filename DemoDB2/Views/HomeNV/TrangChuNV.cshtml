@@ -7,7 +7,6 @@
     }
     <title>@ViewBag.Title HARMONY</title>
     <style>
-
         body {
             font-family: 'Times New Roman', serif;
             margin: 0;
@@ -127,22 +126,18 @@
                 .table-link .btn:hover {
                     background-color: #0056b3;
                 }
-
-    
-
-      
     </style>
 </head>
 <body>
     <br /> <br /> <br /> <br />
-  
+
     <div id="content-table">
         <table class="table-link">
             <thead>
                 <tr>
                     <th>Phòng</th>
                     <th>Dịch Vụ</th>
-                    <th>Nhân Viên</th>
+                    <th>Tài Khoản</th>
                 </tr>
             </thead>
             <tbody>
@@ -171,6 +166,7 @@
                             Xem Nhân Viên
                         </a>
                     </td>
+
                 </tr>
                 <tr>
                     <td>
@@ -190,6 +186,18 @@
                         </a>
                     </td>
                     <td>
+                        <a href="@Url.Action("CustomerManagement", "LoginNhanVien")">
+                            <img src="https://i.pinimg.com/564x/20/b7/8f/20b78fc003fb9931c9341d4f62761bca.jpg" alt="Customer">
+                        </a>
+                        <a href="@Url.Action("CustomerManagement", "LoginNhanVien")" class="btn">
+                            Xem Khách Hàng
+                        </a>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>
                         <a href="@Url.Action("Index", "HoaDon")">
                             <img src="https://i.pinimg.com/736x/5c/15/23/5c15233ce3ff3ae87d87b96285a0b0e9.jpg" alt="Bill">
                         </a>
@@ -198,7 +206,20 @@
                         </a>
                     </td>
                     <td>
-                        <!-- Có thể thêm nội dung cho cột Nhân Viên ở đây nếu cần -->
+                        <a href="@Url.Action("ViewSpa", "DichVu")">
+                            <img src="https://i.pinimg.com/564x/6c/04/a6/6c04a631accc6c393ddc49956defeb09.jpg" alt="Spa">
+                        </a>
+                        <a href="@Url.Action("ViewSpa", "DichVu")" class="btn">
+                            Xem Spa
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("XemLichLamViec", "LichLamViec")">
+                            <img src="https://i.pinimg.com/564x/2b/e9/5f/2be95fd8dbb1514a407fb25383869977.jpg" alt="Lịch Làm Việc">
+                        </a>
+                        <a href="@Url.Action("XemLichLamViec", "LichLamViec")" class="btn">
+                            Lịch Làm Việc
+                        </a>
                     </td>
                 </tr>
             </tbody>
