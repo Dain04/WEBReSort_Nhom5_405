@@ -1,0 +1,129 @@
+﻿@model DemoDB2.ViewModels.ChiTietHoaDonXeViewModel
+@{
+    ViewBag.Title = "Thanh Toán Đặt Xe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Thanh Toán Đặt Xe</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Chi Tiết Hóa Đơn</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        @foreach (var item in Model.Xe)
+                        {
+                            <tr>
+                                <td>@item.HieuXe</td>
+                                <td>@item.SoLuong x @string.Format("{0:N0} VND", item.GiaXe)</td>
+                                <td class="text-right">@string.Format("{0:N0} VND", item.GiaXe * item.SoLuong)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <th colspan="2">Tổng cộng:</th>
+                            <td class="text-right font-weight-bold text-danger">@string.Format("{0:N0} VND", Model.TongTien)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Phương Thức Thanh Toán</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <select id="phuongThucThanhToan" class="form-control">
+                            <option value="ChuyenKhoan">Chuyển khoản</option>
+                            <option value="The">Thẻ tín dụng/ghi nợ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0">Quét mã QR để thanh toán</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <img src="https://images.viblo.asia/e8e205ed-d6c8-4fd6-95f5-c236fff24949.jpg"
+                                     alt="QR Code"
+                                     class="img-fluid"
+                                     style="max-width: 350px; max-height: 350px;" />
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnXacNhanThanhToan" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-check mr-2"></i>Xác nhận thanh toán
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('#btnXacNhanThanhToan').click(function () {
+                var phuongThucThanhToan = $('#phuongThucThanhToan').val();
+                $.ajax({
+                    url: '@Url.Action("XacNhanThanhToanXe", "DichVu")',
+                    type: 'POST',
+                    data: { phuongThucThanhToan: phuongThucThanhToan },
+                    success: function (result) {
+                        if (result.success) {
+                            Swal.fire({
+                                title: 'Thành công!',
+                                text: 'Đặt xe thành công! Tài xế sẽ liên lạc lại với bạn.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2500
+                            }).then(() => {
+                                window.location.href = result.redirectUrl;
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: result.message || 'Có lỗi xảy ra khi xử lý yêu cầu.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: 'Có lỗi xảy ra khi xử lý yêu cầu. Vui lòng thử lại.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .btn-lg {
+        transition: all 0.2s;
+    }
+
+        .btn-lg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+</style>

@@ -1,0 +1,110 @@
+﻿@model DemoDB2.Models.NhanVien
+@{
+    ViewBag.Title = "Chỉnh sửa thông tin nhân viên";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+<br />
+<br />
+<br />
+<br />
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Chỉnh sửa thông tin cá nhân</h1>
+        <a href="@Url.Action("TrangChuNV","HomeNV")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Trở Về
+        </a>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.NhanVienID)
+
+        <div class="profile-content">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-info">
+                <table class="profile-table">
+                    <tr>
+                        <td><i class="fas fa-user"></i> Tên</td>
+                        <td>
+                            @Html.EditorFor(model => model.Ten, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Ten, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-map-marker-alt"></i> Địa chỉ</td>
+                        <td>
+                            @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-phone"></i> Số điện thoại</td>
+                        <td>
+                            @Html.EditorFor(model => model.SoDienThoai, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.SoDienThoai, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-envelope"></i> Email</td>
+                        <td>
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-key"></i> Mật khẩu mới (để trống nếu không thay đổi)</td>
+                        <td>
+                            @Html.Password("newPassword", "", new { @class = "form-control", placeholder = "Nhập mật khẩu mới" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-key"></i> Xác nhận mật khẩu mới</td>
+                        <td>
+                            @Html.Password("confirmNewPassword", "", new { @class = "form-control", placeholder = "Xác nhận mật khẩu mới" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Lưu thay đổi
+            </button>
+            <a href="@Url.Action("ProfileNV", "LoginNhanVien", new { id = Model.NhanVienID })" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Hủy
+            </a>
+        </div>
+    }
+</div>
+
+<!-- Giữ nguyên phần style và các liên kết CSS -->
+
+<style>
+    /* Giữ nguyên các style từ trang profile và thêm vào một số style mới cho form */
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .text-danger {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .profile-table td {
+        vertical-align: top;
+    }
+</style>
+
+<!-- Thêm Font Awesome và Google Fonts như trong trang profile -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">

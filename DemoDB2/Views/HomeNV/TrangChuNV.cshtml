@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @{
+        ViewBag.Title = "Profile Nhân Viên";
+        Layout = "~/Views/Shared/_LayoutNV.cshtml";
+    }
+    <title>@ViewBag.Title HARMONY</title>
+    <style>
+
+        body {
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-inverse {
+            background: linear-gradient(to top, rgba(0,0,0,0.3), black);
+            border: none;
+            height: 50px;
+        }
+
+            .navbar-inverse .navbar-brand {
+                color: white;
+            }
+
+            .navbar-inverse .nav > li > a {
+                color: white;
+                font-size: 14px;
+                text-align: center;
+                padding-top: 15px;
+            }
+
+        .navbar-brand::before {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background-image: url('/Content/images/logo4.png');
+            background-size: cover;
+            vertical-align: middle;
+        }
+
+        .navbar-collapse {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .toolbar {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 70px;
+            height: 130px;
+        }
+
+            .toolbar img {
+                width: 100%;
+                height: auto;
+            }
+
+        #content-table {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .table-link {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 20px;
+            margin-bottom: 20px;
+        }
+
+            .table-link th, .table-link td {
+                padding: 20px;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .table-link th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+                border-bottom: 2px solid #ddd;
+            }
+
+            .table-link td {
+                background-color: #fff;
+                transition: all 0.3s ease;
+                text-align: center;
+                width: 33.33%;
+            }
+
+                .table-link td:hover {
+                    background-color: #f8f9fa;
+                    transform: translateY(-5px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                }
+
+            .table-link img {
+                width: 80%;
+                height: 300px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+
+            .table-link .btn {
+                display: block;
+                width: 80%;
+                margin: 10px auto;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                text-decoration: none;
+                font-size: 14px;
+                transition: background-color 0.3s ease;
+            }
+
+                .table-link .btn:hover {
+                    background-color: #0056b3;
+                }
+
+    
+
+      
+    </style>
+</head>
+<body>
+    <br /> <br /> <br /> <br />
+  
+    <div id="content-table">
+        <table class="table-link">
+            <thead>
+                <tr>
+                    <th>Phòng</th>
+                    <th>Dịch Vụ</th>
+                    <th>Nhân Viên</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="@Url.Action("ViewPhong", "Phong")">
+                            <img src="https://i.pinimg.com/564x/ac/21/94/ac2194d022464d589cb74e8fa63c58f6.jpg" alt="Phòng">
+                        </a>
+                        <a href="@Url.Action("ViewPhong", "Phong")" class="btn">
+                            Xem Phòng
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ViewMonAn", "DichVu")">
+                            <img src="https://i.pinimg.com/564x/42/64/4e/42644e6f8c14e2be6719ea5d861d07ca.jpg">
+                        </a>
+                        <a href="@Url.Action("ViewMonAn", "DichVu")" class="btn">
+                            Xem Món Ăn
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ViewNV", "LoginNhanVien")">
+                            <img src="https://i.pinimg.com/564x/5c/7c/bf/5c7cbf7a50c654bceda61c4474cdc4d4.jpg" alt="Nhân Viên">
+                        </a>
+                        <a href="@Url.Action("ViewNV", "LoginNhanVien")" class="btn">
+                            Xem Nhân Viên
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="@Url.Action("ViewLoaiPhong", "LoaiPhong")">
+                            <img src="https://i.pinimg.com/564x/c9/11/b4/c911b4fd1e8c80469d43eec88a1f2fbb.jpg" alt="Loại Phòng">
+                        </a>
+                        <a href="@Url.Action("ViewLoaiPhong", "LoaiPhong")" class="btn">
+                            Xem Loại Phòng
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ViewXe", "DichVu")">
+                            <img src="https://i.pinimg.com/564x/90/ef/91/90ef914ab697fce7964aab8fdb4a7d98.jpg" alt="Xe">
+                        </a>
+                        <a href="@Url.Action("ViewXe", "DichVu")" class="btn">
+                            Xem Xe
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Index", "HoaDon")">
+                            <img src="https://i.pinimg.com/736x/5c/15/23/5c15233ce3ff3ae87d87b96285a0b0e9.jpg" alt="Bill">
+                        </a>
+                        <a href="@Url.Action("Index", "HoaDon")" class="btn">
+                            Xem Hóa Đơn
+                        </a>
+                    </td>
+                    <td>
+                        <!-- Có thể thêm nội dung cho cột Nhân Viên ở đây nếu cần -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+</html>

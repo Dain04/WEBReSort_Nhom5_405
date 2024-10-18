@@ -1,0 +1,71 @@
+﻿@model DemoDB2.Models.HoaDon
+@{
+    ViewBag.Title = "Chi tiết hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Chi tiết hóa đơn</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Mã hóa đơn:</th>
+                            <td>@Model.HoaDonID</td>
+                        </tr>
+                        <tr>
+                            <th>Khách hàng:</th>
+                            <td>@ViewBag.TenKhachHang</td>
+                        </tr>
+                        <tr>
+                            <th>Loại phòng:</th>
+                            <td>@ViewBag.LoaiPhong</td>
+                        </tr>
+                        <tr>
+                            <th>Ngày nhận phòng:</th>
+                            <td>@Model.NgayNhanPhong.Value.ToShortDateString()</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Ngày trả phòng:</th>
+                            <td>@Model.NgayTraPhong.Value.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <th>Số ngày ở:</th>
+                            <td>@ViewBag.SoNgayO</td>
+                        </tr>
+                        <tr>
+                            <th>Giá phòng/ngày:</th>
+                            <td>@String.Format("{0:N0} VNĐ", ViewBag.GiaPhong)</td>
+                        </tr>
+                        <tr class="table-info">
+                            <th>Tổng tiền:</th>
+                            <td class="font-weight-bold">@String.Format("{0:N0} VNĐ", ViewBag.TongTien)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("IndexKH")" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th {
+        font-weight: bold;
+        width: 40%;
+    }
+
+    .card {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+</style>

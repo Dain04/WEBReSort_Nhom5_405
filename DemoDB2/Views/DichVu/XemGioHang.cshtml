@@ -1,0 +1,91 @@
+﻿@model List<DemoDB2.ViewModels.GioHangViewModel>
+@using DemoDB2.Models
+
+@{
+    ViewBag.Title = "Giỏ Hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Giỏ Hàng</h2>
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên Món</th>
+                    <th>Giá</th>
+                    <th>Số Lượng</th>
+                    <th>Tổng</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TenMon</td>
+                        <td>@string.Format("{0:N0} VND", item.GiaMon)</td>
+                        <td>
+                            <input type="number" class="form-control quantity-input" data-id="@item.MonAnId" value="@item.SoLuong" min="0" style="width: 70px;">
+                        </td>
+                        <td>@string.Format("{0:N0} VND", item.GiaMon * item.SoLuong)</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm remove-item" data-id="@item.MonAnId">Xóa</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Tổng cộng:</strong></td>
+                    <td><strong>@string.Format("{0:N0} VND", Model.Sum(m => m.GiaMon * m.SoLuong))</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        <a href="@Url.Action("ThanhToan", "DichVu")" class="btn btn-primary">Thanh Toán</a>    }
+    else
+    {
+        <p>Giỏ hàng của bạn đang trống.</p>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.quantity-input').change(function() {
+                var monAnId = $(this).data('id');
+                var soLuong = $(this).val();
+                capNhatGioHang(monAnId, soLuong);
+            });
+
+            $('.remove-item').click(function() {
+                var monAnId = $(this).data('id');
+                capNhatGioHang(monAnId, 0);
+            });
+
+            function capNhatGioHang(monAnId, soLuong) {
+                $.ajax({
+                    url: '@Url.Action("CapNhatGioHang", "DichVu")',
+                    type: 'POST',
+                    data: { monAnId: monAnId, soLuong: soLuong },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert('Có lỗi xảy ra khi cập nhật giỏ hàng.');
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi kết nối với server.');
+                    }
+                });
+            }
+
+            $('#checkout-btn').click(function() {
+                alert('Chức năng thanh toán chưa được triển khai.');
+            });
+        });
+    </script>
+}

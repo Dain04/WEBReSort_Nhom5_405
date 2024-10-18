@@ -1,0 +1,161 @@
+﻿@model DemoDB2.Models.NguoiDung
+@{
+    ViewBag.Title = "FormLogin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById("MatKhau");
+        var toggleButton = document.getElementById("toggleButton");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        } else {
+            passwordField.type = "password";
+            toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+        }
+    }
+</script>
+
+<div class="login-container">
+    <div class="login-form">
+        <h2>ĐĂNG NHẬP TÀI KHOẢN</h2>
+        @using (Html.BeginForm("LoginAcount", "LoginUser", FormMethod.Post, new { @class = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email)
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", placeholder = "Nhập email" })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.MatKhau)
+                <div class="password-input">
+                    @Html.PasswordFor(model => model.MatKhau, new { @class = "form-control", id = "MatKhau", placeholder = "Nhập mật khẩu" })
+                    <button type="button" onclick="togglePasswordVisibility()" id="toggleButton" class="toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger" })
+            </div>
+            if (ViewBag.ErrorInfo != null)
+            {
+                <div class="alert alert-danger">@ViewBag.ErrorInfo</div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Đăng nhập Khách Hàng" class="btn btn-primary btn-block" />
+            </div>
+            <div class="form-group">
+                <p>Nếu bạn là Nhân Viên</p>
+                <a href="@Url.Action("LoginNV", "LoginNhanVien")" class="btn btn-secondary btn-block">Đăng nhập Nhân Viên</a>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        background-image: url('https://r4.wallpaperflare.com/wallpaper/963/215/743/swimming-pool-santorini-greece-island-wallpaper-a491a12ce279ccdbbe40ffb73be6bc30.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+    }
+
+    .login-form {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #007bff;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .password-input {
+        position: relative;
+    }
+
+    .form-control#MatKhau {
+        padding-right: 40px; /* Tăng padding bên phải */
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: -30px; /* Di chuyển nút ra xa hơn về bên phải */
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #007bff;
+        font-size: 18px; /* Tăng kích thước biểu tượng để dễ nhìn hơn */
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+</style>

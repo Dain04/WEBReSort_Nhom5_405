@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title - HARMONY</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="~/Content/cskh.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-inverse {
+            background: linear-gradient(to top, rgba(0,0,0,0.3), black);
+            border: none;
+            height: 50px;
+        }
+
+            .navbar-inverse .navbar-brand {
+                color: white;
+            }
+
+            .navbar-inverse .nav > li > a {
+                color: white;
+                font-size: 14px;
+                text-align: center;
+                padding-top: 15px;
+            }
+
+        .navbar-brand::before {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background-image: url('/Content/images/logo4.png');
+            background-size: cover;
+            vertical-align: middle;
+        }
+
+        .navbar-collapse {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .toolbar {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 70px;
+            height: 130px;
+        }
+
+            .toolbar img {
+                width: 100%;
+                height: auto;
+            }
+
+        #div-footer {
+            position: fixed;
+            text-align: center;
+            bottom: 0;
+            left: 0;
+            padding-top: 13px;
+            height: 45px;
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        .text1 {
+            font-size: 17px;
+        }
+
+        li.format-hello {
+            padding-top: 15px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            @Html.ActionLink("HARMONY", "TrangChuNV", "HomeNV", new { area = "" }, new { @class = "navbar-brand" })
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    @if (Session["NameUser"] == null)
+                    {
+                        @*<li><a href="/LoginUser/RegisterUser">ĐĂNG KÝ</a></li>*@
+                        <li><a href="/LoginNhanVien/LoginNV">ĐĂNG NHẬP</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/LoginNhanVien/ProfileNV">HỒ SƠ</a></li>
+                        <li class="format-hello">
+                            <span>Hello @Session["NameUser"]</span>
+                        </li>
+                        <li><a href="/LoginUser/LogOutUser">ĐĂNG XUẤT</a></li>
+                    }
+                </ul>
+                <div class="toolbar">
+                    <a href="http://zaloapp.com/qr/p/1diju6zmw8v72">
+                        <img src="https://png.pngtree.com/png-vector/20230316/ourmid/pngtree-admin-and-customer-service-job-vacancies-vector-png-image_6650726.png" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <div id="div-footer">
+        <h4 class="text1">XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH ĐÃ TIN TƯỞNG VÀ LỰA CHỌN KHÁCH SẠN HARMONY!</h4>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,101 @@
+﻿@using DemoDB2.Models
+@using PagedList
+@using PagedList.Mvc
+@model IPagedList<Phong>
+
+@{
+    ViewBag.Title = "Danh Sách Phòng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Content/PhongList.css" rel="stylesheet" />
+</head>
+
+<div class="room-list-container">
+    <div class="header">
+        <h2>Danh Sách Phòng</h2>
+    </div>
+    <div class="container mt-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+                <a href="@Url.Action("IndexKH", "HoaDon")" class="btn btn-primary btn-sm float-right">Xem Hóa Đơn</a>
+            </div>
+        }
+    </div>
+    @{
+        var groupedPhongs = Model.GroupBy(p => p.LoaiP);
+    }
+
+    @foreach (var group in groupedPhongs)
+    {
+        <h3>Loại phòng: @group.Key</h3>
+        <div class="room-grid">
+            @foreach (var phong in group)
+            {
+                <div class="room-card">
+                    <div class="room-image">
+                        @if (!string.IsNullOrEmpty(phong.ImagePhong))
+                        {
+                            <img src="@Url.Content(phong.ImagePhong)" alt="Hình ảnh phòng @phong.PhongID" />
+                        }
+                        else
+                        {
+                            <div class="no-image">Không có hình ảnh</div>
+                        }
+                    </div>
+                    <div class="room-info">
+                        <h3>Phòng @phong.PhongID</h3>
+                        <p class="room-price">Giá: @phong.Gia</p>
+                        <p class="room-status">
+                            @if (phong.TinhTrang.HasValue)
+                            {
+                                if (phong.TinhTrang.Value)
+                                {
+                                    <span class="status available">Trống</span>
+                                }
+                                else
+                                {
+                                    <span class="status occupied">Đã đặt</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="status unknown">Không xác định</span>
+                            }
+                        </p>
+                        @if (phong.TinhTrang.HasValue && phong.TinhTrang.Value)
+                        {
+<a href="@Url.Action("DatPhong", new { id = phong.PhongID })" class="btn btn-book" data-id="@phong.PhongID" data-price="@phong.Gia">Đặt Phòng</a>                        }
+                        else
+                        {
+                            <span class="btn btn-disabled">Không có sẵn</span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+
+@Html.PagedListPager(Model, page => Url.Action("ViewPhongKH", new { page }))
+
+<script src="~/Content/PhongList.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.btn-book').click(function (e) {
+            e.preventDefault();
+            var phongId = $(this).data('id');
+            var giaPhong = $(this).data('price');
+
+            alert('Bạn đã đặt phòng: ' + phongId + '\nGiá: ' + giaPhong + ' VND');
+
+            // Redirect to the booking action after showing the alert
+            window.location.href = $(this).attr('href');
+        });
+    });
+</script>

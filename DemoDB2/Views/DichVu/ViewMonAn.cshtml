@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DemoDB2.Models.MonAn>
+@{
+    ViewBag.Title = "Quản lý món ăn";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+<br /><br />
+<div class="container mt-4">
+    <h2>Quản lý món ăn</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <a href="@Url.Action("TrangChuNV", "HomeNV")" class="btn btn-success mr-2">
+                Trang Chủ
+            </a>
+            @Html.ActionLink("Thêm món ăn mới", "AddMonAn", null, new { @class = "btn btn-success" })
+        </div>
+        @using (Html.BeginForm("ViewMonAn", "DichVu", FormMethod.Get, new { @class = "form-inline" }))
+        {
+            <div class="input-group">
+                <input type="text" name="_name" class="form-control" placeholder="Tìm kiếm..." />
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">
+                        Tìm kiếm
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.MonAnID)</th>
+                <th>@Html.DisplayNameFor(model => model.TenMon)</th>
+                <th>@Html.DisplayNameFor(model => model.GiaMon)</th>
+               
+                <th>@Html.DisplayNameFor(model => model.ImageMonAn)</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.MonAnID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TenMon)</td>
+                    <td>@Html.DisplayFor(modelItem => item.GiaMon)</td>
+                  
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageMonAn))
+                        {
+                            <img src="@Url.Content(item.ImageMonAn)" alt="Hình ảnh món ăn" class="img-thumbnail" style="width:100px;height:auto;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">Không có hình ảnh</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("Sửa", "EditMonAn", new { id = item.MonAnID }, new { @class = "btn btn-primary btn-sm" })
+                            @Html.ActionLink("Xóa", "DeleteMonAn", new { id = item.MonAnID }, new { @class = "btn btn-danger btn-sm" })
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<style>
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>

@@ -1,0 +1,237 @@
+﻿@model DemoDB2.Models.NhanVien
+@{
+    ViewBag.Title = "Profile Nhân Viên";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Thông tin cá nhân</h1>
+        <a href="@Url.Action("TrangChuNV","HomeNV")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Trở Về
+        </a>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="profile-info">
+            <table class="profile-table">
+                <tr>
+                    <td><i class="fas fa-id-badge"></i> ID Nhân Viên</td>
+                    <td>@Model.NhanVienID</td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-user"></i> Tên Nhân Viên</td>
+                    <td>@Model.Ten</td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-user-tag"></i> ID Chức Vụ</td>
+                    <td>@Model.ChucVuID</td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-money-bill-wave"></i> Lương mới nhất</td>
+                    <td>
+                        @if (ViewBag.LuongMoiNhat != null)
+                        {
+                            <span>@string.Format("{0:N0} VND", ViewBag.LuongMoiNhat.TongLuong)</span>
+                            <br />
+                            <small>(Tháng @ViewBag.LuongMoiNhat.Thang/@ViewBag.LuongMoiNhat.Nam)</small>
+                        }
+                        else
+                        {
+                            <span>Chưa có thông tin lương</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-map-marker-alt"></i> Vị trí</td>
+                    <td>@Model.DiaChi</td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-phone"></i> Số điện thoại</td>
+                    <td>@Model.SoDienThoai</td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-envelope"></i> Email</td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-key"></i> Mật khẩu</td>
+                    <td>••••••••</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <a href="@Url.Action("EditNV", "LoginNhanVien", new { id = Model.NhanVienID })" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Cập nhật hồ sơ
+        </a>
+        @*@if (Model.ChucVuID == 1)
+        {
+            <a href="@Url.Action("TaoLichLamViec", "LichLamViec")" class="btn btn-success">
+                <i class="fas fa-calendar-plus"></i> Tạo lịch làm việc
+            </a>
+        }*@
+
+
+        @if (Model.ChucVuID == 2)
+        {
+            <a href="@Url.Action("DangKyLichLamViec", "LichLamViec")" class="btn btn-success">
+                <i class="fas fa-calendar-plus"></i> Đăng ký lịch làm việc
+            </a>
+        }
+        <a href="@Url.Action("XemLichLamViec", "LichLamViec")" class="btn btn-success">
+            <i class="fas fa-calendar-plus"></i> Xem Lịch Làm Việc
+        </a>
+        <a href="@Url.Action("LogOutUser","LoginUser")" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+    .btn-success {
+        background-color: #27ae60;
+        color: #fff;
+    }
+    .profile-container {
+        max-width: 800px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 40px;
+    }
+
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .profile-header h1 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 28px;
+    }
+
+    .profile-content {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .profile-avatar {
+        font-size: 120px;
+        color: #3498db;
+        margin-right: 40px;
+        margin-bottom: 20px;
+    }
+
+    .profile-info {
+        flex-grow: 1;
+        min-width: 300px;
+    }
+
+    .profile-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 15px;
+    }
+
+    .profile-table td {
+        padding: 15px;
+        border-bottom: 1px solid #ecf0f1;
+    }
+
+    .profile-table td:first-child {
+        font-weight: 500;
+        color: #7f8c8d;
+        width: 40%;
+    }
+
+    .profile-actions {
+        margin-top: 40px;
+        text-align: right;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        margin-left: 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background-color: #e74c3c;
+        color: #fff;
+    }
+
+    .btn-secondary {
+        background-color: #95a5a6;
+        color: #fff;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .fas {
+        margin-right: 8px;
+    }
+
+   media (max-width: 600px) {
+        .profile-container {
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .profile-avatar {
+            margin-right: 0;
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-info {
+            width: 100%;
+        }
+
+        .profile-actions {
+            text-align: center;
+        }
+
+        .btn {
+            margin: 10px 0;
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<!-- Add Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">

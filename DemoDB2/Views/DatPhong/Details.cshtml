@@ -1,0 +1,67 @@
+﻿@model DemoDB2.Models.DatPhong
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DatPhong</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NgayDatPhong)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NgayDatPhong)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NgayNhanPhong)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NgayNhanPhong)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NgayTraPhong)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NgayTraPhong)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DichVuSuDung.IDDichVuSuDung)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DichVuSuDung.IDDichVuSuDung)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NguoiDung.TenNguoiDung)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NguoiDung.TenNguoiDung)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Phong.LoaiP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Phong.LoaiP)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DatPhongID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

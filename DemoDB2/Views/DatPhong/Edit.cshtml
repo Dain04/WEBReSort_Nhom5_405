@@ -1,0 +1,70 @@
+﻿@model IEnumerable<DemoDB2.Models.DatPhong>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>
+    Index
+    <link rel="stylesheet" href="~/Content/DatPhongIndex.css" />
+</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn-create" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NgayDatPhong)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NgayNhanPhong)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NgayTraPhong)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DichVuSuDung.IDDichVuSuDung)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NguoiDung.TenNguoiDung)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phong.LoaiP)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayDatPhong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayNhanPhong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayTraPhong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DichVuSuDung.IDDichVuSuDung)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NguoiDung.TenNguoiDung)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phong.LoaiP)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.DatPhongID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.DatPhongID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.DatPhongID })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<link rel="stylesheet" href="~/Content/DatPhongIndex.css">

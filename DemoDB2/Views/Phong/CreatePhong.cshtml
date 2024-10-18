@@ -1,0 +1,101 @@
+﻿@model DemoDB2.Models.Phong
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center mb-0">THÊM MỚI PHÒNG</h2>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("CreatePhong", "Phong", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.PhongID, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.EditorFor(model => model.PhongID, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.PhongID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.LoaiP, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.DropDownListFor(model => model.LoaiP, ViewBag.LoaiPhongList as SelectList, "Chọn loại phòng", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LoaiP, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.TinhTrang, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.DropDownListFor(model => model.TinhTrang,
+                                    new List<SelectListItem>
+                                    {
+                                        new SelectListItem { Text = "Trống", Value = "true" },
+                                        new SelectListItem { Text = "Đã đặt", Value = "false" }
+                                    }, "Chọn tình trạng", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TinhTrang, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.Gia, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.EditorFor(model => model.Gia, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Gia, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.UploadImage, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                <input type="file" name="UploadImage" class="form-control-file" onchange="ChangeImage(this, document.getElementById('previewImg'))" />
+                                <img id="previewImg" src="#" alt="Preview Image" class="mt-2" style="max-width: 200px; display: none;" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-9 offset-sm-3">
+                                <button type="submit" class="btn btn-primary">Tạo mới</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ChangeImage(input, imgElement) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imgElement.src = e.target.result;
+                imgElement.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<style>
+    body {
+        background-image: url('/Content/images/green.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+
+    .card {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+</style>

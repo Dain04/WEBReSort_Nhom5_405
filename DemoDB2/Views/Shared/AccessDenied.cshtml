@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "Không có quyền truy cập";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+
+<style>
+    .access-denied {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+    .error-container {
+        text-align: center;
+        background-color: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .error-icon {
+        font-size: 80px;
+        color: #dc3545;
+        margin-bottom: 20px;
+    }
+
+    .error-heading {
+        color: #dc3545;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .error-message {
+        color: #6c757d;
+        margin-bottom: 25px;
+    }
+
+    .home-link {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+        .home-link:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+            color: white;
+        }
+</style>
+
+<div class="access-denied">
+    <div class="error-container">
+        <div class="error-icon">
+            &#10060;
+        </div>
+        <h1 class="error-heading">Không có quyền truy cập!</h1>
+        <p class="error-message">Bạn không có quyền truy cập vào trang này. Vui lòng liên hệ với quản trị viên nếu bạn cần hỗ trợ.</p>
+        @Html.ActionLink("Quay lại trang chủ", "TrangChuNV", "HomeNV", null, new { @class = "home-link" })
+    </div>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.querySelector('.error-container');
+        container.style.opacity = '0';
+        container.style.transform = 'translateY(-20px)';
+        container.style.transition = 'opacity 0.5s, transform 0.5s';
+
+        setTimeout(() => {
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        }, 100);
+    });
+</script>

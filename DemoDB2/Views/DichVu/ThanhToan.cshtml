@@ -1,0 +1,156 @@
+﻿@model DemoDB2.ViewModels.ChiTietHoaDonViewModel
+@{
+    ViewBag.Title = "Thanh Toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Thanh Toán</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Chi Tiết Hóa Đơn</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        @foreach (var item in Model.MonAn)
+                        {
+                            <tr>
+                                <td>@item.TenMon</td>
+                                <td>@item.SoLuong x @string.Format("{0:N0} VND", item.GiaMon)</td>
+                                <td class="text-right">@string.Format("{0:N0} VND", item.GiaMon * item.SoLuong)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <th colspan="2">Tổng cộng:</th>
+                            <td class="text-right font-weight-bold text-danger">@string.Format("{0:N0} VND", Model.TongTien)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Phương Thức Thanh Toán</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <select id="phuongThucThanhToan" class="form-control">
+                            <option value="ChuyenKhoan">Chuyển khoản</option>
+                            <option value="The">Thẻ tín dụng/ghi nợ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0">Quét mã QR để thanh toán</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <img src="https://images.viblo.asia/e8e205ed-d6c8-4fd6-95f5-c236fff24949.jpg"
+                                     alt="QR Code"
+                                     class="img-fluid"
+                                     style="max-width: 350px; max-height: 350px;" />
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnXacNhanThanhToan" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-check mr-2"></i>Xác nhận thanh toán
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="qrCodeSection" class="row mt-4" style="display: none;">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+
+                <div class="card-body text-center">
+                    <div id="loadingAnimation" class="mt-3" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Đang xử lý...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('#btnXacNhanThanhToan').click(function () {
+                var phuongThucThanhToan = $('#phuongThucThanhToan').val();
+                $.ajax({
+                    url: '@Url.Action("XacNhanThanhToan", "DichVu")',
+                    type: 'POST',
+                    data: { phuongThucThanhToan: phuongThucThanhToan },
+                    success: function (result) {
+                        if (result.requiresQR) {
+                            $('#qrCodeImage').attr('src', result.qrCode);
+                            $('#qrCodeSection').show();
+                            $('#loadingAnimation').show();
+                            simulatePayment(phuongThucThanhToan);
+                        } else {
+                            simulatePayment('Tiền mặt');
+                        }
+                    }
+                });
+            });
+
+            function simulatePayment(method) {
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    text: 'Đang xử lý thanh toán qua ' + method,
+                    icon: 'info',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                }).then(() => {
+                    $.ajax({
+                        url: '@Url.Action("HoanTatThanhToan", "DichVu")',
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    title: 'Thành công!',
+                                    text: 'Thanh toán đã được xử lý thành công',
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    window.location.href = result.redirectUrl;
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+}
+
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .btn-lg {
+        transition: all 0.2s;
+    }
+
+        .btn-lg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+</style>

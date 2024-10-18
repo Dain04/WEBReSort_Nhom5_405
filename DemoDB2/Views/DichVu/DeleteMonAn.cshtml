@@ -1,0 +1,50 @@
+﻿@model DemoDB2.Models.MonAn
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Xác nhận xóa món ăn</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">@Model.TenMon</h4>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.TenMon)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.TenMon)</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.GiaMon)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.GiaMon)</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.IDBan)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.IDBan)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.ImageMonAn))
+                            {
+                                <img src="@Url.Content(Model.ImageMonAn)" alt="@Model.TenMon" class="img-fluid rounded" />
+                            }
+                            else
+                            {
+                                <p>Không có hình ảnh</p>
+                            }
+                        </div>
+                    </div>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                            @Html.ActionLink("Quay lại danh sách", "ViewMonAn", null, new { @class = "btn btn-secondary ml-2" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

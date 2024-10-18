@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DemoDB2.Models.NhanVien>
+@{
+    ViewBag.Title = "Danh Sách Nhân Viên";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+
+<br />
+<br />
+<br />
+<br />
+
+<h2>@ViewBag.Title</h2>
+
+<style>
+    .employee-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .employee-list {
+        width: 48%;
+        padding: 20px 0;
+    }
+
+    .employee-card {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #f9f9f9;
+    }
+
+        .employee-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+    .employee-info {
+        margin-bottom: 5px;
+    }
+
+    .employee-actions {
+        margin-top: 15px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-edit, .btn-delete {
+        padding: 5px 10px;
+        border-radius: 4px;
+        text-decoration: none;
+        color: white;
+    }
+
+    .btn-edit {
+        background-color: #007bff;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+    }
+</style>
+<div class="employee-container">
+    <div class="employee-list">
+        <h3>Nhân Viên</h3>
+        @foreach (var employee in Model.Where(e => e.ChucVuID == 2))
+        {
+    <div class="employee-card">
+        <h3>@employee.Ten</h3>
+        <div class="employee-info"><strong>ID:</strong> @employee.NhanVienID</div>
+        <div class="employee-info"><strong>Tên:</strong> @employee.Ten</div>
+        <div class="employee-info"><strong>Chức vụ ID:</strong> @employee.ChucVuID</div>
+        <div class="employee-info"><strong>Lương:</strong> @employee.Luong</div>
+        <div class="employee-info"><strong>Địa chỉ:</strong> @employee.DiaChi</div>
+        <div class="employee-info"><strong>SĐT:</strong> @employee.SoDienThoai</div>
+        <div class="employee-info"><strong>Email:</strong> @employee.Email</div>
+        @if (Session["ChucVuID"] != null && (int)Session["ChucVuID"] == 1)
+        {
+            <div class="employee-actions">
+                @Html.ActionLink("Xóa", "DeleteNV", new { id = employee.NhanVienID }, new { @class = "btn-delete" })
+            </div>
+        }
+    </div>
+        }
+    </div>
+    <div class="employee-list">
+        <h3>Quản Lý</h3>
+        @foreach (var employee in Model.Where(e => e.ChucVuID == 1))
+        {
+    <div class="employee-card">
+        <h3>@employee.Ten</h3>
+        <div class="employee-info"><strong>ID:</strong> @employee.NhanVienID</div>
+        <div class="employee-info"><strong>Tên:</strong> @employee.Ten</div>
+        <div class="employee-info"><strong>Chức vụ ID:</strong> @employee.ChucVuID</div>
+        <div class="employee-info"><strong>Lương:</strong> @employee.Luong</div>
+        <div class="employee-info"><strong>Địa chỉ:</strong> @employee.DiaChi</div>
+        <div class="employee-info"><strong>SĐT:</strong> @employee.SoDienThoai</div>
+        <div class="employee-info"><strong>Email:</strong> @employee.Email</div>
+        @if (Session["ChucVuID"] != null && (int)Session["ChucVuID"] == 1)
+        {
+            @*<div class="employee-actions">
+                @Html.ActionLink("Xóa", "DeleteNV", new { id = employee.NhanVienID }, new { @class = "btn-delete" })
+            </div>*@
+        }
+    </div>
+        }
+    </div>
+</div>

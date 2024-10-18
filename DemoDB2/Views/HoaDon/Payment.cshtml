@@ -1,0 +1,170 @@
+﻿@*@model DemoDB2.Models.HoaDon
+
+    @{
+        ViewBag.Title = "Thanh toán hóa đơn";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <h2>Thanh toán hóa đơn</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Thông tin hóa đơn</h4>
+            <dl class="dl-horizontal">
+                <dt>Mã hóa đơn:</dt>
+                <dd>@Model.HoaDonID</dd>
+
+                <dt>Tổng tiền:</dt>
+                <dd>@String.Format("{0:N0} VNĐ", ViewBag.TongTien)</dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <h4>Quét mã QR để thanh toán</h4>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=@ViewBag.QRCodeData" alt="QR Code" />
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h4>Hoặc chọn phương thức thanh toán khác:</h4>
+            <button class="btn btn-primary" onclick="simulatePayment('Thẻ tín dụng')">Thẻ tín dụng</button>
+            <button class="btn btn-info" onclick="simulatePayment('Ví điện tử')">Ví điện tử</button>
+            <button class="btn btn-success" onclick="simulatePayment('Chuyển khoản ngân hàng')">Chuyển khoản ngân hàng</button>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("ConfirmPayment", "HoaDon", new { id = Model.HoaDonID }, FormMethod.Post, new { id = "paymentForm" }))
+    {
+        @Html.AntiForgeryToken()
+    }
+
+    @section Scripts {
+        <script>
+            function simulatePayment(method) {
+                alert('Đang xử lý thanh toán qua ' + method + '...');
+                setTimeout(function() {
+                    alert('Thanh toán thành công!');
+                    document.getElementById('paymentForm').submit();
+                }, 500);
+            }
+        </script>
+    }*@
+
+
+@model DemoDB2.Models.HoaDon
+@{
+    ViewBag.Title = "Thanh toán hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Thanh toán hóa đơn</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Thông tin hóa đơn</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Mã hóa đơn:</th>
+                            <td>@Model.HoaDonID</td>
+                        </tr>
+                        <tr>
+                            <th>Tổng tiền:</th>
+                            <td class="font-weight-bold text-danger">@String.Format("{0:N0} VNĐ", ViewBag.TongTien)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Quét mã QR để thanh toán</h4>
+                </div>
+                <div class="card-body text-center">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=@ViewBag.QRCodeData" alt="QR Code" class="img-fluid" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Hoặc chọn phương thức thanh toán khác</h4>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-outline-primary btn-lg mr-2 mb-2" onclick="simulatePayment('Thẻ tín dụng')">
+                        <i class="fas fa-credit-card mr-2"></i>Thẻ tín dụng
+                    </button>
+                    <button class="btn btn-outline-info btn-lg mr-2 mb-2" onclick="simulatePayment('Ví điện tử')">
+                        <i class="fas fa-wallet mr-2"></i>Ví điện tử
+                    </button>
+                    <button class="btn btn-outline-success btn-lg mb-2" onclick="simulatePayment('Chuyển khoản ngân hàng')">
+                        <i class="fas fa-university mr-2"></i>Chuyển khoản ngân hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("ConfirmPayment", "HoaDon", new { id = Model.HoaDonID }, FormMethod.Post, new { id = "paymentForm" }))
+{
+    @Html.AntiForgeryToken()
+}
+
+
+
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .btn-lg {
+        transition: all 0.2s;
+    }
+
+        .btn-lg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+</style>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function simulatePayment(method) {
+            Swal.fire({
+                title: 'Đang xử lý...',
+                text: 'Đang xử lý thanh toán qua ' + method,
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 1500,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            }).then(() => {
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: 'Thanh toán đã được xử lý thành công',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    document.getElementById('paymentForm').submit();
+                });
+            });
+        }
+    </script>
+}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+

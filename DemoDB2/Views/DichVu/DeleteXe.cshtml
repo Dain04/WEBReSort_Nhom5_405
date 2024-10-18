@@ -1,0 +1,63 @@
+﻿@model DemoDB2.Models.Xe
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Xác nhận xóa xe</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Bạn có chắc chắn muốn xóa xe này?</h5>
+                    <dl class="row">
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.HieuXe)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.HieuXe)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.BienSoXe)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.BienSoXe)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TaiXe)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.TaiXe)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.SoChoNgoi)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.SoChoNgoi)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.GiaXe)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.GiaXe)</dd>
+                    </dl>
+
+                    @if (!string.IsNullOrEmpty(Model.ImageXe))
+                    {
+                        <div class="form-group row">
+                            <dt class="col-sm-3">Hình ảnh xe</dt>
+                            <dd class="col-sm-9">
+                                <img src="@Url.Content(Model.ImageXe)" alt="Hình ảnh xe" style="max-width: 200px;" />
+                            </dd>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-10 offset-sm-3">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                @Html.ActionLink("Quay lại danh sách", "ViewXe", null, new { @class = "btn btn-secondary ml-2" })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+</style>

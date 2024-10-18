@@ -1,0 +1,25 @@
+﻿@model List<DemoDB2.Models.Phong>
+
+<h2>Đặt Phòng VIP</h2>
+
+@using (Html.BeginForm("DatPhongVIP", "Home", FormMethod.Post))
+{
+    <div>
+        <label>Chọn Phòng:</label>
+        <select name="PhongID">
+            @foreach (var phong in Model)
+            {
+                <option value="@phong.PhongID">Phòng @phong.PhongID - @phong.Gia.Value.ToString("N0") VNĐ</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label>Ngày Nhận Phòng:</label>
+        <input type="date" name="NgayNhanPhong" required />
+    </div>
+    <div>
+        <label>Ngày Trả Phòng:</label>
+        <input type="date" name="NgayTraPhong" required />
+    </div>
+    <button type="submit">Đặt Phòng</button>
+}

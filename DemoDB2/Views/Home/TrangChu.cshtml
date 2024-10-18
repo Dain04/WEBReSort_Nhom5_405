@@ -1,0 +1,332 @@
+﻿@using DemoDB2.Models;
+@model PagedList.PagedList<Phong>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "TrangChu";
+    <script src="~/Scripts/script.js"></script>
+}
+<link rel="stylesheet" href="~/Content/TrangChu.css">
+
+<div class="slideshow-container">
+    <div class="mySlides1">
+        <img src="~/Content/images/h1.jpg">
+        <div class="slide-text">Chào mừng đến với Khách sạn Harmony</div>
+    </div>
+
+    <div class="mySlides1">
+        <img src="~/Content/images/2jpg.jpg">
+        <div class="slide-text">Trải nghiệm đẳng cấp</div>
+    </div>
+
+    <div class="mySlides1">
+        <img src="~/Content/images/h3.jpg">
+        <div class="slide-text">Dịch vụ hoàn hảo</div>
+    </div>
+
+    <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
+</div>
+
+<section class="welcome-section">
+    <div class="container">
+        <h2>CHÀO MỪNG ĐẾN VỚI KHÁCH SẠN HARMONY</h2>
+        <p>Nơi đẳng cấp và sự thoải mái hội tụ! Chúng tôi hân hạnh được phục vụ bạn với những trải nghiệm lưu trú tuyệt vời và dịch vụ hoàn hảo nhất. Hãy để chúng tôi biến kỳ nghỉ của bạn trở nên đáng nhớ và tràn đầy niềm vui!</p>
+    </div>
+</section>
+
+<section class="criteria-section">
+    <div class="container">
+        <h2>CHÚNG TÔI ĐẢM BẢO VỚI KHÁCH HÀNG 5 TIÊU CHÍ</h2>
+        <div class="criteria-container">
+            <div class="criteria-item">
+                <img src="~/Content/images/chluong.jpg" alt="Chất lượng">
+                <p>CHẤT LƯỢNG</p>
+            </div>
+            <div class="criteria-item">
+                <img src="~/Content/images/dv.jpg" alt="Dịch vụ">
+                <p>DỊCH VỤ</p>
+            </div>
+            <div class="criteria-item">
+                <img src="~/Content/images/bv.jpg" alt="An toàn">
+                <p>AN TOÀN</p>
+            </div>
+            <div class="criteria-item">
+                <img src="~/Content/images/vt.jpg" alt="Vị trí tiện lợi">
+                <p>VỊ TRÍ TIỆN LỢI</p>
+            </div>
+            <div class="criteria-item">
+                <img src="~/Content/images/mt.jpg" alt="Môi trường thân thiện">
+                <p>MÔI TRƯỜNG THÂN THIỆN</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="rooms-section">
+    <div class="container">
+        <h2>PHÒNG CỦA CHÚNG TÔI</h2>
+        <div class="rooms-grid">
+            <div class="rooms-grid">
+                <a href="/Home/DetailPhongVip" class="room-card">
+                    <div class="room-image">
+                        <img src="~/Content/images/roomvip.jpg" alt="PHÒNG VIP">
+                    </div>
+                    <div class="room-info">
+                        <h3>PHÒNG VIP</h3>
+                        <p>Trải nghiệm đẳng cấp với phòng VIP sang trọng và tiện nghi bậc nhất của chúng tôi.</p>
+                    </div>
+                </a>
+                <a href="/Home/DetailPhongthuong" class="room-card">
+                    <div class="room-image">
+                        <img src="~/Content/images/roomnormal.jpg" alt="Phòng Tiêu Chuẩn">
+                    </div>
+                    <div class="room-info">
+                        <h3>PHÒNG NORMAL</h3>
+                        <p>Tận hưởng sự thoải mái và tiện nghi trong phòng NORMAL tiêu chuẩn của chúng tôi.</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+        <h2>DỊCH VỤ CỦA CHÚNG TÔI</h2>
+        <div class="rooms-grid">
+            <div class="rooms-grid">
+                <a href="/DichVu/ViewMonAnKH" class="room-card">
+                    <div class="room-image">
+                        <img src="https://i.pinimg.com/564x/4a/1e/ab/4a1eab2d466012527d81bcd4a181e1c8.jpg" alt="ĐỒ DÙNG TIỆN LỢI">
+                    </div>
+                    <div class="room-info">
+                        <h3>ĐỒ DÙNG TIỆN LỢI</h3>
+                        <p>Luôn mang đến thực phẩm tươi ngon và lành mạnh nhất  </p>
+                    </div>
+                </a>
+                <a href="/DichVu/ViewXeKH" class="room-card">
+                    <div class="room-image">
+                        <img src="https://i.pinimg.com/564x/94/79/b7/9479b7667a3e4f2a494a9fe1e362455d.jpg" alt="DỊCH VỤ ĐƯA ĐÓN">
+                    </div>
+                    <div class="room-info">
+                        <h3>DỊCH VỤ ĐƯA ĐÓN</h3>
+                        <p>Dịch vụ đưa đón cao cấp của khách sạn Harmony cam kết chuyến đi an toàn và tiện nghi nhất!</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+<section class="amenities-section">
+    <div class="container">
+        <h2>TIỆN NGHI KHÁCH SẠN</h2>
+        <div class="amenities-grid">
+            <div class="amenity-item">
+                <i class="fas fa-charging-station"></i>
+                <p>Trạm sạc xe điện</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-wifi"></i>
+                <p>Internet tốc độ cao miễn phí (Wi-Fi)</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-swimming-pool"></i>
+                <p>Hồ bơi</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-dumbbell"></i>
+                <p>Trung tâm thể dục</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-parking"></i>
+                <p>Chỗ đỗ xe có tính phí tại chỗ</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-utensils"></i>
+                <p>Nhà hàng tại chỗ</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-glass-cheers"></i>
+                <p>Quầy bar / lounge</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-umbrella-beach"></i>
+                <p>Khu vực ăn uống ngoài trời</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-gift"></i>
+                <p>Cửa hàng quà tặng</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-paw"></i>
+                <p>Cho phép vật nuôi (thân thiện với chó)</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-briefcase"></i>
+                <p>Trung tâm dịch vụ doanh nhân với truy cập Internet</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-handshake"></i>
+                <p>Cơ sở hội nghị</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-suitcase"></i>
+                <p>Lưu trữ hành lý</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-concierge-bell"></i>
+                <p>Dịch vụ hướng dẫn khách (Concierge)</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-smoking-ban"></i>
+                <p>Khách sạn không hút thuốc</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-fire"></i>
+                <p>Lò sưởi ngoài trời</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-umbrella-beach"></i>
+                <p>Ghế dài / ghế bãi biển</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-money-bill-wave"></i>
+                <p>Máy ATM tại chỗ</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-clock"></i>
+                <p>Lễ tân 24 giờ</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- New Tiện Nghi Phòng section -->
+<section class="room-amenities-section">
+    <div class="container">
+        <h2>TIỆN NGHI PHÒNG</h2>
+        <div class="room-amenities-grid">
+
+            <div class="room-amenity-item">
+                <i class="fas fa-broom"></i>
+                <p>Dịch vụ dọn phòng</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-tv"></i>
+                <p>TV thông minh</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-shower"></i>
+                <p>Phòng tắm có vòi sen đứng</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-tshirt"></i>
+                <p>Áo choàng tắm</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-door-open"></i>
+                <p>Phòng có cửa thông nhau</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-lock"></i>
+                <p>Két an toàn</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-couch"></i>
+                <p>Khu vực ngồi</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-door-closed"></i>
+                <p>Tủ quần áo</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-coffee"></i>
+                <p>Máy pha cà phê</p>
+            </div>
+            <div class="room-amenity-item">
+                <i class="fas fa-tools"></i>
+                <p>Bàn ủi và bàn ủi cỡ lớn</p>
+            </div>
+
+            <div class="room-amenity-item">
+                <i class="fas fa-snowflake"></i>
+                <p>Tủ lạnh</p>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Về Khách sạn Harmony</h3>
+                <p>Khách sạn Harmony - Nơi đẳng cấp và sự thoải mái hội tụ. Chúng tôi cam kết mang đến cho bạn trải nghiệm lưu trú tuyệt vời nhất.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section links">
+                <h3>Liên kết nhanh</h3>
+                <ul>
+                    <li><a href="/Home/TrangChu">Trang chủ</a></li>
+                    <li><a href="/Home/DetailPhongThuong">Phòng thường</a></li>
+                    <li><a href="/Home/DetailPhongVip">Phòng vip</a></li>
+                    <li><a href="/DichVu/ViewMonAnKH">Dịch vụ ăn uống</a></li>
+                    <li><a href="/DichVu/ViewXeKH">Dịch vụ di chuyển </a></li>
+
+                </ul>
+            </div>
+
+            <div class="footer-section contact">
+                <h3>Liên hệ</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Thành phố XYZ</p>
+                <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                <p><i class="fas fa-envelope"></i> info@harmonyhotel.com</p>
+            </div>
+
+            <div class="footer-section newsletter">
+                <h3>Đăng ký nhận tin</h3>
+                <p>Đăng ký để nhận thông tin về ưu đãi và sự kiện mới nhất.</p>
+                <form action="#" method="post">
+                    <input type="email" name="email" placeholder="Email của bạn">
+                    <button type="submit">Đăng ký</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <p>&copy; 2024 Khách sạn Harmony. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </div>
+</footer>
+<script>
+    let slideIndex = [1, 1];
+    let slideId = ["mySlides1", "mySlides2"]
+    showSlides(1, 0);
+    showSlides(1, 1);
+
+    setInterval(function () {
+        plusSlides(1, 0);
+    }, 3000);
+
+    function plusSlides(n, no) {
+        showSlides(slideIndex[no] += n, no);
+    }
+
+    function showSlides(n, no) {
+        let i;
+        let x = document.getElementsByClassName(slideId[no]);
+        if (n > x.length) { slideIndex[no] = 1 }
+        if (n < 1) { slideIndex[no] = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex[no] - 1].style.display = "block";
+    }
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

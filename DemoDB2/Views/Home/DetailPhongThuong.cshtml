@@ -1,0 +1,93 @@
+﻿@* Views/Shared/_GioiThieuPhongVIP.cshtml *@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/Content/DetailPhongThuong.css">
+    <script src="~/Content/scripPhongthuong.js"></script>
+</head>
+<body>
+    <div class="vip-room-container">
+        <h1 class="vip-room-title">Trải Nghiệm Thoải Mái Tại Phòng Tiêu Chuẩn</h1>
+        <div class="vip-room-content">
+            <div class="slideshow-container">
+                <div class="slides fade" style="display: block;">
+                    <img src="https://i.pinimg.com/736x/8a/cc/15/8acc15614eda2480c20905c5126f50a4.jpg" alt="Phòng Thường 1">
+                </div>
+                <div class="slides fade">
+                    <img src="https://i.pinimg.com/564x/11/d9/f1/11d9f140c3301dbcc7bc32626a277dbe.jpg" alt="Phòng Thường 2">
+                </div>
+                <div class="slides fade">
+                    <img src="https://i.pinimg.com/736x/61/30/67/613067e1c2cff31c940b0d84d60ec11a.jpg" alt="Phòng Thường 3">
+                </div>
+                <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+                <a class="next" onclick="changeSlide(1)">&#10095;</a>
+            </div>
+            <div class="dot-container">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+        <div class="btbook">
+            <a href="/Phong/ViewPhongKH" class="cta-button">Đặt Phòng Ngay</a>
+        </div>
+        <div class="room-description">
+            <p class="centered-description">Tận hưởng không gian thoải mái và tiện nghi trong phòng tiêu chuẩn của chúng tôi. Chúng tôi cung cấp các tiện ích cơ bản để đảm bảo kỳ nghỉ của bạn luôn thoải mái:</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fas fa-bed"></i>
+                    <span>Giường đôi hoặc hai giường đơn thoải mái</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shower"></i>
+                    <span>Phòng tắm riêng với vòi sen</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-wifi"></i>
+                    <span>Wi-Fi miễn phí</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-tv"></i>
+                    <span>TV màn hình phẳng</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-mug-hot"></i>
+                    <span>Bộ pha trà và cà phê</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-wind"></i>
+                    <span>Điều hòa không khí</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Điện thoại trong phòng</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-suitcase"></i>
+                    <span>Tủ quần áo</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Két an toàn</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-broom"></i>
+                    <span>Dịch vụ dọn phòng hàng ngày</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-concierge-bell"></i>
+                    <span>Dịch vụ phòng (có giới hạn thời gian)</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-tshirt"></i>
+                    <span>Dịch vụ giặt ủi (có phụ phí)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

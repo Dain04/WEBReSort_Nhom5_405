@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DemoDB2.Models.ChucVu>
+@{
+    ViewBag.Title = "Danh Sách Chức Vụ";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+<br /><br /><br /><br />
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Thêm Chức Vụ Mới", "CreateChucVu", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ChucVuID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TenChucVu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoTaChucVu)
+            </th>
+            <th>Thao Tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChucVuID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenChucVu)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MoTaChucVu)
+                </td>
+                <td>
+                    @Html.ActionLink("Sửa", "Edit", new { id = item.ChucVuID }, new { @class = "btn btn-warning btn-sm" })
+                    @*@Html.ActionLink("Chi Tiết", "Details", new { id = item.ChucVuID }, new { @class = "btn btn-info btn-sm" })*@
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.ChucVuID }, new { @class = "btn btn-danger btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .table {
+        margin-top: 20px;
+    }
+
+    .btn-sm {
+        margin-right: 5px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}

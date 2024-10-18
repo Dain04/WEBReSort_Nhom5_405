@@ -1,0 +1,214 @@
+﻿@using DemoDB2.ViewModels
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title HARMONY</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="~/Content/cskh.css" rel=" stylesheet" />
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+
+        <div class="container">
+
+            @Html.ActionLink("HARMONY", "TrangChu", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    @if (Session["NameUser"] == null)
+                    {
+                        <li><a href="/Home/AboutUs">ABOUT US</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DỊCH VỤ <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Phong/ViewPhongKH">Danh Sách Phòng</a></li>
+                                <li><a href="/Home/DetailPhongVip">Giới Thiệu Phòng VIP</a></li>
+                                <li><a href="/DichVu/ViewMonAnKH">Nhà Hàng</a></li>
+                                <li><a href="/DichVu/ViewXeKH">Thuê Xe </a></li>
+
+                            </ul>
+                        </li>
+
+                        <li><a href="/LoginUser/RegisterUser">ĐĂNG KÝ</a></li>
+                        <li><a href="/LoginUser/Index">ĐĂNG NHẬP</a></li>
+
+
+                    }
+                    else
+                    {
+                        <li><a href="/Home/AboutUs">ABOUT US</a></li>                        
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DỊCH VỤ <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Home/DetailPhongThuong">Giới Thiệu Phòng NORMAL</a></li>
+                                <li><a href="/Home/DetailPhongVip">Giới Thiệu Phòng VIP</a></li>
+                                <li><a href="/DichVu/ViewMonAnKH">Nhà Hàng</a></li>
+                                <li><a href="/DichVu/ViewXeKH">Thuê Xe </a></li>
+
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("XemGioHang", "DichVu")" class="btn btn-outline-primary">
+                                <i class="fa fa-shopping-cart"></i> Giỏ hàng <span id="cart-count">@((Session["GioHang"] as List<GioHangViewModel>)?.Sum(m => m.SoLuong) ?? 0)</span>
+                            </a>
+                        </li>
+                        <li><a href="/LoginUser/Profile">HỒ SƠ</a></li>
+                        <li class="format-hello">
+                            <span> Hello @Session["NameUser"]</span>
+                        </li>
+                        <li><a href="/LoginUser/LogOutUser">ĐĂNG XUẤT</a></li>
+                    }
+                </ul>
+                <div class="toolbar">
+                    <a href="http://zaloapp.com/qr/p/1diju6zmw8v72">
+                        <img src="https://png.pngtree.com/png-vector/20230316/ourmid/pngtree-admin-and-customer-service-job-vacancies-vector-png-image_6650726.png" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+    <div id="div-footer">
+        <h4 class="text1">XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH ĐÃ TIN TƯỞNG VÀ LỰA CHỌN KHÁCH SẠN HARMONY!</h4>
+    </div>
+    <style>
+        body {
+            font-family: Times New Roman /*kiêu chữ*/
+        }
+
+
+        .btn-default {
+            background-color: #009966;
+            border-color: #009966;
+            color: #fff;
+            margin: auto;
+            width: 100px
+        }
+
+        .toolbar { /* icon hỗ trợ*/
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 70px;
+            height: 130px;
+        }
+
+            .toolbar img {
+                width: 100%;
+                height: auto;
+            }
+
+
+        /* thanh menu dưới*/
+        #div-main {
+            width: 100%
+        }
+
+        #div-footer {
+            position: fixed;
+            text-align: center;
+            bottom: 0;
+            left: 0;
+            padding-top: 13px;
+            height: 45px;
+            width: 100%;
+            background: rgba(0,0,0,0.5 );
+            color: white;
+        }
+
+        .text1 {
+            font-size: 17px;
+        }
+        /*menu trên*/
+        li.format-hello {
+            padding-top: 15px;
+            color: white;
+        }
+
+
+        .navbar-inverse .navbar-brand {
+            color: white; /* Thay đổi màu chữ của logo */
+        }
+
+        .navbar-inverse .nav > li > a { /*  các mục trên menu */
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        .navbar-inverse {
+            background: linear-gradient(to top, rgba(0,0,0,0.3 ), black); /*  background trong suốt */
+            border: none; /* không viền */
+        }
+
+
+        .navbar-brand::before {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px; /* Khoảng cách giữa hình ảnh và chữ */
+            background-image: url('/Content/images/logo4.png');
+            background-size: cover; /*  hình ảnh phù hợp với kích thước của phần tử */
+            vertical-align: middle; /* Đảm bảo hình ảnh nằm giữa dòng văn bản */
+        }
+
+        .navbar { /*kich thuoc menu*/
+            width: 100%;
+            height: 50px;
+        }
+
+        .navbar-collapse {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav > li {
+            width: auto;
+        }
+
+        .navbar-inverse .navbar-nav > li > a:hover,
+        .navbar-inverse .navbar-nav > li > a:focus,
+        .navbar-inverse .navbar-nav > .open > a,
+        .navbar-inverse .navbar-nav > .open > a:hover,
+        .navbar-inverse .navbar-nav > .open > a:focus {
+            background-color: rgba(0,0,0,0.3);
+        }
+
+        .dropdown-menu {
+            background-color: rgba(0,0,0,0.5);
+        }
+
+            .dropdown-menu > li > a {
+                color: white;
+            }
+
+                .dropdown-menu > li > a:hover,
+                .dropdown-menu > li > a:focus {
+                    background-color: rgba(0,0,0,0.5);
+                    color: white;
+                }
+    </style>
+
+
+    <script>
+        let input = document.querySelector(".iinput");
+        let btn = document.querySelector(".abtn");
+        let parent = document.querySelector(".parent");
+
+        btn.addEventListener("click", () => {
+            parent.classList.toggle("active");
+            input.focus();
+        });
+
+
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

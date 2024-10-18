@@ -1,0 +1,102 @@
+﻿@model DemoDB2.Models.Xe
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<div class="bang">
+    <h2>THÊM MỚI XE</h2>
+    @using (Html.BeginForm("CreateXe", "DichVu", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <table class="table-bordered">
+            <tr>
+                <td>@Html.LabelFor(model => model.XeID)</td>
+                <td>@Html.EditorFor(model => model.XeID, new { htmlAttributes = new { @class = "form-control" } })</td>
+                <td>@Html.ValidationMessageFor(model => model.XeID, "", new { @class = "text-danger" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.HieuXe)</td>
+                <td>@Html.EditorFor(model => model.HieuXe, new { htmlAttributes = new { @class = "form-control" } })</td>
+                <td>@Html.ValidationMessageFor(model => model.HieuXe, "", new { @class = "text-danger" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.BienSoXe)</td>
+                <td>@Html.EditorFor(model => model.BienSoXe, new { htmlAttributes = new { @class = "form-control" } })</td>
+                <td>@Html.ValidationMessageFor(model => model.BienSoXe, "", new { @class = "text-danger" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.TaiXe)</td>
+                <td>@Html.EditorFor(model => model.TaiXe, new { htmlAttributes = new { @class = "form-control" } })</td>
+                <td>@Html.ValidationMessageFor(model => model.TaiXe, "", new { @class = "text-danger" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.SoChoNgoi)</td>
+                <td>@Html.EditorFor(model => model.SoChoNgoi, new { htmlAttributes = new { @class = "form-control" } })</td>
+                <td>@Html.ValidationMessageFor(model => model.SoChoNgoi, "", new { @class = "text-danger" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.GiaXe)</td>
+                <td>@Html.EditorFor(model => model.GiaXe, new { htmlAttributes = new { @class = "form-control" } })</td>
+                <td>@Html.ValidationMessageFor(model => model.GiaXe, "", new { @class = "text-danger" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.UploadImage, "Hình ảnh xe")</td>
+                <td><input type="file" name="UploadImage" onchange="ChangeImage(this, document.getElementById('previewImg'))" /></td>
+                <td><img id="previewImg" src="#" alt="Preview Image" style="width: 100px; height: 100px; display: none;" /></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="submit" value="Tạo mới" class="btn btn-default" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<br />
+<br />
+<br />
+<div>
+    @Html.ActionLink("Back to List", "ViewXe", "DichVu")
+</div>
+
+<script>
+    function ChangeImage(input, imgElement) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imgElement.src = e.target.result;
+                imgElement.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<style>
+    .bang {
+        margin-left: 950px;
+        width: 450px;
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px #ccc;
+    }
+
+        .bang th {
+            background-color: #000;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .bang td {
+            padding: 10px;
+        }
+
+    body {
+        background-image: url('/Content/images/green.jpg');
+        background-repeat: no-repeat;
+        background-size: 50%;
+        margin-right: auto;
+    }
+</style>

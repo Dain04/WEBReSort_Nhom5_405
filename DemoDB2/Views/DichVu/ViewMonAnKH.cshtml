@@ -1,0 +1,231 @@
+﻿@model IEnumerable<DemoDB2.Models.MonAn>
+@{
+    ViewBag.Title = "Dịch Vụ Ăn Uống";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Thực Đơn</h2>
+    @if (TempData["ThongBaoThanhCong"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["ThongBaoThanhCong"]
+        </div>
+    }
+    <div class="row mb-3">
+        <div class="col-md-3 offset-md-3">
+            @using (Html.BeginForm("ViewMonAnKH", "DichVu", FormMethod.Get, new { @class = "form-inline justify-content-center" }))
+            {
+                <div class="input-group">
+                    <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm món ăn..." />
+                    <input type="number" name="minPrice" class="form-control" placeholder="Giá tối thiểu" />
+                    <input type="number" name="maxPrice" class="form-control" placeholder="Giá tối đa" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(item.ImageMonAn))
+                    {
+                        <img src="@Url.Content(item.ImageMonAn)" class="card-img-top" alt="@item.TenMon">
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted">Không có hình ảnh</span>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.TenMon</h5>
+                        <p class="card-text">Giá: @string.Format("{0:N0} VND", item.GiaMon)</p>
+                        @*<button class="btn btn-primary btn-block order-btn" data-id="@item.MonAnID" data-name="@item.TenMon" data-price="@item.GiaMon">
+                                <i class="fas fa-utensils"></i> Đặt món
+                            </button>*@
+                        <button class="btn btn-primary add-to-cart" data-id="@item.MonAnID" data-name="@item.TenMon" data-price="@item.GiaMon">Thêm vào giỏ hàng</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+
+    h2 {
+        color: #343a40;
+        font-weight: 600;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: #007bff;
+            margin: 10px auto 0;
+        }
+
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        height: 100%;
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+    .card-img-top {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-img-top {
+        transform: scale(1.1);
+    }
+
+    .card-body {
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: calc(100% - 250px);
+    }
+
+    .card-title {
+        font-weight: 600;
+        color: #343a40;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+    }
+
+    .card-text {
+        color: #6c757d;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .order-btn {
+        background-color: #007bff;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-top: auto;
+    }
+
+        .order-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .order-btn i {
+            margin-right: 5px;
+        }
+
+    .input-group {
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        border-radius: 25px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        border: none;
+        padding: 15px 20px;
+    }
+
+    .input-group-append .btn {
+        border-radius: 0 25px 25px 0;
+        padding: 15px 25px;
+    }
+
+    @@media (max-width: 768px) {
+        .card-img-top {
+            height: 200px;
+        }
+    }
+</style>
+
+@*<script>
+    $(document).ready(function() {
+        $('.order-btn').click(function() {
+            var monAnId = $(this).data('id');
+            var tenMon = $(this).data('name');
+            var giaMon = $(this).data('price');
+
+            $.ajax({
+                url: '@Url.Action("DatMon", "DichVu")',
+                type: 'POST',
+                data: {
+                    monAnId: monAnId,
+                    tenMon: tenMon,
+                    giaMon: giaMon
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('Đã thêm món ' + tenMon + ' vào giỏ hàng');
+                        // Cập nhật số lượng món trong giỏ hàng trên giao diện
+                        $('#gioHangCount').text(response.gioHangCount);
+                    } else {
+                        alert('Có lỗi xảy ra khi thêm món vào giỏ hàng.');
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra khi kết nối với server.');
+                }
+            });
+        });
+    });
+    </script>*@
+<script>
+$('.add-to-cart').click(function() {
+    var monAnId = $(this).data('id');
+    var tenMon = $(this).data('name');
+    var giaMon = $(this).data('price');
+    $.ajax({
+        url: '@Url.Action("DatMon", "DichVu")',
+        type: 'POST',
+        data: { monAnId: monAnId, tenMon: tenMon, giaMon: giaMon },
+        success: function(response) {
+        if (response.success) {
+        alert(response.message);
+        // Cập nhật số lượng món trong giỏ hàng trên giao diện
+        $('#cart-count').text(response.gioHangCount);
+        } else {
+        alert('Có lỗi xảy ra khi thêm món vào giỏ hàng.');
+        }
+        },
+        error: function() {
+        alert('Có lỗi xảy ra khi kết nối với server.');
+        }
+        });
+});
+</script>

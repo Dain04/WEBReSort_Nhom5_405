@@ -1,0 +1,158 @@
+﻿@model IEnumerable<DemoDB2.Models.LoaiPhong>
+@{
+    ViewBag.Title = "View Loại Phòng";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+<br /><br />
+<h2 class="page-title">Quản lý Loại Phòng</h2>
+
+<div class="action-links">
+    @Html.ActionLink("Create New", "CreateLoaiPhong", null, new { @class = "action-button" })
+    <a href="@Url.Action("TrangChuNV", "HomeNV")" class="action-button">Trang Chu</a>
+</div>
+
+@using (Html.BeginForm("ViewLoaiPhong", "LoaiPhong", FormMethod.Get, new { @class = "search-form" }))
+{
+    <div class="search-container">
+        <input type="text" name="_name" placeholder="Tìm kiếm loại phòng..." />
+        <input type="submit" value="Search" class="search-button" />
+    </div>
+}
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.IDLoai)</th>
+            <th>@Html.DisplayNameFor(model => model.TenLoai)</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.IDLoai)</td>
+                <td>@Html.DisplayFor(modelItem => item.TenLoai)</td>
+                <td class="action-cell">
+                    @Html.ActionLink("Edit", "EditLoaiPhong", new { id = item.IDLoai }, new { @class = "table-action-link edit-link" })
+                    @Html.ActionLink("Delete", "DeleteLoaiPhong", new { id = item.IDLoai }, new { @class = "table-action-link delete-link" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .page-title {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .action-links {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .action-button {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 0 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+        .action-button:hover {
+            background-color: #0056b3;
+        }
+
+    .search-form {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .search-container {
+        display: inline-block;
+    }
+
+        .search-container input[type="text"] {
+            padding: 8px;
+            width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+    .search-button {
+        padding: 8px 16px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+    .action-cell {
+        white-space: nowrap;
+    }
+
+    .table-action-link {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 2px;
+        color: white;
+        text-decoration: none;
+        border-radius: 3px;
+    }
+
+    .edit-link {
+        background-color: #ffc107;
+    }
+
+    .delete-link {
+        background-color: #dc3545;
+    }
+
+    .table-action-link:hover {
+        opacity: 0.8;
+    }
+</style>

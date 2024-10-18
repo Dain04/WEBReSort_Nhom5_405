@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DemoDB2.Models.LichLamViec>
+@{
+    ViewBag.Title = "Xem Lịch Làm Việc";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+<h2>Lịch Làm Việc Của Nhân Viên</h2>
+<p>
+    @Html.ActionLink("Đăng ký lịch mới", "DangKyLichLamViec")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NhanVien.Ten)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Thang)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nam)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SoNgayLamViec)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CaLamViec)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ThoiGianBatDau)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ThoiGianKetThuc)
+        </th>
+        <th>Hành động</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NhanVien.Ten)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Thang)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoNgayLamViec)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CaLamViec)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThoiGianBatDau)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThoiGianKetThuc)
+            </td>
+            <td>
+                @Html.ActionLink("Sửa", "DangKyLichLamViec", new { id = item.LichLamViecID }) |
+                @Html.ActionLink("Xóa", "XoaLichLamViec", new { id = item.LichLamViecID })
+            </td>
+        </tr>
+    }
+</table>

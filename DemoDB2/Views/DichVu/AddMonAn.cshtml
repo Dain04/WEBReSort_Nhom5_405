@@ -1,0 +1,91 @@
+﻿@model DemoDB2.Models.MonAn
+@{
+    ViewBag.Title = "Thêm Món Ăn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center mb-0">THÊM MỚI MÓN ĂN</h2>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("AddMonAn", "DichVu", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @*<div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.MonAnID, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.EditorFor(model => model.MonAnID, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.MonAnID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.TenMon, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.EditorFor(model => model.TenMon, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.TenMon, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.GiaMon, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.EditorFor(model => model.GiaMon, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.GiaMon, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                     
+
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.UploadImage, "Hình ảnh món ăn", new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                <input type="file" name="UploadImage" class="form-control-file" onchange="ChangeImage(this, document.getElementById('previewImg'))" />
+                                <img id="previewImg" src="#" alt="Preview Image" class="mt-2" style="max-width: 200px; display: none;" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-9 offset-sm-3">
+                                <button type="submit" class="btn btn-primary">Tạo mới</button>
+                                @Html.ActionLink("Xem danh sách món ăn", "ViewMonAn", "DichVu", null, new { @class = "btn btn-secondary ml-2" })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ChangeImage(input, imgElement) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imgElement.src = e.target.result;
+                imgElement.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<style>
+    body {
+        background-image: url('/Content/images/green.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+
+    .card {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+</style>
