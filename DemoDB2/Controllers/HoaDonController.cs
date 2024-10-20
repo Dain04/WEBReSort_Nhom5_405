@@ -315,5 +315,6 @@ namespace DemoDB2.Controllers
             ViewBag.TongTien = tongTien;
             return View(hoaDon);
         }
+
     }
 }
