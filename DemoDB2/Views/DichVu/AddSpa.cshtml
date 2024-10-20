@@ -8,7 +8,6 @@
         <h4>Spa</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
         <div class="form-group">
             @Html.LabelFor(model => model.TenDichVu, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -16,7 +15,6 @@
                 @Html.ValidationMessageFor(model => model.TenDichVu, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.MoTa, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -24,7 +22,6 @@
                 @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.GiaDichVu, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

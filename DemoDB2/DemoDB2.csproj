@@ -421,9 +421,7 @@
     <Content Include="Views\DichVu\ViewXeKH.cshtml" />
     <Content Include="Views\Home\DatPhongVIP.cshtml" />
     <Content Include="Views\Home\XacNhanDatPhong.cshtml" />
-    <Content Include="Views\DichVu\DatMon.cshtml" />
     <Content Include="Views\DichVu\XemGioHang.cshtml" />
-    <Content Include="Views\DichVu\CapNhatGioHang.cshtml" />
     <Content Include="Views\Home\AboutUs.cshtml" />
     <Content Include="Views\DichVu\ThanhToan.cshtml" />
     <Content Include="Views\DichVu\ThanhToanXe.cshtml" />
