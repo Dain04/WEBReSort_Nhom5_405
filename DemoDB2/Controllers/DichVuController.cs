@@ -415,5 +415,49 @@ namespace DemoDB2.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+        public ActionResult AddSpa()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddSpa(Spa spa)
+        {
+            try
+            {
+                // Handle image upload
+                if (spa.UploadImage != null && spa.UploadImage.ContentLength > 0)
+                {
+                    string filename = Path.GetFileNameWithoutExtension(spa.UploadImage.FileName);
+                    string extension = Path.GetExtension(spa.UploadImage.FileName);
+                    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                    string path = Path.Combine(Server.MapPath("~/Content/images/"), filename);
+                    spa.ImageSpa = "~/Content/images/" + filename;
+                    spa.UploadImage.SaveAs(path);
+                }
+
+                // Save spa details
+                database.Spa.Add(spa);
+                database.SaveChanges();
+                return RedirectToAction("ViewSpa");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error: " + ex.Message);
+                return View(spa);
+            }
+        }
+
+        public ActionResult ViewSpa()
+        {
+            var spas = database.Spa.ToList();
+            return View(spas);
+        }
+        public ActionResult ViewSpaKH()
+        {
+            var spas = database.Spa.ToList();
+            return View(spas);
+        }
     }
 }

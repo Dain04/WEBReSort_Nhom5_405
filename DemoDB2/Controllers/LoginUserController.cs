@@ -1,11 +1,14 @@
 ﻿using DemoDB2.Models;
+using Microsoft.Owin.Security;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+
 
 namespace DemoDB2.Controllers
 {
@@ -31,8 +34,8 @@ namespace DemoDB2.Controllers
             {
                 database.Configuration.ValidateOnSaveEnabled = false;
                 Session["NameUser"] = _user.Email;
-                Session["PasswordUser"] = _user.MatKhau;
                 Session["ID"] = check.NguoiDungID;
+                Session["ProfileImage"] = check.ImageUser ?? "/Content/Images/default-avatar.png";
                 return RedirectToAction("TrangChu", "Home");
             }
         }
@@ -86,7 +89,7 @@ namespace DemoDB2.Controllers
 
         public new ActionResult Profile()
         {
-            if (Session["NameUser"] == null || Session["PasswordUser"] == null)
+            if (Session["NameUser"] == null || Session["ID"] == null)
             {
                 return RedirectToAction("Index", "LoginUser");
             }
@@ -112,9 +115,8 @@ namespace DemoDB2.Controllers
             }
             return View(user);
         }
-
         [HttpPost]
-        public ActionResult Edit(NguoiDung model, string newPassword, string confirmNewPassword)
+        public ActionResult Edit(NguoiDung model, HttpPostedFileBase UploadImage, string newPassword, string confirmNewPassword)
         {
             if (ModelState.IsValid)
             {
@@ -124,13 +126,11 @@ namespace DemoDB2.Controllers
                     return HttpNotFound();
                 }
 
-                // Cập nhật các trường thông tin khác
                 existingUser.TenNguoiDung = model.TenNguoiDung;
                 existingUser.DiaChi = model.DiaChi;
                 existingUser.SoDienThoai = model.SoDienThoai;
                 existingUser.Email = model.Email;
 
-                // Xử lý mật khẩu
                 if (!string.IsNullOrEmpty(newPassword))
                 {
                     if (newPassword == confirmNewPassword)
@@ -143,27 +143,140 @@ namespace DemoDB2.Controllers
                         return View(model);
                     }
                 }
-                // Nếu mật khẩu mới trống, giữ nguyên mật khẩu cũ
+
+                // Check for the uploaded image
+                if (UploadImage != null && UploadImage.ContentLength > 0)
+                {
+                    // Check file type
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                    var fileExtension = Path.GetExtension(UploadImage.FileName).ToLower();
+
+                    if (!allowedExtensions.Contains(fileExtension))
+                    {
+                        ModelState.AddModelError("UploadImage", "Chỉ hỗ trợ các định dạng hình ảnh: JPEG, PNG.");
+                        return View(model);
+                    }
+
+                    // Check file size (e.g., max size: 2 MB)
+                    const int maxSize = 2 * 1024 * 1024; // 2 MB
+                    if (UploadImage.ContentLength > maxSize)
+                    {
+                        ModelState.AddModelError("UploadImage", "Kích thước tệp không được vượt quá 2 MB.");
+                        return View(model);
+                    }
+
+                    // Save the image
+                    var fileName = Path.GetFileName(UploadImage.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/Images"), fileName);
+                    UploadImage.SaveAs(path);
+                    existingUser.ImageUser = "~/Content/Images/" + fileName;
+                    Session["ProfileImage"] = existingUser.ImageUser;
+                }
 
                 try
                 {
                     database.SaveChanges();
                     return RedirectToAction("Profile");
                 }
-                catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
+                catch (DbEntityValidationException dbEx)
                 {
                     foreach (var validationErrors in dbEx.EntityValidationErrors)
                     {
                         foreach (var validationError in validationErrors.ValidationErrors)
                         {
-                            System.Diagnostics.Debug.WriteLine("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                            System.Diagnostics.Debug.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
                         }
                     }
-                    // Thêm thông báo lỗi vào ModelState
                     ModelState.AddModelError("", "Có lỗi xảy ra khi lưu dữ liệu. Vui lòng kiểm tra lại thông tin.");
                 }
             }
             return View(model);
+        }
+
+        public ActionResult ExternalLogin(string provider)
+        {
+            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "LoginUser"));
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback()
+        {
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            // Kiểm tra xem người dùng đã tồn tại trong cơ sở dữ liệu chưa
+            var user = database.NguoiDung.FirstOrDefault(u => u.Email == loginInfo.Email);
+
+            if (user == null)
+            {
+                // Tạo người dùng mới nếu chưa tồn tại
+                user = new NguoiDung
+                {
+                    Email = loginInfo.Email,
+                    TenNguoiDung = loginInfo.DefaultUserName ?? "Unknown",
+                    MatKhau = "123", // Đặt một mật khẩu mặc định
+
+                };
+                database.NguoiDung.Add(user);
+                try
+                {
+                    await database.SaveChangesAsync();
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in entityValidationErrors.ValidationErrors)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
+                        }
+                    }
+                    // Log the error or handle it appropriately
+                    return RedirectToAction("Error", "Home"); // Redirect to an error page
+                }
+            }
+
+            // Đăng nhập người dùng
+            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = false }, loginInfo.ExternalIdentity);
+
+            // Thiết lập các biến session
+            Session["NameUser"] = user.Email;
+            Session["ID"] = user.NguoiDungID;
+
+
+            return RedirectToAction("TrangChu", "Home");
+        }
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
+
+        private class ChallengeResult : HttpUnauthorizedResult
+        {
+            public ChallengeResult(string provider, string redirectUri)
+            {
+                LoginProvider = provider;
+                RedirectUri = redirectUri;
+            }
+
+            public string LoginProvider { get; set; }
+            public string RedirectUri { get; set; }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+            }
+
+
+
         }
     }
 }

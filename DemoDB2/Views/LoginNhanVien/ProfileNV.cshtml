@@ -27,10 +27,10 @@
                     <td>@Model.Ten</td>
                 </tr>
                 <tr>
-                    <td><i class="fas fa-user-tag"></i> ID Chức Vụ</td>
-                    <td>@Model.ChucVuID</td>
+                    <td><i class="fas fa-user-tag"></i> Tên Chức Vụ</td>
+                    <td>@Model.TenChucVu</td>
                 </tr>
-                <tr>
+                @*<tr>
                     <td><i class="fas fa-money-bill-wave"></i> Lương mới nhất</td>
                     <td>
                         @if (ViewBag.LuongMoiNhat != null)
@@ -44,7 +44,7 @@
                             <span>Chưa có thông tin lương</span>
                         }
                     </td>
-                </tr>
+                </tr>*@
                 <tr>
                     <td><i class="fas fa-map-marker-alt"></i> Vị trí</td>
                     <td>@Model.DiaChi</td>
@@ -70,23 +70,19 @@
         <a href="@Url.Action("EditNV", "LoginNhanVien", new { id = Model.NhanVienID })" class="btn btn-primary">
             <i class="fas fa-edit"></i> Cập nhật hồ sơ
         </a>
-        @*@if (Model.ChucVuID == 1)
-        {
-            <a href="@Url.Action("TaoLichLamViec", "LichLamViec")" class="btn btn-success">
-                <i class="fas fa-calendar-plus"></i> Tạo lịch làm việc
-            </a>
-        }*@
 
 
-        @if (Model.ChucVuID == 2)
+
+        @if (Model.TenChucVu == "Nhân Viên")
         {
             <a href="@Url.Action("DangKyLichLamViec", "LichLamViec")" class="btn btn-success">
                 <i class="fas fa-calendar-plus"></i> Đăng ký lịch làm việc
             </a>
+            <a href="@Url.Action("XemLichLamViec", "LichLamViec")" class="btn btn-success">
+                <i class="fas fa-calendar-plus"></i> Xem Lịch Làm Việc
+            </a>
         }
-        <a href="@Url.Action("XemLichLamViec", "LichLamViec")" class="btn btn-success">
-            <i class="fas fa-calendar-plus"></i> Xem Lịch Làm Việc
-        </a>
+
         <a href="@Url.Action("LogOutUser","LoginUser")" class="btn btn-danger">
             <i class="fas fa-sign-out-alt"></i> Đăng xuất
         </a>

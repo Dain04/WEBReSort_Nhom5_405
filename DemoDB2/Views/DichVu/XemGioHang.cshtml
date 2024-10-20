@@ -44,12 +44,15 @@
                 </tr>
             </tfoot>
         </table>
-        <a href="@Url.Action("ThanhToan", "DichVu")" class="btn btn-primary">Thanh Toán</a>    }
+        <a href="@Url.Action("ThanhToan", "DichVu")" class="btn btn-primary">Thanh Toán</a> }
     else
     {
-        <p>Giỏ hàng của bạn đang trống.</p>
-    }
-</div>
+        <p style="font-size:20px">Giỏ hàng của bạn đang trống. <a href="@Url.Action("ViewMonAnKH","DichVu")"> Thêm vào giỏ hàng ngay</a></p> 
+            <a href="@Url.Action("ViewMonAnKH","DichVu")">
+                <img src="https://i.pinimg.com/236x/92/8b/b3/928bb331a32654ba76a4fc84386f3851.jpg">
+            </a>
+            }
+    </div>
 
 @section Scripts {
     <script>

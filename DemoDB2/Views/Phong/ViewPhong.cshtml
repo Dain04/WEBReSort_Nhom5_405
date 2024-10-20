@@ -7,6 +7,7 @@
 }
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <div class="container mt-4 table-container">
+    <br /><br />
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Danh Sách Phòng</h2>
         <div>
@@ -61,8 +62,10 @@
                         <td>@Html.DisplayFor(modelItem => pro.LoaiP)</td>
                         <td>@Html.DisplayFor(modelItem => pro.Gia)</td>
                         <td>
-                            @Html.ActionLink("Sửa", "EDITPhong", new { id = pro.PhongID }, new { @class = "btn btn-primary btn-sm" })
+                            @Html.ActionLink("Sửa", "EditPhong", new { id = pro.PhongID }, new { @class = "btn btn-primary btn-sm" })
+                            @Html.ActionLink("Xóa", "DeletePhong", new { id = pro.PhongID }, new { @class = "btn btn-primary btn-sm" })
                         </td>
+
                     </tr>
                 }
             </tbody>

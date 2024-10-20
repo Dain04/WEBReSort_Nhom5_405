@@ -39,7 +39,8 @@ namespace DemoDB2.Controllers
                 Session["NameUser"] = _user.Email;
                 Session["PasswordUser"] = _user.MatKhau;
                 Session["NhanVienID"] = check.NhanVienID;
-                Session["ChucVuID"] = check.ChucVuID; 
+                Session["ChucVuID"] = check.ChucVuID;
+                Session["TenChucVu"] = check.ChucVu.TenChucVu;
                 return RedirectToAction("TrangChuNV", "HomeNV");
             }
         }
@@ -92,7 +93,6 @@ namespace DemoDB2.Controllers
             Session.Abandon();
             return RedirectToAction("LoginNV", "LoginNhanVien");
         }
-
         public ActionResult ProfileNV()
         {
             if (Session["NameUser"] == null || Session["PasswordUser"] == null)
@@ -107,17 +107,23 @@ namespace DemoDB2.Controllers
             }
             int id = (int)Session["NhanVienID"];
 
-            NhanVien user = database.NhanVien.Where(s => s.Email == nameUser && s.NhanVienID == id).FirstOrDefault();
+            var user = database.NhanVien
+                .Include(nv => nv.ChucVu)
+                .FirstOrDefault(s => s.Email == nameUser && s.NhanVienID == id);
 
             if (user == null)
             {
                 return RedirectToAction("LoginNV", "LoginNhanVien");
             }
+
+            
+            user.TenChucVu = user.ChucVu?.TenChucVu;
+
             var luongMoiNhat = database.Luong
-             .Where(l => l.NhanVienID == id)
-             .OrderByDescending(l => l.Nam)
-             .ThenByDescending(l => l.Thang)
-             .FirstOrDefault();
+                .Where(l => l.NhanVienID == id)
+                .OrderByDescending(l => l.Nam)
+                .ThenByDescending(l => l.Thang)
+                .FirstOrDefault();
 
             ViewBag.LuongMoiNhat = luongMoiNhat;
 
@@ -184,12 +190,35 @@ namespace DemoDB2.Controllers
         }
         public ActionResult ViewNV()
         {
-            if (Session["ChucVuID"] == null || (int)Session["ChucVuID"] == 2)
+            if (Session["TenChucVu"] == null || (string)Session["TenChucVu"] != "Giám Đốc")
             {
                 ViewBag.ErrorMessage = "Bạn không có quyền truy cập vào trang này.";
                 return View("AccessDenied");
             }
-            var nhanVien = database.NhanVien.ToList();
+            var nhanVien = database.NhanVien
+          .Include(nv => nv.ChucVu)
+          .Select(nv => new
+          {
+              NhanVienID = nv.NhanVienID,
+              Ten = nv.Ten,
+              DiaChi = nv.DiaChi,
+              SoDienThoai = nv.SoDienThoai,
+              Email = nv.Email,
+              ChucVuID = nv.ChucVuID,
+              TenChucVu = nv.ChucVu.TenChucVu
+          })
+          .ToList()
+          .Select(x => new NhanVien
+          {
+              NhanVienID = x.NhanVienID,
+              Ten = x.Ten,
+              DiaChi = x.DiaChi,
+              SoDienThoai = x.SoDienThoai,
+              Email = x.Email,
+              ChucVuID = x.ChucVuID,
+              TenChucVu = x.TenChucVu
+          })
+          .ToList();
             return View(nhanVien);
         }
         // GET: LoginNhanVien/DeleteNV/5
@@ -218,6 +247,17 @@ namespace DemoDB2.Controllers
             database.NhanVien.Remove(nhanVien);
             database.SaveChanges();
             return RedirectToAction("ViewNV");
+        }
+        public ActionResult CustomerManagement()
+        {
+            if (Session["TenChucVu"] == null || (string)Session["TenChucVu"] != "Giám Đốc")
+            {
+                ViewBag.ErrorMessage = "Bạn không có quyền truy cập vào trang này.";
+                return View("AccessDenied");
+            }
+            var customers = database.NguoiDung.ToList();
+            return View(customers);
+        
         }
     }
 }

@@ -1,0 +1,37 @@
+﻿@model DemoDB2.Models.Phong
+<h3>Bạn có chắc chắn muốn xóa phòng này?</h3>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    </div>
+}
+
+<div>
+    <h4>Thông tin phòng</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.PhongID)</dt>
+        <dd>@Html.DisplayFor(model => model.PhongID)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.TinhTrang)</dt>
+        <dd>@Html.DisplayFor(model => model.TinhTrang)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.LoaiP)</dt>
+        <dd>@Html.DisplayFor(model => model.LoaiP)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Gia)</dt>
+        <dd>@Html.DisplayFor(model => model.Gia)</dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Xóa" class="btn btn-danger" />
+            @Html.ActionLink("Quay lại danh sách", "ViewPhong", null, new { @class = "btn btn-default" })
+        </div>
+    }
+</div>

@@ -3,7 +3,6 @@
     ViewBag.Title = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="profile-container">
     <div class="profile-header">
         <h1>Thông tin cá nhân</h1>
@@ -11,10 +10,16 @@
             <i class="fas fa-arrow-left"></i> Trở Về
         </a>
     </div>
-
     <div class="profile-content">
-        <div class="profile-avatar">
-            <i class="fas fa-user-circle"></i>
+        <div class="profile-avatar" id="profile-avatar">
+            @if (!string.IsNullOrEmpty(Model.ImageUser))
+            {
+                <img src="@Url.Content(Model.ImageUser)" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
+            }
+            else
+            {
+                <i class="fas fa-user-circle" style="font-size: 150px;"></i>
+            }
         </div>
         <div class="profile-info">
             <table class="profile-table">
@@ -41,7 +46,6 @@
             </table>
         </div>
     </div>
-
     <div class="profile-actions">
         <a href="@Url.Action("Edit", "LoginUser", new { id = Model.NguoiDungID })" class="btn btn-primary">
             <i class="fas fa-edit"></i> Cập nhật hồ sơ
@@ -153,6 +157,7 @@
     .fas {
         margin-right: 5px;
     }
+ 
 </style>
 
 <!-- Add Font Awesome for icons -->
