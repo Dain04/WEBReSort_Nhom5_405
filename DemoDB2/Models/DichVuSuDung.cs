@@ -24,6 +24,7 @@ namespace DemoDB2.Models
         public Nullable<int> XeID { get; set; }
         public Nullable<int> MonAnID { get; set; }
         public Nullable<int> GiatUiID { get; set; }
+        public Nullable<int> SpaID { get; set; }
         public Nullable<int> HoaDonID { get; set; }
         public Nullable<int> NhanVienID { get; set; }
         public Nullable<int> NguoiDungID { get; set; }
@@ -34,6 +35,7 @@ namespace DemoDB2.Models
         public virtual MonAn MonAn { get; set; }
         public virtual NguoiDung NguoiDung { get; set; }
         public virtual NhanVien NhanVien { get; set; }
+        public virtual Spa Spa { get; set; }
         public virtual Xe Xe { get; set; }
     }
 }

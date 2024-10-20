@@ -20,13 +20,14 @@ namespace DemoDB2.Models
         {
             this.DichVuSuDung = new HashSet<DichVuSuDung>();
         }
-        public HttpPostedFileBase UploadImage { get; set; }
+    
         public int MonAnID { get; set; }
         public string TenMon { get; set; }
         public Nullable<decimal> GiaMon { get; set; }
         public Nullable<int> IDBan { get; set; }
         public string ImageMonAn { get; set; }
-    
+        public HttpPostedFileBase UploadImage { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DichVuSuDung> DichVuSuDung { get; set; }
     }

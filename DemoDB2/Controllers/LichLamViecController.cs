@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace DemoDB2.Controllers
 {
@@ -12,123 +13,140 @@ namespace DemoDB2.Controllers
 
         public ActionResult DangKyLichLamViec()
         {
-            return View();
+            return View(new LichLamViec());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DangKyLichLamViec(LichLamViec lichLamViec)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
+                // Kiểm tra Session trước
+                if (Session["NhanVienID"] == null)
                 {
-                    if (lichLamViec.SoNgayLamViec < 25 || lichLamViec.SoNgayLamViec > 30)
-                    {
-                        ModelState.AddModelError("SoNgayLamViec", "Số ngày làm việc phải từ 25 đến 30 ngày.");
-                        return View(lichLamViec);
-                    }
-                    // Lấy NhanVienID của người đăng nhập hiện tại
-                    int nhanVienID = (int)Session["NhanVienID"];
-                    lichLamViec.NhanVienID = nhanVienID;
-
-                    // Tính toán ThoiGianBatDau và ThoiGianKetThuc dựa trên CaLamViec
-                    switch (lichLamViec.CaLamViec)
-                    {
-                        case 1:
-                            lichLamViec.ThoiGianBatDau = new TimeSpan(6, 0, 0);
-                            lichLamViec.ThoiGianKetThuc = new TimeSpan(12, 0, 0);
-                            break;
-                        case 2:
-                            lichLamViec.ThoiGianBatDau = new TimeSpan(12, 0, 0);
-                            lichLamViec.ThoiGianKetThuc = new TimeSpan(18, 0, 0);
-                            break;
-                        case 3:
-                            lichLamViec.ThoiGianBatDau = new TimeSpan(18, 0, 0);
-                            lichLamViec.ThoiGianKetThuc = new TimeSpan(0, 0, 0);
-                            break;
-                        case 4:
-                            lichLamViec.ThoiGianBatDau = new TimeSpan(0, 0, 0);
-                            lichLamViec.ThoiGianKetThuc = new TimeSpan(6, 0, 0);
-                            break;
-                    }
-
-                    // Kiểm tra xem đã có lịch làm việc cho tháng và năm này chưa
-                    var existingSchedule = database.LichLamViec.FirstOrDefault(l =>
-                        l.NhanVienID == nhanVienID &&
-                        l.Thang == lichLamViec.Thang &&
-                        l.Nam == lichLamViec.Nam);
-
-                    if (existingSchedule != null)
-                    {
-                        // Cập nhật lịch làm việc hiện có
-                        existingSchedule.SoNgayLamViec = lichLamViec.SoNgayLamViec;
-                        existingSchedule.CaLamViec = lichLamViec.CaLamViec;
-                        existingSchedule.ThoiGianBatDau = lichLamViec.ThoiGianBatDau;
-                        existingSchedule.ThoiGianKetThuc = lichLamViec.ThoiGianKetThuc;
-                        database.SaveChanges();
-                    }
-                    else
-                    {
-                        // Thêm lịch làm việc mới
-                        database.LichLamViec.Add(lichLamViec);
-                        database.SaveChanges();
-                    }
-
-                    // Tính và cập nhật lương
-                    decimal tongLuong = TinhLuong(lichLamViec);
-                    var luong = database.Luong.FirstOrDefault(l => l.NhanVienID == nhanVienID && l.Thang == lichLamViec.Thang && l.Nam == lichLamViec.Nam);
-                    if (luong == null)
-                    {
-                        luong = new Luong
-                        {
-                            NhanVienID = nhanVienID,
-                            Thang = lichLamViec.Thang,
-                            Nam = lichLamViec.Nam,
-                            LuongMotGio = 35000,
-                            TongLuong = tongLuong
-                        };
-                        database.Luong.Add(luong);
-                    }
-                    else
-                    {
-                        luong.TongLuong = tongLuong;
-                    }
-                    database.SaveChanges();
-
-                    return RedirectToAction("XemLichLamViec");
+                    ModelState.AddModelError("", "Vui lòng đăng nhập lại!");
+                    return View(lichLamViec);
                 }
 
-                catch (Exception ex)
+                // Gán NhanVienID từ Session
+                lichLamViec.NhanVienID = (int)Session["NhanVienID"];
+
+                // Tính số ca làm việc
+                int soCa = 0;
+                if (lichLamViec.CaSang) soCa++;
+                if (lichLamViec.CaChieu) soCa++;
+                if (lichLamViec.CaToi) soCa++;
+                if (lichLamViec.CaDem) soCa++;
+
+                // Validate số ca làm việc
+                if (soCa == 0)
                 {
-                    ModelState.AddModelError("", "Có lỗi xảy ra khi đăng ký lịch làm việc: " + ex.Message);
+                    ModelState.AddModelError("", "Vui lòng chọn ít nhất 1 ca làm việc!");
+                    return View(lichLamViec);
                 }
+
+                if (soCa > 2)
+                {
+                    ModelState.AddModelError("", "Chỉ được đăng ký tối đa 2 ca một ngày!");
+                    return View(lichLamViec);
+                }
+
+                // Validate ngày tháng
+                if (lichLamViec.Ngay < 1 || lichLamViec.Ngay > 31)
+                {
+                    ModelState.AddModelError("Ngay", "Ngày không hợp lệ!");
+                    return View(lichLamViec);
+                }
+
+                if (lichLamViec.Thang < 1 || lichLamViec.Thang > 12)
+                {
+                    ModelState.AddModelError("Thang", "Tháng không hợp lệ!");
+                    return View(lichLamViec);
+                }
+
+                if (lichLamViec.Nam < 2024)
+                {
+                    ModelState.AddModelError("Nam", "Năm không hợp lệ!");
+                    return View(lichLamViec);
+                }
+
+                // Kiểm tra lịch làm việc đã tồn tại
+                bool existingSchedule = database.LichLamViec.Any(l =>
+                    l.NhanVienID == lichLamViec.NhanVienID &&
+                    l.Ngay == lichLamViec.Ngay &&
+                    l.Thang == lichLamViec.Thang &&
+                    l.Nam == lichLamViec.Nam);
+
+                if (existingSchedule)
+                {
+                    ModelState.AddModelError("", "Bạn đã đăng ký lịch làm việc cho ngày này!");
+                    return View(lichLamViec);
+                }
+
+                // Cập nhật số ca làm việc
+                lichLamViec.SoCaLamViec = soCa;
+
+                // Thêm vào database
+                database.LichLamViec.Add(lichLamViec);
+                database.SaveChanges();
+
+                TempData["Success"] = "Đăng ký lịch làm việc thành công!";
+                return RedirectToAction("XemLichLamViec");
             }
-
-            return View(lichLamViec);
-        }
-
-        private decimal TinhLuong(LichLamViec lichLamViec)
-        {
-            int soGioLamViecMoiNgay = 6; // Mỗi ca làm việc 6 tiếng
-            decimal luongMotGio = 35000;
-            decimal tongLuong = lichLamViec.SoNgayLamViec * soGioLamViecMoiNgay * luongMotGio;
-            return tongLuong;
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
+                return View(lichLamViec);
+            }
         }
 
         public ActionResult XemLichLamViec()
         {
             try
             {
+                if (Session["NhanVienID"] == null || Session["TenChucVu"] == null)
+                {
+                    return RedirectToAction("LoginNV", "LoginNhanVien");
+                }
+
                 int nhanVienID = (int)Session["NhanVienID"];
-                var lichLamViec = database.LichLamViec.Where(l => l.NhanVienID == nhanVienID).ToList();
-                return View(lichLamViec);
+                string tenChucVu = Session["TenChucVu"].ToString();
+
+            
+                System.Diagnostics.Debug.WriteLine("Chức vụ hiện tại: " + tenChucVu);
+
+                if (tenChucVu.Equals("Quản Lý", StringComparison.OrdinalIgnoreCase) ||
+                    tenChucVu.Equals("Giám Đốc", StringComparison.OrdinalIgnoreCase))
+                {
+                    var allLichLamViec = database.LichLamViec
+                        .Include(l => l.NhanVien)
+                        .OrderByDescending(l => l.Nam)
+                        .ThenByDescending(l => l.Thang)
+                        .ThenByDescending(l => l.Ngay)
+                        .ToList();
+                    ViewBag.IsManager = true;
+                    return View(allLichLamViec);
+                }
+                else
+                {
+                    var lichLamViec = database.LichLamViec
+                        .Where(l => l.NhanVienID == nhanVienID)
+                        .OrderByDescending(l => l.Nam)
+                        .ThenByDescending(l => l.Thang)
+                        .ThenByDescending(l => l.Ngay)
+                        .ToList();
+                    ViewBag.IsManager = false;
+                    return View(lichLamViec);
+                }
             }
-            catch (InvalidCastException)
+            catch (Exception)
             {
                 return RedirectToAction("LoginNV", "LoginNhanVien");
             }
         }
+
+ 
 
         protected override void Dispose(bool disposing)
         {
@@ -150,5 +168,4 @@ namespace DemoDB2.Controllers
             }
         }
     }
-   
 }

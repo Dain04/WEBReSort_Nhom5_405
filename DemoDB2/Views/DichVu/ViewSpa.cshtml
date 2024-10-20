@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DemoDB2.Models.Spa>
+@{
+    ViewBag.Title = "Quản Lý Dịch Vụ Spa";
+}
+<link rel="stylesheet" href="~/Content/ViewSpaNV.css" />
+<div class="container-fluid mt-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h2 class="text-primary"><i class="fas fa-spa mr-2"></i>Quản Lý Dịch Vụ Spa</h2>
+            <div class="col-md-6 text-md-right">
+                @Html.ActionLink("Thêm Dịch Vụ Mới", "AddSpa", null, new { @class = "btn btn-success" })
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Hình Ảnh</th>
+                            <th>Tên Dịch Vụ</th>
+                            <th>Mô Tả</th>
+                            <th>Giá</th>
+                            <th>Thời Gian</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <img src="@Url.Content(item.ImageSpa)" alt="@item.TenDichVu" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                </td>
+                                <td>@item.TenDichVu</td>
+                                <td>@(item.MoTa?.Length > 100 ? item.MoTa.Substring(0, 97) + "..." : item.MoTa)</td>
+                                <td>@string.Format("{0:N0} VNĐ", item.GiaDichVu)</td>
+                                <td>@item.ThoiGianDichVu phút</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        @Html.ActionLink("Chỉnh Sửa", "EditSpa", new { id = item.SpaID }, new { @class = "btn btn-outline-primary btn-sm" })
+                                        @Html.ActionLink("Xóa", "DeleteSpa", new { id = item.SpaID }, new { @class = "btn btn-outline-danger btn-sm", onclick = "return confirmDelete();" })
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+@section Scripts {
+    <script>
+        function confirmDelete() {
+            return confirm('Bạn có chắc chắn muốn xóa dịch vụ này?');
+        }
+
+        $(document).ready(function () {
+            $('table').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Vietnamese.json"
+                },
+                "pageLength": 10,
+                "ordering": true,
+                "responsive": true
+            });
+        });
+    </script>
+}

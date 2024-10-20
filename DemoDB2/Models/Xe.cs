@@ -24,12 +24,12 @@ namespace DemoDB2.Models
         public int XeID { get; set; }
         public string HieuXe { get; set; }
         public string BienSoXe { get; set; }
-        public HttpPostedFileBase UploadImage { get; set; }
         public string TaiXe { get; set; }
         public Nullable<int> SoChoNgoi { get; set; }
         public Nullable<decimal> GiaXe { get; set; }
         public string ImageXe { get; set; }
-    
+        public HttpPostedFileBase UploadImage { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DichVuSuDung> DichVuSuDung { get; set; }
     }

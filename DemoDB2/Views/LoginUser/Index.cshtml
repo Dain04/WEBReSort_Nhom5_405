@@ -30,7 +30,7 @@
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.MatKhau)
+                @Html.Label("MatKhau", "Mật Khẩu")
                 <div class="password-input">
                     @Html.PasswordFor(model => model.MatKhau, new { @class = "form-control", id = "MatKhau", placeholder = "Nhập mật khẩu" })
                     <button type="button" onclick="togglePasswordVisibility()" id="toggleButton" class="toggle-password">
@@ -46,6 +46,18 @@
             <div class="form-group">
                 <input type="submit" value="Đăng nhập Khách Hàng" class="btn btn-primary btn-block" />
             </div>
+
+        }
+
+        @using (Html.BeginForm("ExternalLogin", "LoginUser", new { provider = "Google" }, FormMethod.Post))
+        {
+            <button type="submit" class="btn btn-danger">
+                <i class="fab fa-google"></i> Sign in with Google
+            </button>
+        }
+        <br />
+        @using (Html.BeginForm("LoginAcount", "LoginUser", FormMethod.Post, new { @class = "form" }))
+        {
             <div class="form-group">
                 <p>Nếu bạn là Nhân Viên</p>
                 <a href="@Url.Action("LoginNV", "LoginNhanVien")" class="btn btn-secondary btn-block">Đăng nhập Nhân Viên</a>

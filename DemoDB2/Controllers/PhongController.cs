@@ -5,7 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using DemoDB2.Models;
 using PagedList;
-using static DemoDB2.Models.Phong;
+
 
 namespace DemoDB2.Controllers
 {
@@ -76,7 +76,7 @@ namespace DemoDB2.Controllers
             var model = database.Phong.OrderBy(p => p.PhongID).ToPagedList(pageNumber, pageSize);
             return View(model);
         }
-        public ActionResult EDITPhong(int id)
+        public ActionResult EditPhong(int id)
         {
             if (id == 0)
             {
@@ -96,27 +96,43 @@ namespace DemoDB2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EDITPhong(Phong phong)
+        public ActionResult EditPhong(Phong phong)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    var existingPhong = database.Phong.Find(phong.PhongID);
+                    if (existingPhong == null)
+                    {
+                        return HttpNotFound();
+                    }
+
                     if (phong.UploadImage != null && phong.UploadImage.ContentLength > 0)
                     {
                         string filename = Path.GetFileNameWithoutExtension(phong.UploadImage.FileName);
                         string extension = Path.GetExtension(phong.UploadImage.FileName);
-                        filename = filename + extension;
+                        filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
                         string path = Path.Combine(Server.MapPath("~/Content/images/"), filename);
                         phong.ImagePhong = "~/Content/images/" + filename;
                         phong.UploadImage.SaveAs(path);
                     }
+                    else
+                    {
+                        // Giữ nguyên ảnh cũ nếu không có ảnh mới được tải lên
+                        phong.ImagePhong = existingPhong.ImagePhong;
+                    }
 
-                    database.Entry(phong).State = System.Data.Entity.EntityState.Modified;
+                    // Cập nhật các trường khác
+                    existingPhong.LoaiP = phong.LoaiP;
+                    existingPhong.TinhTrang = phong.TinhTrang;
+                    existingPhong.Gia = phong.Gia;
+                    existingPhong.ImagePhong = phong.ImagePhong;
+
+                    database.Entry(existingPhong).State = System.Data.Entity.EntityState.Modified;
                     database.SaveChanges();
                     return RedirectToAction("ViewPhong");
                 }
-
 
                 ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai", phong.LoaiP);
                 return View(phong);
@@ -124,7 +140,6 @@ namespace DemoDB2.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Error: " + ex.Message);
-
                 ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai", phong.LoaiP);
                 return View(phong);
             }
@@ -181,6 +196,61 @@ namespace DemoDB2.Controllers
             }
 
             return View(datPhong);
+        }
+        public ActionResult DeletePhong(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Phong phong = database.Phong.Find(id);
+            if (phong == null)
+            {
+                return HttpNotFound();
+            }
+            return View(phong);
+        }
+
+        [HttpPost, ActionName("DeletePhong")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeletePhongConfirmed(int id)
+        {
+            try
+            {
+                Phong phong = database.Phong.Find(id);
+                if (phong == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Check if the room is currently booked
+                var bookings = database.DatPhong.Where(dp => dp.PhongID == id && dp.NgayTraPhong >= DateTime.Now).ToList();
+                if (bookings.Any())
+                {
+                    ModelState.AddModelError("", "Không thể xóa phòng này vì đang có đặt phòng.");
+                    return View(phong);
+                }
+
+                // Delete associated bookings and invoices
+                var relatedBookings = database.DatPhong.Where(dp => dp.PhongID == id);
+                foreach (var booking in relatedBookings)
+                {
+                    var relatedInvoices = database.HoaDon.Where(hd => hd.PhongID == id && hd.KhachHangID == booking.NguoiDungID);
+                    database.HoaDon.RemoveRange(relatedInvoices);
+                }
+                database.DatPhong.RemoveRange(relatedBookings);
+
+                // Delete the room
+                database.Phong.Remove(phong);
+                database.SaveChanges();
+
+                return RedirectToAction("ViewPhong");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Lỗi khi xóa phòng: " + ex.Message);
+                return View(database.Phong.Find(id));
+            }
         }
     }
 }

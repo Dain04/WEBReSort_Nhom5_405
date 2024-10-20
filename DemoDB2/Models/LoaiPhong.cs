@@ -15,7 +15,7 @@ namespace DemoDB2.Models
     public partial class LoaiPhong
     {
         public int IDLoai { get; set; }
-        public string TenLoai { get; set; }
         public List<LoaiPhong> ListLoai { get; internal set; }
+        public string TenLoai { get; set; }
     }
 }

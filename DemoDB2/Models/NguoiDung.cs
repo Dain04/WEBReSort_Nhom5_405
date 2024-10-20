@@ -11,7 +11,8 @@ namespace DemoDB2.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Web;
+
     public partial class NguoiDung
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -28,7 +29,9 @@ namespace DemoDB2.Models
         public string SoDienThoai { get; set; }
         public string Email { get; set; }
         public string MatKhau { get; set; }
-    
+        public string ImageUser { get; set; }
+        public HttpPostedFileBase UploadImage { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DatPhong> DatPhong { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<DemoDB2.Models.NguoiDung>
+@{
+    ViewBag.Title = "Danh Sách Khách Hàng";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+<br />
+<br />
+<br />
+<br />
+<h2>@ViewBag.Title</h2>
+<style>
+    .customer-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .customer-card {
+        width: 48%;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #f9f9f9;
+    }
+
+        .customer-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+    .customer-info {
+        margin-bottom: 5px;
+    }
+</style>
+<div class="customer-container">
+    @foreach (var customer in Model)
+    {
+        <div class="customer-card">
+            <h3>@customer.TenNguoiDung</h3>
+            <div class="customer-info"><strong>ID:</strong> @customer.NguoiDungID</div>
+            <div class="customer-info"><strong>Tên:</strong> @customer.TenNguoiDung</div>
+            <div class="customer-info"><strong>Địa chỉ:</strong> @customer.DiaChi</div>
+            <div class="customer-info"><strong>SĐT:</strong> @customer.SoDienThoai</div>
+            <div class="customer-info"><strong>Email:</strong> @customer.Email</div>
+        </div>
+    }
+</div>

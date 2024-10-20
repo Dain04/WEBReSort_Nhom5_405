@@ -17,15 +17,7 @@
                         @Html.AntiForgeryToken()
 
                         <div class="form-group row mb-3">
-                            @Html.LabelFor(model => model.PhongID, new { @class = "col-sm-3 col-form-label" })
-                            <div class="col-sm-9">
-                                @Html.EditorFor(model => model.PhongID, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.PhongID, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-3">
-                            @Html.LabelFor(model => model.LoaiP, new { @class = "col-sm-3 col-form-label" })
+                            @Html.Label("LoaiP","Loại Phòng", new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
                                 @Html.DropDownListFor(model => model.LoaiP, ViewBag.LoaiPhongList as SelectList, "Chọn loại phòng", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.LoaiP, "", new { @class = "text-danger" })
@@ -33,7 +25,7 @@
                         </div>
 
                         <div class="form-group row mb-3">
-                            @Html.LabelFor(model => model.TinhTrang, new { @class = "col-sm-3 col-form-label" })
+                            @Html.Label("TinhTrang","Tình Trạng", new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
                                 @Html.DropDownListFor(model => model.TinhTrang,
                                     new List<SelectListItem>
@@ -46,7 +38,7 @@
                         </div>
 
                         <div class="form-group row mb-3">
-                            @Html.LabelFor(model => model.Gia, new { @class = "col-sm-3 col-form-label" })
+                            @Html.Label("Gia","Giá", new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
                                 @Html.EditorFor(model => model.Gia, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Gia, "", new { @class = "text-danger" })
@@ -93,6 +85,7 @@
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+
     }
 
     .card {
