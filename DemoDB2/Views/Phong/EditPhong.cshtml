@@ -14,7 +14,7 @@
                 <div class="card-body">
                     @using (Html.BeginForm("EditPhong", "Phong", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
-                        @Html.AntiForgeryToken()
+                        @Html.AntiForgeryToken() 
                         @Html.HiddenFor(model => model.PhongID)
 
                         <div class="form-group row mb-3">

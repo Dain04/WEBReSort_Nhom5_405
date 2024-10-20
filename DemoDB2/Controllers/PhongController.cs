@@ -11,7 +11,7 @@ namespace DemoDB2.Controllers
 {
     public class PhongController : Controller
     {
-        QLKSEntities database = new QLKSEntities();
+        QLKSEntities database = new QLKSEntities(); 
 
         public ActionResult SelectLoai()
         {
