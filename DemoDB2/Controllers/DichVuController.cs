@@ -157,7 +157,7 @@ namespace DemoDB2.Controllers
             else
                 return View(database.MonAn.Where(s => s.TenMon.Contains(_name)).ToList());
         }
-        /////////////////////////////////////////////////////////////////////////Xe////////
+        //////////////////////Xe////////
         public ActionResult CreateXe()
         {
             return View();
