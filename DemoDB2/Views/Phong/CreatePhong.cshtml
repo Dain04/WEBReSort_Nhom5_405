@@ -15,7 +15,7 @@
                     @using (Html.BeginForm("CreatePhong", "Phong", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
-
+                     
                         <div class="form-group row mb-3">
                             @Html.Label("LoaiP","Loại Phòng", new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
