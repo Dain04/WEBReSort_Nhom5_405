@@ -430,6 +430,7 @@
     <Content Include="Views\DichVu\AddSpa.cshtml" />
     <Content Include="Views\DichVu\ViewSpa.cshtml" />
     <Content Include="Views\DichVu\ViewSpaKH.cshtml" />
+    <Content Include="Views\ChucVu\DeleteChucVu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

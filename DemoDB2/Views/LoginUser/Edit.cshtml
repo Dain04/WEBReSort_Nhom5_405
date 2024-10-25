@@ -10,6 +10,7 @@
             <i class="fas fa-arrow-left"></i> Trở Về
         </a>
     </div>
+
     @using (Html.BeginForm("Edit", "LoginUser", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
@@ -55,6 +56,7 @@
                         <td>
                             @Html.EditorFor(model => model.SoDienThoai, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.SoDienThoai, "", new { @class = "text-danger" })
+                            <small class="text-muted">Số điện thoại phải có 10 số</small>
                         </td>
                     </tr>
                     <tr>
@@ -96,6 +98,16 @@
     actualBtn.addEventListener('change', function () {
         fileChosen.textContent = this.files[0] ? this.files[0].name : 'Chưa chọn file nào';
     });
+
+    /*Số điện thoại*/
+    $(document).ready(function () {
+        $('#SoDienThoai').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
+    });
 </script>
 <style>
 
@@ -122,25 +134,26 @@
     #UploadImage {
         display: none;
     }
+
     #file-chosen {
         display: inline-block;
         margin-top: 10px;
         font-size: 14px;
-        color: #7f8c8d; 
+        color: #7f8c8d;
     }
+
     .avatar-image {
-        width: 150px; 
-        height: 150px; 
-        border-radius: 50%; 
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
         object-fit: cover;
         margin-top: 10px;
     }
 
     .avatar-icon {
-        font-size: 120px; 
+        font-size: 120px;
         color: #3498db;
     }
-
 </style>
 <link rel="stylesheet" href="~/Content/EditLoginUser.css">
 <!-- Add Font Awesome for icons -->
