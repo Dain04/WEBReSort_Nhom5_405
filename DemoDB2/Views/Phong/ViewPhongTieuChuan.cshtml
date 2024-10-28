@@ -57,9 +57,15 @@
                     <div class="room-info">
                         <h3>Phòng @phong.PhongID</h3>
                         <p class="room-price">Giá: @phong.Gia</p>
+
+                        @* Thêm hiển thị tình trạng phòng *@
+                        <p class="room-status @(phong.TinhTrangPhong?.TenTinhTrang?.ToLower().Replace(" ", "-"))">
+                            Tình trạng: @(phong.TinhTrangPhong?.TenTinhTrang ?? "Chưa có")
+                        </p>
+
                         @if (Session["ID"] != null)
                         {
-                            <a href="@Url.Action("DatPhong", "Phong", new { id = phong.PhongID })"
+                            <a href="@Url.Action("DatPhong", new { id = phong.PhongID })"
                                class="btn btn-book"
                                data-id="@phong.PhongID"
                                data-price="@phong.Gia">Đặt Phòng</a>
