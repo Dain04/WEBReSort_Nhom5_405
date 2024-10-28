@@ -23,16 +23,7 @@
                         </tr>
                         <tr>
                             <th>Loại phòng:</th>
-                            <td>
-                                @if (Model.Phong != null && Model.Phong.LoaiPhong != null)
-                                {
-                                @($"{Model.Phong.LoaiPhong.TenLoai} - {Model.Phong.PhongID}")
-                                }
-                                else
-                                {
-                                @("N/A")
-                                }
-                            </td>
+                            <td>@ViewBag.LoaiPhong</td>
                         </tr>
                         <tr>
                             <th>Ngày nhận phòng:</th>
@@ -79,3 +70,4 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 </style>
+

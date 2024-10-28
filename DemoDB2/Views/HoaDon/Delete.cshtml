@@ -57,13 +57,13 @@
         <div class="card-footer">
             @using (Html.BeginForm())
             {
-            @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-danger mr-2">
-                <i class="fas fa-trash-alt mr-2"></i>Xác nhận xóa
-            </button>
-            <a href="@Url.Action("Index")" class="btn btn-secondary">
-                <i class="fas fa-arrow-left mr-2"></i>Quay lại danh sách
-            </a>
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger mr-2">
+                    <i class="fas fa-trash-alt mr-2"></i>Xác nhận xóa
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left mr-2"></i>Quay lại danh sách
+                </a>
             }
         </div>
     </div>
@@ -79,3 +79,4 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 </style>
+
