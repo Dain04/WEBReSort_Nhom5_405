@@ -1,9 +1,8 @@
 ﻿@model DemoDB2.Models.Phong
 @{
     ViewBag.Title = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
 }
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -15,36 +14,27 @@
                     @using (Html.BeginForm("CreatePhong", "Phong", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
-                     
                         <div class="form-group row mb-3">
-                            @Html.Label("LoaiP","Loại Phòng", new { @class = "col-sm-3 col-form-label" })
+                            @Html.Label("IDLoai", "Loại Phòng", new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
-                                @Html.DropDownListFor(model => model.LoaiP, ViewBag.LoaiPhongList as SelectList, "Chọn loại phòng", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.LoaiP, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(model => model.IDLoai, ViewBag.LoaiPhongList as SelectList, "Chọn loại phòng", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.IDLoai, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group row mb-3">
-                            @Html.Label("TinhTrang","Tình Trạng", new { @class = "col-sm-3 col-form-label" })
+                            @Html.Label("IDTinhTrang", "Tình Trạng Phòng", new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
-                                @Html.DropDownListFor(model => model.TinhTrang,
-                                    new List<SelectListItem>
-                                    {
-                                        new SelectListItem { Text = "Trống", Value = "true" },
-                                        new SelectListItem { Text = "Đã đặt", Value = "false" }
-                                    }, "Chọn tình trạng", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.TinhTrang, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(model => model.IDTinhTrang, ViewBag.TinhTrangPhongList as SelectList, "Chọn tình trạng phòng", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.IDTinhTrang, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group row mb-3">
-                            @Html.Label("Gia","Giá", new { @class = "col-sm-3 col-form-label" })
+                            @Html.Label("Gia", "Giá", new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
                                 @Html.EditorFor(model => model.Gia, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Gia, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group row mb-3">
                             @Html.LabelFor(model => model.UploadImage, new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
@@ -52,7 +42,6 @@
                                 <img id="previewImg" src="#" alt="Preview Image" class="mt-2" style="max-width: 200px; display: none;" />
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <div class="col-sm-9 offset-sm-3">
                                 <button type="submit" class="btn btn-primary">Tạo mới</button>
@@ -66,16 +55,17 @@
 </div>
 
 <script>
-    function ChangeImage(input, imgElement) {
+    function ChangeImage(input, previewImg) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                imgElement.src = e.target.result;
-                imgElement.style.display = 'block';
+                $(previewImg).attr('src', e.target.result);
+                $(previewImg).show();
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
+    //
 </script>
 
 <style>
@@ -85,7 +75,6 @@
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
-
     }
 
     .card {

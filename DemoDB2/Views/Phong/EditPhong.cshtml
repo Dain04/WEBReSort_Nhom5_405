@@ -14,29 +14,24 @@
                 <div class="card-body">
                     @using (Html.BeginForm("EditPhong", "Phong", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
-                        @Html.AntiForgeryToken() 
+                        @Html.AntiForgeryToken()
                         @Html.HiddenFor(model => model.PhongID)
 
                         <div class="form-group row mb-3">
-                            @Html.LabelFor(model => model.LoaiP, new { @class = "col-sm-3 col-form-label" })
+                            @Html.LabelFor(model => model.LoaiPhong, new { @class = "col-sm-3 col-form-label" })
                             <div class="col-sm-9">
-                                @Html.DropDownListFor(model => model.LoaiP, ViewBag.LoaiPhongList as SelectList, "Chọn loại phòng", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.LoaiP, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(model => model.IDLoai, ViewBag.LoaiPhongList as SelectList, "Chọn loại phòng", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LoaiPhong, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row mb-3">
+                            @Html.LabelFor(model => model.TinhTrangPhong, new { @class = "col-sm-3 col-form-label" })
+                            <div class="col-sm-9">
+                                @Html.DropDownListFor(model => model.IDTinhTrang, ViewBag.TinhTrangPhongList as SelectList, "Chọn loại phòng", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TinhTrangPhong, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <div class="form-group row mb-3">
-                            @Html.LabelFor(model => model.TinhTrang, new { @class = "col-sm-3 col-form-label" })
-                            <div class="col-sm-9">
-                                @Html.DropDownListFor(model => model.TinhTrang,
-                                    new List<SelectListItem>
-                                    {
-                                        new SelectListItem { Text = "Trống", Value = "true" },
-                                        new SelectListItem { Text = "Đã đặt", Value = "false" }
-                                    }, "Chọn tình trạng", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.TinhTrang, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
 
                         <div class="form-group row mb-3">
                             @Html.LabelFor(model => model.Gia, new { @class = "col-sm-3 col-form-label" })

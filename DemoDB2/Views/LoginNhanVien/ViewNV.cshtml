@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_LayoutNV.cshtml";
 }
 
-
 <br />
 <br />
 <br />
@@ -60,7 +59,6 @@
     .btn-delete {
         background-color: #dc3545;
     }
-
     .btn-add {
         background-color: #28a745; /* Màu nền xanh lá */
         color: white; /* Màu chữ trắng */
@@ -70,7 +68,9 @@
         font-size: 10px; /* Kích thước chữ */
         font-weight: bold; /* Đậm chữ */
         border: none; /* Bỏ viền */
+       
     }
+
 </style>
 <div class="employee-container">
     @Html.ActionLink("Thêm Nhân Viên", "RegisterNhanVien", null, new { @class = "btn-add" })
@@ -101,7 +101,7 @@
     </div>
     <div class="employee-list">
         <h3>Giám Đốc</h3>
-        @foreach (var employee in Model.Where(e => e.ChucVuID == 1))
+        @foreach (var employee in Model.Where(e => e.ChucVuID ==1 ))
         {
             <div class="employee-card">
                 <h3>@employee.Ten</h3>
@@ -112,7 +112,7 @@
                 <div class="employee-info"><strong>Địa chỉ:</strong> @employee.DiaChi</div>
                 <div class="employee-info"><strong>SĐT:</strong> @employee.SoDienThoai</div>
                 <div class="employee-info"><strong>Email:</strong> @employee.Email</div>
-
+       
             </div>
         }
     </div>

@@ -29,7 +29,6 @@ namespace DemoDB2.Models
         public Nullable<decimal> GiaXe { get; set; }
         public string ImageXe { get; set; }
         public HttpPostedFileBase UploadImage { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DichVuSuDung> DichVuSuDung { get; set; }
     }

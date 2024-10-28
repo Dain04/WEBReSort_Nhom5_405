@@ -6,21 +6,20 @@
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-
+    @RenderSection("Styles", required: false)
     <link href="~/Content/cskh.css" rel="stylesheet" />
     <style>
         body {
-            font-family: 'Times New Roman', serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
+            font-family: Times New Roman ;/*kiêu chữ*/
+          
+          
         }
 
         .navbar-inverse {
             background: linear-gradient(to top, rgba(0,0,0,0.3), black);
             border: none;
             height: 50px;
-        } 
+        }
 
             .navbar-inverse .navbar-brand {
                 color: white;
@@ -177,7 +176,7 @@
                     }
                 </ul>
                 <div class="toolbar">
-                    <a href="http://zaloapp.com/qr/p/1diju6zmw8v72">
+                    <a href="https://www.facebook.com/profile.php?id=61566362344881">
                         <img src="https://png.pngtree.com/png-vector/20230316/ourmid/pngtree-admin-and-customer-service-job-vacancies-vector-png-image_6650726.png" alt="">
                     </a>
                 </div>
@@ -198,6 +197,7 @@
         <a href="@Url.Action("ViewLoaiPhong", "LoaiPhong")"><i class="fa fa-building-o"></i> Quản lý loại phòng</a>
         <a href="@Url.Action("Index", "HoaDon")"><i class="fa fa-file-text-o"></i> Quản lý hóa đơn</a>
         <a href="@Url.Action("XemLichLamViec", "LichLamViec")"><i class="fa fa-calendar"></i> Lịch Làm Việc</a>
+        <a href="@Url.Action("ViewListTinhTrangP", "TinhTrangPhong")"><i class="fa fa-calendar-check-o"></i> Quản Lý Tình Trạng Phòng</a>
 
 
         <button class="dropdown-btn">

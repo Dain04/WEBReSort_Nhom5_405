@@ -11,7 +11,7 @@ namespace DemoDB2.Controllers
     {
         QLKSEntities database = new QLKSEntities();
         // GET: LoaiPhong
-         
+
         public PartialViewResult ListLoaiPhong()
         {
             var cateList = database.LoaiPhong.ToList();

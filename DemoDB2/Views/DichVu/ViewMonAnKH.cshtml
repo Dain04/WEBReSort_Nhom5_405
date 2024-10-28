@@ -48,7 +48,9 @@
                     <div class="card-body">
                         <h5 class="card-title">@item.TenMon</h5>
                         <p class="card-text">Giá: @string.Format("{0:N0} VND", item.GiaMon)</p>
-                      
+                        @*<button class="btn btn-primary btn-block order-btn" data-id="@item.MonAnID" data-name="@item.TenMon" data-price="@item.GiaMon">
+                                <i class="fas fa-utensils"></i> Đặt món
+                            </button>*@
                         <button class="btn btn-primary add-to-cart" data-id="@item.MonAnID" data-name="@item.TenMon" data-price="@item.GiaMon">Thêm vào giỏ hàng</button>
                     </div>
                 </div>

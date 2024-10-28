@@ -37,6 +37,7 @@ namespace DemoDB2.Models
         public virtual DbSet<NhanVien> NhanVien { get; set; }
         public virtual DbSet<Phong> Phong { get; set; }
         public virtual DbSet<Spa> Spa { get; set; }
+        public virtual DbSet<TinhTrangPhong> TinhTrangPhong { get; set; }
         public virtual DbSet<Xe> Xe { get; set; }
     }
 }

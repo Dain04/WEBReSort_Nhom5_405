@@ -1,35 +1,46 @@
 ﻿@model DemoDB2.Models.LoaiPhong
-
-@using (Html.BeginForm()) 
+@{
+    ViewBag.Title = "Tạo Lại Phòng";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
 <div class="form-horizontal">
     <div class="col-md-offset-2 col-md-10">
         <h4>Loại Phòng</h4>
     </div>
-        
-        <hr />
-        
 
-        <div class="form-group">
-            @Html.Label("Tên Loại Phòng", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TenLoai, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TenLoai, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    <hr />  <hr />  <hr />
+    <div class="alert alert-warning mt-2" role="alert" style="margin-top: 10px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 4px;">
+        <i class="fas fa-exclamation-triangle" style="color: #856404; margin-right: 5px;"></i>
+        <strong style="color: #856404;">LƯU Ý:</strong>
+        <span style="color: #856404;"> TẠO THEO THỨ TỰ SAU</span>
+        <ul style="margin-top: 5px; margin-bottom: 0; color: #856404;">
+            <li>ID = 1 : Phòng Vip</li>
+            <li>ID = 2 : Phòng Tiêu Chuẩn</li>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-            <br /><br />
+        </ul>
+    </div>
 
-            <div class="col-md-offset-2 col-md-10">
-                <a href="@Url.Action("ViewLoaiPhong")" class="btn btn-primary">Danh dách loại phòng</a>
-            </div>
+    <div class="form-group">
+        @Html.Label("Tên Loại Phòng", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TenLoai, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TenLoai, "", new { @class = "text-danger" })
         </div>
     </div>
-    }
-  
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+        <br /><br />
+
+        <div class="col-md-offset-2 col-md-10">
+            <a href="@Url.Action("ViewLoaiPhong")" class="btn btn-primary">Danh dách loại phòng</a>
+        </div>
+    </div>
+</div>
+}

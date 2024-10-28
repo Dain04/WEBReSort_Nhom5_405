@@ -1,5 +1,8 @@
 ﻿@model DemoDB2.Models.Spa
-
+@{
+    ViewBag.Title = "Thêm Spa";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
 @using (Html.BeginForm("AddSpa", "DichVu", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -8,6 +11,7 @@
         <h4>Spa</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
             @Html.LabelFor(model => model.TenDichVu, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -15,6 +19,7 @@
                 @Html.ValidationMessageFor(model => model.TenDichVu, "", new { @class = "text-danger" })
             </div>
         </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.MoTa, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -22,6 +27,7 @@
                 @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
             </div>
         </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.GiaDichVu, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

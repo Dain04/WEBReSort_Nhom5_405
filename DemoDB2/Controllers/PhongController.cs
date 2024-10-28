@@ -5,13 +5,13 @@ using System.Net;
 using System.Web.Mvc;
 using DemoDB2.Models;
 using PagedList;
-
+using System.Data.Entity;
 
 namespace DemoDB2.Controllers
 {
     public class PhongController : Controller
     {
-        QLKSEntities database = new QLKSEntities(); 
+        QLKSEntities database = new QLKSEntities();
 
         public ActionResult SelectLoai()
         {
@@ -19,10 +19,16 @@ namespace DemoDB2.Controllers
             se_cate.ListLoai = database.LoaiPhong.ToList<LoaiPhong>();
             return PartialView("SelectLoai", se_cate);
         }
-
+        public ActionResult SelectTinhTrangPhong()
+        {
+            TinhTrangPhong se_cate = new TinhTrangPhong();
+            se_cate.ListTinhTrang = database.TinhTrangPhong.ToList<TinhTrangPhong>();
+            return PartialView("SelectTinhTrangPhong", se_cate);
+        }
         public ActionResult CreatePhong()
         {
-            ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai");
+            ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "IDLoai", "TenLoai");
+            ViewBag.TinhTrangPhongList = new SelectList(database.TinhTrangPhong, "IDTinhTrang", "TenTinhTrang");
             return View();
         }
 
@@ -49,32 +55,139 @@ namespace DemoDB2.Controllers
                     database.SaveChanges();
                     return RedirectToAction("ViewPhong");
                 }
-
-                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai");
+                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "IDLoai", "TenLoai");
+                ViewBag.TinhTrangPhongList = new SelectList(database.TinhTrangPhong, "IDTinhTrang", "TenTinhTrang");
                 return View(pro);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Error: " + ex.Message);
-                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai");
+                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "IDLoai", "TenLoai");
+                ViewBag.TinhTrangPhongList = new SelectList(database.TinhTrangPhong, "IDTinhTrang", "TenTinhTrang");
                 return View(pro);
             }
         }
+        [HttpPost]
+        public ActionResult ConfirmRoom(int id)
+        {
+            try
+            {
+                // Tìm phòng theo ID
+                var phong = database.Phong.Find(id);
+                if (phong == null)
+                {
+                    return HttpNotFound();
+                }
 
-        public ActionResult ViewPhong(int? page)
+                // Đảm bảo trạng thái hiện tại là Chờ Xác Nhận (ID = 2)
+                if (phong.IDTinhTrang != 2)
+                {
+                    TempData["Error"] = "Chỉ có thể xác nhận phòng đang ở trạng thái Chờ Xác Nhận";
+                    return RedirectToAction("ViewPhong");
+                }
+
+                // Cập nhật trạng thái phòng thành "Đã xác nhận" (ID = 3)
+                phong.IDTinhTrang = 3;
+                database.Entry(phong).State = EntityState.Modified;
+
+                // Cập nhật trạng thái trong bảng DatPhong
+                var datPhongList = database.DatPhong.Where(dp => dp.PhongID == id).ToList();
+                foreach (var datPhong in datPhongList)
+                {
+                    datPhong.IDTinhTrang = 3; // Cập nhật trạng thái của DatPhong thành "Đã xác nhận"
+                    database.Entry(datPhong).State = EntityState.Modified;
+                }
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                database.SaveChanges();
+
+                // Thông báo thành công
+                TempData["Success"] = "Đã xác nhận phòng thành công";
+
+                // Refresh lại trang với các tham số hiện tại
+                if (Request.QueryString["page"] != null)
+                {
+                    return RedirectToAction("ViewPhong", new
+                    {
+                        page = Request.QueryString["page"],
+                        TinhTrangID = Request.QueryString["TinhTrangID"]
+                    });
+                }
+                return RedirectToAction("ViewPhong");
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi và thông báo
+                TempData["Error"] = "Có lỗi xảy ra: " + ex.Message;
+                return RedirectToAction("ViewPhong");
+            }
+        }
+        public ActionResult ViewPhong(int? page, int? TinhTrangID)
         {
             int pageSize = 5;
             int pageNumber = (page ?? 1);
-            var phongs = database.Phong.OrderBy(p => p.PhongID).ToList();
-            var pagedPhongs = phongs.ToPagedList(pageNumber, pageSize);
+
+            var phongs = database.Phong
+                .Include(p => p.LoaiPhong)
+                .Include(p => p.TinhTrangPhong);
+
+            if (TinhTrangID.HasValue)
+            {
+                phongs = phongs.Where(p => p.IDTinhTrang == TinhTrangID.Value);
+            }
+
+            var pagedPhongs = phongs
+                .OrderBy(p => p.PhongID)
+                .ToPagedList(pageNumber, pageSize);
+
+            ViewBag.TinhTrangList = new SelectList(database.TinhTrangPhong, "IDTinhTrang", "TenTinhTrang");
+
             return View(pagedPhongs);
         }
-        public ActionResult ViewPhongKH(int? page)
+        public ActionResult ViewPhongTieuChuan(int? page)
         {
-            int pageSize = 12;
+            return ViewPhongKH(page, 2, null); // Giả sử ID 2 là cho Phòng Tiêu Chuẩn
+        }
+
+        public ActionResult ViewPhongVIP(int? page)
+        {
+            return ViewPhongKH(page, 1, null); // Giả sử ID 1 là cho Phòng VIP
+        }
+        public ActionResult ViewPhongKH(int? page, int? LoaiPhongID, int? TinhTrangID)
+        {
+            int pageSize = 6;
             int pageNumber = (page ?? 1);
-            var model = database.Phong.OrderBy(p => p.PhongID).ToPagedList(pageNumber, pageSize);
-            return View(model);
+
+            var phongs = database.Phong
+                .Include(p => p.LoaiPhong)
+                .Include(p => p.TinhTrangPhong);
+
+            // Lọc theo loại phòng nếu có
+            if (LoaiPhongID.HasValue)
+            {
+                phongs = phongs.Where(p => p.IDLoai == LoaiPhongID.Value);
+            }
+
+            // Lọc theo tình trạng nếu có
+            if (TinhTrangID.HasValue)
+            {
+                phongs = phongs.Where(p => p.IDTinhTrang == TinhTrangID.Value);
+            }
+
+            // Thêm điều kiện để không hiển thị các phòng có tình trạng "Chờ xác nhận" (ID = 2)
+            phongs = phongs.Where(p => p.IDTinhTrang != 2);
+
+            var pagedPhongs = phongs.OrderBy(p => p.PhongID).ToPagedList(pageNumber, pageSize);
+
+            // Thêm danh sách tình trạng vào ViewBag
+            ViewBag.DanhSachTinhTrang = database.TinhTrangPhong.ToList();
+            ViewBag.TinhTrangID = TinhTrangID; // Lưu lại tình trạng đã chọn
+
+            // Các ViewBag khác vẫn giữ nguyên
+            ViewBag.LoaiPhongID = LoaiPhongID;
+            ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "IDLoai", "TenLoai");
+
+            return View(pagedPhongs);
         }
         public ActionResult EditPhong(int id)
         {
@@ -89,7 +202,8 @@ namespace DemoDB2.Controllers
             }
 
 
-            ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai", phong.LoaiP);
+            ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "IDLoai", "TenLoai", phong.IDLoai);
+            ViewBag.TinhTrangPhongList = new SelectList(database.TinhTrangPhong, "IDTinhTrang", "TenTinhTrang", phong.IDTinhTrang);
 
             return View(phong);
         }
@@ -124,8 +238,8 @@ namespace DemoDB2.Controllers
                     }
 
                     // Cập nhật các trường khác
-                    existingPhong.LoaiP = phong.LoaiP;
-                    existingPhong.TinhTrang = phong.TinhTrang;
+                    existingPhong.IDLoai = phong.IDLoai;
+                    existingPhong.IDTinhTrang = phong.IDTinhTrang;
                     existingPhong.Gia = phong.Gia;
                     existingPhong.ImagePhong = phong.ImagePhong;
 
@@ -134,13 +248,14 @@ namespace DemoDB2.Controllers
                     return RedirectToAction("ViewPhong");
                 }
 
-                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai", phong.LoaiP);
+                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "IDLoai", "TenLoai", phong.IDLoai);
+                ViewBag.TinhTrangPhongList = new SelectList(database.TinhTrangPhong, "IDTinhTrang", "TenTinhTrang", phong.IDTinhTrang);
                 return View(phong);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Error: " + ex.Message);
-                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai", phong.LoaiP);
+                ViewBag.LoaiPhongList = new SelectList(database.LoaiPhong, "TenLoai", "TenLoai", phong.LoaiPhong);
                 return View(phong);
             }
         }
@@ -174,8 +289,6 @@ namespace DemoDB2.Controllers
                 var phong = database.Phong.Find(datPhong.PhongID);
                 if (phong != null)
                 {
-                    phong.TinhTrang = false; // Đặt thành đã đặt
-
                     // Tạo hóa đơn mới
                     var hoaDon = new HoaDon
                     {
@@ -187,15 +300,51 @@ namespace DemoDB2.Controllers
                     };
 
                     database.HoaDon.Add(hoaDon);
+                    // Cập nhật trạng thái phòng thành "Chờ xác nhận" (ID = 2)
+                    phong.IDTinhTrang = 2; // Giả sử ID 2 là trạng thái "Chờ xác nhận"
+                    database.Entry(phong).State = EntityState.Modified;
+                    datPhong.ImagePhong = phong.ImagePhong; 
+                    datPhong.IDTinhTrang = phong.IDTinhTrang;
                 }
 
                 database.SaveChanges();
 
                 TempData["SuccessMessage"] = "Đặt phòng thành công. Hóa đơn đã được tạo.";
-                return RedirectToAction("ViewPhongKH");
+                // Chuyển hướng về trang ViewPhongVIP hoặc ViewPhongTieuChuan
+                if (phong.IDLoai == 1) // Giả sử ID 1 là cho phòng VIP
+                {
+                    return RedirectToAction("ViewPhongVIP");
+                }
+                else if (phong.IDLoai == 2) // Giả sử ID 2 là cho phòng tiêu chuẩn
+                {
+                    return RedirectToAction("ViewPhongTieuChuan");
+                }
             }
 
             return View(datPhong);
+        }
+        public ActionResult ChiTietDatPhong(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Lấy danh sách đặt phòng của người dùng
+            var datPhongList = database.DatPhong
+                .Include(dp => dp.Phong)
+                .Include(dp => dp.TinhTrangPhong)
+                .Where(dp => dp.NguoiDungID == id)
+                .OrderByDescending(dp => dp.NgayDatPhong)
+                .ToList();
+
+            if (datPhongList == null || !datPhongList.Any())
+            {
+                TempData["Message"] = "Không có phiếu đặt phòng nào.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(datPhongList);
         }
         public ActionResult DeletePhong(int? id)
         {

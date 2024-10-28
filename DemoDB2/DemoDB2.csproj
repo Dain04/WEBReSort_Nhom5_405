@@ -203,6 +203,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CheckNVSessionAttribute.cs" />
+    <Compile Include="Controllers\CheckUserLoginAttribute.cs" />
     <Compile Include="Controllers\ChucVuController.cs" />
     <Compile Include="Controllers\DatPhongController.cs" />
     <Compile Include="Controllers\DichVuController.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Controllers\LoginUserController.cs" />
     <Compile Include="Controllers\Startup.cs" />
     <Compile Include="Controllers\PhongController.cs" />
+    <Compile Include="Controllers\TinhTrangPhongController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -267,6 +269,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Spa.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TinhTrangPhong.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Xe.cs">
@@ -431,9 +436,21 @@
     <Content Include="Views\DichVu\ViewSpa.cshtml" />
     <Content Include="Views\DichVu\ViewSpaKH.cshtml" />
     <Content Include="Views\ChucVu\DeleteChucVu.cshtml" />
+    <Content Include="Views\DichVu\EditSpa.cshtml" />
+    <Content Include="Views\DichVu\DeleteSpa.cshtml" />
+    <Content Include="Views\TinhTrangPhong\CreateTinhTrangP.cshtml" />
+    <Content Include="Views\TinhTrangPhong\ViewListTinhTrangP.cshtml" />
+    <Content Include="Views\Phong\SelectTinhTrangPhong.cshtml" />
+    <Content Include="Views\Phong\ViewPhongVip.cshtml" />
+    <Content Include="Views\Phong\ViewPhongTieuChuan.cshtml" />
+    <Content Include="Views\TinhTrangPhong\DeleteTinhTrangPhong.cshtml" />
+    <Content Include="Views\TinhTrangPhong\EditTinhTrangPhong.cshtml" />
+    <Content Include="Views\LoginUser\PhieuDatPhong.cshtml" />
+    <Content Include="Views\Phong\ChiTietDatPhong.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\CheckUserLoginAttribute\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

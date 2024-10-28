@@ -30,7 +30,16 @@ else
             <tr>
                 <td>@item.HoaDonID</td>
                 <td>@(item.NguoiDung != null ? item.NguoiDung.TenNguoiDung : "N/A")</td>
-                <td>@(item.Phong != null ? item.Phong.LoaiP + " - " + item.Phong.PhongID : "N/A")</td>
+                <td>
+                    @if (item.Phong != null && item.Phong.LoaiPhong != null)
+                    {
+                        @($"{item.Phong.LoaiPhong.TenLoai} - {item.Phong.PhongID}")
+                    }
+                    else
+                    {
+                        @("N/A")
+                    }
+                </td>
                 <td>@(item.NgayNhanPhong.HasValue ? item.NgayNhanPhong.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                 <td>@(item.NgayTraPhong.HasValue ? item.NgayTraPhong.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                 <td>@(item.TongTien.HasValue ? string.Format("{0:N0} VNĐ", item.TongTien.Value) : "N/A")</td>
@@ -44,5 +53,3 @@ else
         }
     </table>
 }
-
-

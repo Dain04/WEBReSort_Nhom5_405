@@ -1,4 +1,3 @@
 ﻿@model DemoDB2.Models.LoaiPhong
 @Html.DropDownListFor(model => model.IDLoai,
 new SelectList(Model.ListLoai.OrderBy(model => model.TenLoai), "IDLoai", "TenLoai"), "--Select Cate--")
- 

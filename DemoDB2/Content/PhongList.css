@@ -88,3 +88,31 @@
     color: white;
     cursor: not-allowed;
 }
+.room-status {
+    margin: 8px 0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    font-weight: 500;
+}
+
+/* Tùy chỉnh màu sắc theo trạng thái */
+.trong {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.da-dat {
+    background-color: #f44336;
+    color: white;
+}
+
+.dang-don-dep {
+    background-color: #ff9800;
+    color: white;
+}
+
+.bao-tri {
+    background-color: #9e9e9e;
+    color: white;
+}

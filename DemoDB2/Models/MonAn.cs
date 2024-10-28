@@ -24,7 +24,7 @@ namespace DemoDB2.Models
         public int MonAnID { get; set; }
         public string TenMon { get; set; }
         public Nullable<decimal> GiaMon { get; set; }
-        public Nullable<int> IDBan { get; set; }
+        public Nullable<int> SoLuongMon { get; set; }
         public string ImageMonAn { get; set; }
         public HttpPostedFileBase UploadImage { get; set; }
 

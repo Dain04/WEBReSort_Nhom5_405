@@ -1,0 +1,48 @@
+﻿@model DemoDB2.Models.TinhTrangPhong
+@{
+    ViewBag.Title = "Tạo Tình Trạng Phòng";
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>TinhTrangPhong</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TenTinhTrang, "Tình Trạng Phòng", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="alert alert-warning mt-2" role="alert" style="margin-top: 10px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 4px;">
+                <i class="fas fa-exclamation-triangle" style="color: #856404; margin-right: 5px;"></i>
+                <strong style="color: #856404;">LƯU Ý:</strong>
+                <span style="color: #856404;">ID TÌNH TRẠNG PHẢI TẠO THEO THỨ TỰ SAU</span>
+                <ul style="margin-top: 5px; margin-bottom: 0; color: #856404;">
+                    <li>ID = 1 : Trống</li>
+                    <li>ID = 2 : Chờ Xác Nhận</li>
+                    <li>ID = 3 : Đã Xác Nhận</li>
+                    <li>ID = 4 : Đã Đặt</li>
+                    <li>ID = 5 : Đang Bảo Trì</li>
+                    <li>ID = 6 : Đang Vệ Sinh</li>
+                </ul>
+            </div>
+            @Html.EditorFor(model => model.TenTinhTrang, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TenTinhTrang, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+        <br /><br />
+
+        <div class="col-md-offset-2 col-md-10">
+            <a href="@Url.Action("ViewListTinhTrangP")" class="btn btn-primary">Danh dách tình trạng phòng</a>
+        </div>
+    </div>
+    </div>
+ }

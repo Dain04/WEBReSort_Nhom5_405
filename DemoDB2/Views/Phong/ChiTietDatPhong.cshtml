@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DemoDB2.Models.DatPhong>
+@{
+    ViewBag.Title = "Chi tiết đặt phòng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Danh sách phiếu đặt phòng</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Không có phiếu đặt phòng nào.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Mã đặt phòng</th>
+                        <th>Hình ảnh</th>
+                        <th>Ngày đặt</th>
+                        <th>Ngày nhận phòng</th>
+                        <th>Ngày trả phòng</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th> <!-- Thêm cột cho hành động -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.DatPhongID</td>
+                            <td>
+                                <img src="@Url.Content(item.ImagePhong)" alt="Room Image" style="width:100px" />
+                            </td>
+                            <td>@(item.NgayDatPhong.HasValue ? item.NgayDatPhong.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                            <td>@(item.NgayNhanPhong.HasValue ? item.NgayNhanPhong.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                            <td>@(item.NgayTraPhong.HasValue ? item.NgayTraPhong.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                            <td>@item.TinhTrangPhong.TenTinhTrang</td>
+                            <td>
+                                @if (item.IDTinhTrang == 3) // Kiểm tra trạng thái phòng
+                                {
+                                    <a href="@Url.Action("IndexKH", "HoaDon", new { id = item.DatPhongID })" class="btn btn-success">
+                                        <i class="fas fa-credit-card"></i> Thanh toán
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">Chờ nhân viên xác nhận đặt phòng</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="mt-3">
+        <a href="@Url.Action("Profile", "LoginUser ")" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Trở về trang chủ
+        </a>
+    </div>
+</div>

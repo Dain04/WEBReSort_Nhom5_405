@@ -1,0 +1,105 @@
+﻿@using DemoDB2.Models
+@using PagedList
+@using PagedList.Mvc
+@model IPagedList<Phong>
+
+@{
+    ViewBag.Title = "Danh Sách Phòng Tiêu Chuẩn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Content/PhongList.css" rel="stylesheet" />
+</head>
+
+<div class="room-list-container">
+    <div class="header">
+        <h2>Danh Sách Phòng Tiêu Chuẩn</h2>
+    </div>
+
+    <div class="container mt-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+                <a href="@Url.Action("IndexKH", "HoaDon")" class="btn btn-primary btn-sm float-right">Xem Hóa Đơn</a>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+    </div>
+
+    @{
+        var groupedPhongs = Model.GroupBy(p => p.LoaiPhong);
+    }
+
+    @foreach (var group in Model.GroupBy(p => p.LoaiPhong))
+    {
+        <h3>Loại phòng: @group.Key.TenLoai</h3>
+        <div class="room-grid">
+            @foreach (var phong in group)
+            {
+                <div class="room-card">
+                    <div class="room-image">
+                        @if (!string.IsNullOrEmpty(phong.ImagePhong))
+                        {
+                            <img src="@Url.Content(phong.ImagePhong)" alt="Hình ảnh phòng @phong.PhongID" />
+                        }
+                        else
+                        {
+                            <div class="no-image">Không có hình ảnh</div>
+                        }
+                    </div>
+                    <div class="room-info">
+                        <h3>Phòng @phong.PhongID</h3>
+                        <p class="room-price">Giá: @phong.Gia</p>
+                        @if (Session["ID"] != null)
+                        {
+                            <a href="@Url.Action("DatPhong", "Phong", new { id = phong.PhongID })"
+                               class="btn btn-book"
+                               data-id="@phong.PhongID"
+                               data-price="@phong.Gia">Đặt Phòng</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", "LoginUser")"
+                               class="btn btn-primary"
+                               onclick="return confirm('Bạn cần đăng nhập để đặt phòng. Chuyển đến trang đăng nhập?')">
+                                Đăng nhập để đặt phòng
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@Html.PagedListPager(Model, page => Url.Action("ViewPhongTieuChuan", new { page }))
+
+<script src="~/Content/PhongList.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.btn-book').click(function (e) {
+            e.preventDefault();
+            var phongId = $(this).data('id');
+            var giaPhong = $(this).data('price');
+
+            @if (Session["ID"] == null)
+            {
+                @:if (confirm('Bạn cần đăng nhập để đặt phòng. Chuyển đến trang đăng nhập?')) {
+                @:    window.location.href = '@Url.Action("Index", "LoginUser")';
+                @:}
+                @:return false;
+            }
+            else
+            {
+                @:window.location.href = $(this).attr('href');
+            }
+        });
+    });
+</script>

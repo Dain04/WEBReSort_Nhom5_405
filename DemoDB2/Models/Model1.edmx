@@ -24,6 +24,8 @@
           <Property Name="NgayTraPhong" Type="date" />
           <Property Name="NguoiDungID" Type="int" />
           <Property Name="IDDichVuSuDung" Type="int" />
+          <Property Name="IDTinhTrang" Type="int" />
+          <Property Name="ImagePhong" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="DichVuSuDung">
           <Key>
@@ -93,7 +95,7 @@
           <Property Name="MonAnID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TenMon" Type="nvarchar" MaxLength="255" />
           <Property Name="GiaMon" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="IDBan" Type="int" />
+          <Property Name="SoLuongMon" Type="int" />
           <Property Name="ImageMonAn" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="NguoiDung">
@@ -127,8 +129,8 @@
             <PropertyRef Name="PhongID" />
           </Key>
           <Property Name="PhongID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TinhTrang" Type="bit" />
-          <Property Name="LoaiP" Type="nchar" MaxLength="20" />
+          <Property Name="IDTinhTrang" Type="int" />
+          <Property Name="IDLoai" Type="int" />
           <Property Name="Gia" Type="decimal" Precision="18" Scale="2" />
           <Property Name="ImagePhong" Type="nvarchar(max)" />
         </EntityType>
@@ -143,6 +145,13 @@
           <Property Name="ThoiGianDichVu" Type="int" />
           <Property Name="ImageSpa" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="TinhTrangPhong">
+          <Key>
+            <PropertyRef Name="IDTinhTrang" />
+          </Key>
+          <Property Name="IDTinhTrang" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenTinhTrang" Type="nchar" MaxLength="20" Nullable="false" />
+        </EntityType>
         <EntityType Name="Xe">
           <Key>
             <PropertyRef Name="XeID" />
@@ -155,7 +164,7 @@
           <Property Name="GiaXe" Type="decimal" Precision="18" Scale="2" />
           <Property Name="ImageXe" Type="nvarchar(max)" />
         </EntityType>
-        <Association Name="FK__DatPhong__IDDich__4222D4EF">
+        <Association Name="FK__DatPhong__IDDich__45F365D3">
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="0..1" />
           <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -167,7 +176,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DatPhong__NguoiD__4316F928">
+        <Association Name="FK__DatPhong__IDTinh__48CFD27E">
+          <End Role="TinhTrangPhong" Type="Self.TinhTrangPhong" Multiplicity="0..1" />
+          <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TinhTrangPhong">
+              <PropertyRef Name="IDTinhTrang" />
+            </Principal>
+            <Dependent Role="DatPhong">
+              <PropertyRef Name="IDTinhTrang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DatPhong__NguoiD__46E78A0C">
           <End Role="NguoiDung" Type="Self.NguoiDung" Multiplicity="0..1" />
           <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -179,7 +200,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DatPhong__PhongI__440B1D61">
+        <Association Name="FK__DatPhong__PhongI__47DBAE45">
           <End Role="Phong" Type="Self.Phong" Multiplicity="0..1" />
           <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -191,7 +212,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__HoaDo__3E52440B">
+        <Association Name="FK__DichVuSuD__HoaDo__4222D4EF">
           <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -203,7 +224,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__MonAn__3C69FB99">
+        <Association Name="FK__DichVuSuD__MonAn__403A8C7D">
           <End Role="MonAn" Type="Self.MonAn" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -215,7 +236,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__Nguoi__3F466844">
+        <Association Name="FK__DichVuSuD__Nguoi__4316F928">
           <End Role="NguoiDung" Type="Self.NguoiDung" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -227,7 +248,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__NhanV__3A81B327">
+        <Association Name="FK__DichVuSuD__NhanV__3E52440B">
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -239,7 +260,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__SpaID__3D5E1FD2">
+        <Association Name="FK__DichVuSuD__SpaID__412EB0B6">
           <End Role="Spa" Type="Self.Spa" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -251,7 +272,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuDu__XeID__3B75D760">
+        <Association Name="FK__DichVuSuDu__XeID__3F466844">
           <End Role="Xe" Type="Self.Xe" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -263,7 +284,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HoaDon__NguoiDun__36B12243">
+        <Association Name="FK__HoaDon__NguoiDun__3A81B327">
           <End Role="NguoiDung" Type="Self.NguoiDung" Multiplicity="0..1" />
           <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
@@ -275,7 +296,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HoaDon__PhongID__37A5467C">
+        <Association Name="FK__HoaDon__PhongID__3B75D760">
           <End Role="Phong" Type="Self.Phong" Multiplicity="0..1" />
           <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
@@ -287,7 +308,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__LichLamVi__NhanV__60A75C0F">
+        <Association Name="FK__LichLamVi__NhanV__52593CB8">
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="1" />
           <End Role="LichLamViec" Type="Self.LichLamViec" Multiplicity="*" />
           <ReferentialConstraint>
@@ -299,7 +320,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Luong__NhanVienI__46E78A0C">
+        <Association Name="FK__Luong__NhanVienI__4BAC3F29">
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="1" />
           <End Role="Luong" Type="Self.Luong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -311,7 +332,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__NhanVien__ChucVu__33D4B598">
+        <Association Name="FK__NhanVien__ChucVu__37A5467C">
           <End Role="ChucVu" Type="Self.ChucVu" Multiplicity="0..1" />
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="*" />
           <ReferentialConstraint>
@@ -323,9 +344,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <!--Errors Found During Generation:
-warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-        <Association Name="FK__Phong__LoaiP__2D27B809" />-->
+        <Association Name="FK__Phong__IDLoai__30F848ED">
+          <End Role="LoaiPhong" Type="Self.LoaiPhong" Multiplicity="0..1" />
+          <End Role="Phong" Type="Self.Phong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LoaiPhong">
+              <PropertyRef Name="IDLoai" />
+            </Principal>
+            <Dependent Role="Phong">
+              <PropertyRef Name="IDLoai" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Phong__IDTinhTra__300424B4">
+          <End Role="TinhTrangPhong" Type="Self.TinhTrangPhong" Multiplicity="0..1" />
+          <End Role="Phong" Type="Self.Phong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TinhTrangPhong">
+              <PropertyRef Name="IDTinhTrang" />
+            </Principal>
+            <Dependent Role="Phong">
+              <PropertyRef Name="IDTinhTrang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="QLKSModelStoreContainer">
           <EntitySet Name="ChucVu" EntityType="Self.ChucVu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DatPhong" EntityType="Self.DatPhong" Schema="dbo" store:Type="Tables" />
@@ -339,62 +381,75 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <EntitySet Name="NhanVien" EntityType="Self.NhanVien" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Phong" EntityType="Self.Phong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Spa" EntityType="Self.Spa" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TinhTrangPhong" EntityType="Self.TinhTrangPhong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Xe" EntityType="Self.Xe" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__DatPhong__IDDich__4222D4EF" Association="Self.FK__DatPhong__IDDich__4222D4EF">
+          <AssociationSet Name="FK__DatPhong__IDDich__45F365D3" Association="Self.FK__DatPhong__IDDich__45F365D3">
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
             <End Role="DatPhong" EntitySet="DatPhong" />
           </AssociationSet>
-          <AssociationSet Name="FK__DatPhong__NguoiD__4316F928" Association="Self.FK__DatPhong__NguoiD__4316F928">
+          <AssociationSet Name="FK__DatPhong__IDTinh__48CFD27E" Association="Self.FK__DatPhong__IDTinh__48CFD27E">
+            <End Role="TinhTrangPhong" EntitySet="TinhTrangPhong" />
+            <End Role="DatPhong" EntitySet="DatPhong" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DatPhong__NguoiD__46E78A0C" Association="Self.FK__DatPhong__NguoiD__46E78A0C">
             <End Role="NguoiDung" EntitySet="NguoiDung" />
             <End Role="DatPhong" EntitySet="DatPhong" />
           </AssociationSet>
-          <AssociationSet Name="FK__DatPhong__PhongI__440B1D61" Association="Self.FK__DatPhong__PhongI__440B1D61">
+          <AssociationSet Name="FK__DatPhong__PhongI__47DBAE45" Association="Self.FK__DatPhong__PhongI__47DBAE45">
             <End Role="Phong" EntitySet="Phong" />
             <End Role="DatPhong" EntitySet="DatPhong" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__HoaDo__3E52440B" Association="Self.FK__DichVuSuD__HoaDo__3E52440B">
+          <AssociationSet Name="FK__DichVuSuD__HoaDo__4222D4EF" Association="Self.FK__DichVuSuD__HoaDo__4222D4EF">
             <End Role="HoaDon" EntitySet="HoaDon" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__MonAn__3C69FB99" Association="Self.FK__DichVuSuD__MonAn__3C69FB99">
+          <AssociationSet Name="FK__DichVuSuD__MonAn__403A8C7D" Association="Self.FK__DichVuSuD__MonAn__403A8C7D">
             <End Role="MonAn" EntitySet="MonAn" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__Nguoi__3F466844" Association="Self.FK__DichVuSuD__Nguoi__3F466844">
+          <AssociationSet Name="FK__DichVuSuD__Nguoi__4316F928" Association="Self.FK__DichVuSuD__Nguoi__4316F928">
             <End Role="NguoiDung" EntitySet="NguoiDung" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__NhanV__3A81B327" Association="Self.FK__DichVuSuD__NhanV__3A81B327">
+          <AssociationSet Name="FK__DichVuSuD__NhanV__3E52440B" Association="Self.FK__DichVuSuD__NhanV__3E52440B">
             <End Role="NhanVien" EntitySet="NhanVien" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__SpaID__3D5E1FD2" Association="Self.FK__DichVuSuD__SpaID__3D5E1FD2">
+          <AssociationSet Name="FK__DichVuSuD__SpaID__412EB0B6" Association="Self.FK__DichVuSuD__SpaID__412EB0B6">
             <End Role="Spa" EntitySet="Spa" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuDu__XeID__3B75D760" Association="Self.FK__DichVuSuDu__XeID__3B75D760">
+          <AssociationSet Name="FK__DichVuSuDu__XeID__3F466844" Association="Self.FK__DichVuSuDu__XeID__3F466844">
             <End Role="Xe" EntitySet="Xe" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__HoaDon__NguoiDun__36B12243" Association="Self.FK__HoaDon__NguoiDun__36B12243">
+          <AssociationSet Name="FK__HoaDon__NguoiDun__3A81B327" Association="Self.FK__HoaDon__NguoiDun__3A81B327">
             <End Role="NguoiDung" EntitySet="NguoiDung" />
             <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__HoaDon__PhongID__37A5467C" Association="Self.FK__HoaDon__PhongID__37A5467C">
+          <AssociationSet Name="FK__HoaDon__PhongID__3B75D760" Association="Self.FK__HoaDon__PhongID__3B75D760">
             <End Role="Phong" EntitySet="Phong" />
             <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__LichLamVi__NhanV__60A75C0F" Association="Self.FK__LichLamVi__NhanV__60A75C0F">
+          <AssociationSet Name="FK__LichLamVi__NhanV__52593CB8" Association="Self.FK__LichLamVi__NhanV__52593CB8">
             <End Role="NhanVien" EntitySet="NhanVien" />
             <End Role="LichLamViec" EntitySet="LichLamViec" />
           </AssociationSet>
-          <AssociationSet Name="FK__Luong__NhanVienI__46E78A0C" Association="Self.FK__Luong__NhanVienI__46E78A0C">
+          <AssociationSet Name="FK__Luong__NhanVienI__4BAC3F29" Association="Self.FK__Luong__NhanVienI__4BAC3F29">
             <End Role="NhanVien" EntitySet="NhanVien" />
             <End Role="Luong" EntitySet="Luong" />
           </AssociationSet>
-          <AssociationSet Name="FK__NhanVien__ChucVu__33D4B598" Association="Self.FK__NhanVien__ChucVu__33D4B598">
+          <AssociationSet Name="FK__NhanVien__ChucVu__37A5467C" Association="Self.FK__NhanVien__ChucVu__37A5467C">
             <End Role="ChucVu" EntitySet="ChucVu" />
             <End Role="NhanVien" EntitySet="NhanVien" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Phong__IDLoai__30F848ED" Association="Self.FK__Phong__IDLoai__30F848ED">
+            <End Role="LoaiPhong" EntitySet="LoaiPhong" />
+            <End Role="Phong" EntitySet="Phong" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Phong__IDTinhTra__300424B4" Association="Self.FK__Phong__IDTinhTra__300424B4">
+            <End Role="TinhTrangPhong" EntitySet="TinhTrangPhong" />
+            <End Role="Phong" EntitySet="Phong" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -409,7 +464,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="ChucVuID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TenChucVu" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="MoTaChucVu" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="NhanVien" Relationship="Self.FK__NhanVien__ChucVu__33D4B598" FromRole="ChucVu" ToRole="NhanVien" />
+          <NavigationProperty Name="NhanVien" Relationship="Self.FK__NhanVien__ChucVu__37A5467C" FromRole="ChucVu" ToRole="NhanVien" />
         </EntityType>
         <EntityType Name="DatPhong">
           <Key>
@@ -422,9 +477,12 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="NgayTraPhong" Type="DateTime" Precision="0" />
           <Property Name="NguoiDungID" Type="Int32" />
           <Property Name="IDDichVuSuDung" Type="Int32" />
-          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DatPhong__IDDich__4222D4EF" FromRole="DatPhong" ToRole="DichVuSuDung" />
-          <NavigationProperty Name="NguoiDung" Relationship="Self.FK__DatPhong__NguoiD__4316F928" FromRole="DatPhong" ToRole="NguoiDung" />
-          <NavigationProperty Name="Phong" Relationship="Self.FK__DatPhong__PhongI__440B1D61" FromRole="DatPhong" ToRole="Phong" />
+          <Property Name="IDTinhTrang" Type="Int32" />
+          <Property Name="ImagePhong" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DatPhong__IDDich__45F365D3" FromRole="DatPhong" ToRole="DichVuSuDung" />
+          <NavigationProperty Name="TinhTrangPhong" Relationship="Self.FK__DatPhong__IDTinh__48CFD27E" FromRole="DatPhong" ToRole="TinhTrangPhong" />
+          <NavigationProperty Name="NguoiDung" Relationship="Self.FK__DatPhong__NguoiD__46E78A0C" FromRole="DatPhong" ToRole="NguoiDung" />
+          <NavigationProperty Name="Phong" Relationship="Self.FK__DatPhong__PhongI__47DBAE45" FromRole="DatPhong" ToRole="Phong" />
         </EntityType>
         <EntityType Name="DichVuSuDung">
           <Key>
@@ -438,13 +496,13 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="HoaDonID" Type="Int32" />
           <Property Name="NhanVienID" Type="Int32" />
           <Property Name="NguoiDungID" Type="Int32" />
-          <NavigationProperty Name="DatPhong" Relationship="Self.FK__DatPhong__IDDich__4222D4EF" FromRole="DichVuSuDung" ToRole="DatPhong" />
-          <NavigationProperty Name="HoaDon" Relationship="Self.FK__DichVuSuD__HoaDo__3E52440B" FromRole="DichVuSuDung" ToRole="HoaDon" />
-          <NavigationProperty Name="MonAn" Relationship="Self.FK__DichVuSuD__MonAn__3C69FB99" FromRole="DichVuSuDung" ToRole="MonAn" />
-          <NavigationProperty Name="NguoiDung" Relationship="Self.FK__DichVuSuD__Nguoi__3F466844" FromRole="DichVuSuDung" ToRole="NguoiDung" />
-          <NavigationProperty Name="NhanVien" Relationship="Self.FK__DichVuSuD__NhanV__3A81B327" FromRole="DichVuSuDung" ToRole="NhanVien" />
-          <NavigationProperty Name="Spa" Relationship="Self.FK__DichVuSuD__SpaID__3D5E1FD2" FromRole="DichVuSuDung" ToRole="Spa" />
-          <NavigationProperty Name="Xe" Relationship="Self.FK__DichVuSuDu__XeID__3B75D760" FromRole="DichVuSuDung" ToRole="Xe" />
+          <NavigationProperty Name="DatPhong" Relationship="Self.FK__DatPhong__IDDich__45F365D3" FromRole="DichVuSuDung" ToRole="DatPhong" />
+          <NavigationProperty Name="HoaDon" Relationship="Self.FK__DichVuSuD__HoaDo__4222D4EF" FromRole="DichVuSuDung" ToRole="HoaDon" />
+          <NavigationProperty Name="MonAn" Relationship="Self.FK__DichVuSuD__MonAn__403A8C7D" FromRole="DichVuSuDung" ToRole="MonAn" />
+          <NavigationProperty Name="NguoiDung" Relationship="Self.FK__DichVuSuD__Nguoi__4316F928" FromRole="DichVuSuDung" ToRole="NguoiDung" />
+          <NavigationProperty Name="NhanVien" Relationship="Self.FK__DichVuSuD__NhanV__3E52440B" FromRole="DichVuSuDung" ToRole="NhanVien" />
+          <NavigationProperty Name="Spa" Relationship="Self.FK__DichVuSuD__SpaID__412EB0B6" FromRole="DichVuSuDung" ToRole="Spa" />
+          <NavigationProperty Name="Xe" Relationship="Self.FK__DichVuSuDu__XeID__3F466844" FromRole="DichVuSuDung" ToRole="Xe" />
         </EntityType>
         <EntityType Name="HoaDon">
           <Key>
@@ -460,9 +518,9 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="NguoiDungID" Type="Int32" />
           <Property Name="NhanVienID" Type="Int32" />
           <Property Name="TrangThaiThanhToan" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__HoaDo__3E52440B" FromRole="HoaDon" ToRole="DichVuSuDung" />
-          <NavigationProperty Name="NguoiDung" Relationship="Self.FK__HoaDon__NguoiDun__36B12243" FromRole="HoaDon" ToRole="NguoiDung" />
-          <NavigationProperty Name="Phong" Relationship="Self.FK__HoaDon__PhongID__37A5467C" FromRole="HoaDon" ToRole="Phong" />
+          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__HoaDo__4222D4EF" FromRole="HoaDon" ToRole="DichVuSuDung" />
+          <NavigationProperty Name="NguoiDung" Relationship="Self.FK__HoaDon__NguoiDun__3A81B327" FromRole="HoaDon" ToRole="NguoiDung" />
+          <NavigationProperty Name="Phong" Relationship="Self.FK__HoaDon__PhongID__3B75D760" FromRole="HoaDon" ToRole="Phong" />
         </EntityType>
         <EntityType Name="LichLamViec">
           <Key>
@@ -478,7 +536,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="CaChieu" Type="Boolean" Nullable="false" />
           <Property Name="CaToi" Type="Boolean" Nullable="false" />
           <Property Name="CaDem" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="NhanVien" Relationship="Self.FK__LichLamVi__NhanV__60A75C0F" FromRole="LichLamViec" ToRole="NhanVien" />
+          <NavigationProperty Name="NhanVien" Relationship="Self.FK__LichLamVi__NhanV__52593CB8" FromRole="LichLamViec" ToRole="NhanVien" />
         </EntityType>
         <EntityType Name="LoaiPhong">
           <Key>
@@ -486,6 +544,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           </Key>
           <Property Name="IDLoai" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TenLoai" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Phong" Relationship="Self.FK__Phong__IDLoai__30F848ED" FromRole="LoaiPhong" ToRole="Phong" />
         </EntityType>
         <EntityType Name="Luong">
           <Key>
@@ -497,7 +556,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="Nam" Type="Int32" Nullable="false" />
           <Property Name="LuongMotGio" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="TongLuong" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <NavigationProperty Name="NhanVien" Relationship="Self.FK__Luong__NhanVienI__46E78A0C" FromRole="Luong" ToRole="NhanVien" />
+          <NavigationProperty Name="NhanVien" Relationship="Self.FK__Luong__NhanVienI__4BAC3F29" FromRole="Luong" ToRole="NhanVien" />
         </EntityType>
         <EntityType Name="MonAn">
           <Key>
@@ -506,9 +565,9 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="MonAnID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TenMon" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="GiaMon" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="IDBan" Type="Int32" />
+          <Property Name="SoLuongMon" Type="Int32" />
           <Property Name="ImageMonAn" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__MonAn__3C69FB99" FromRole="MonAn" ToRole="DichVuSuDung" />
+          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__MonAn__403A8C7D" FromRole="MonAn" ToRole="DichVuSuDung" />
         </EntityType>
         <EntityType Name="NguoiDung">
           <Key>
@@ -521,9 +580,9 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MatKhau" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ImageUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DatPhong" Relationship="Self.FK__DatPhong__NguoiD__4316F928" FromRole="NguoiDung" ToRole="DatPhong" />
-          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__Nguoi__3F466844" FromRole="NguoiDung" ToRole="DichVuSuDung" />
-          <NavigationProperty Name="HoaDon" Relationship="Self.FK__HoaDon__NguoiDun__36B12243" FromRole="NguoiDung" ToRole="HoaDon" />
+          <NavigationProperty Name="DatPhong" Relationship="Self.FK__DatPhong__NguoiD__46E78A0C" FromRole="NguoiDung" ToRole="DatPhong" />
+          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__Nguoi__4316F928" FromRole="NguoiDung" ToRole="DichVuSuDung" />
+          <NavigationProperty Name="HoaDon" Relationship="Self.FK__HoaDon__NguoiDun__3A81B327" FromRole="NguoiDung" ToRole="HoaDon" />
         </EntityType>
         <EntityType Name="NhanVien">
           <Key>
@@ -538,22 +597,24 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MatKhau" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ImageNhanVien" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ChucVu" Relationship="Self.FK__NhanVien__ChucVu__33D4B598" FromRole="NhanVien" ToRole="ChucVu" />
-          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__NhanV__3A81B327" FromRole="NhanVien" ToRole="DichVuSuDung" />
-          <NavigationProperty Name="LichLamViec" Relationship="Self.FK__LichLamVi__NhanV__60A75C0F" FromRole="NhanVien" ToRole="LichLamViec" />
-          <NavigationProperty Name="Luong1" Relationship="Self.FK__Luong__NhanVienI__46E78A0C" FromRole="NhanVien" ToRole="Luong" />
+          <NavigationProperty Name="ChucVu" Relationship="Self.FK__NhanVien__ChucVu__37A5467C" FromRole="NhanVien" ToRole="ChucVu" />
+          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__NhanV__3E52440B" FromRole="NhanVien" ToRole="DichVuSuDung" />
+          <NavigationProperty Name="LichLamViec" Relationship="Self.FK__LichLamVi__NhanV__52593CB8" FromRole="NhanVien" ToRole="LichLamViec" />
+          <NavigationProperty Name="Luong1" Relationship="Self.FK__Luong__NhanVienI__4BAC3F29" FromRole="NhanVien" ToRole="Luong" />
         </EntityType>
         <EntityType Name="Phong">
           <Key>
             <PropertyRef Name="PhongID" />
           </Key>
           <Property Name="PhongID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TinhTrang" Type="Boolean" />
-          <Property Name="LoaiP" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="IDTinhTrang" Type="Int32" />
+          <Property Name="IDLoai" Type="Int32" />
           <Property Name="Gia" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="ImagePhong" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DatPhong" Relationship="Self.FK__DatPhong__PhongI__440B1D61" FromRole="Phong" ToRole="DatPhong" />
-          <NavigationProperty Name="HoaDon" Relationship="Self.FK__HoaDon__PhongID__37A5467C" FromRole="Phong" ToRole="HoaDon" />
+          <NavigationProperty Name="DatPhong" Relationship="Self.FK__DatPhong__PhongI__47DBAE45" FromRole="Phong" ToRole="DatPhong" />
+          <NavigationProperty Name="HoaDon" Relationship="Self.FK__HoaDon__PhongID__3B75D760" FromRole="Phong" ToRole="HoaDon" />
+          <NavigationProperty Name="LoaiPhong" Relationship="Self.FK__Phong__IDLoai__30F848ED" FromRole="Phong" ToRole="LoaiPhong" />
+          <NavigationProperty Name="TinhTrangPhong" Relationship="Self.FK__Phong__IDTinhTra__300424B4" FromRole="Phong" ToRole="TinhTrangPhong" />
         </EntityType>
         <EntityType Name="Spa">
           <Key>
@@ -565,7 +626,16 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="GiaDichVu" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="ThoiGianDichVu" Type="Int32" />
           <Property Name="ImageSpa" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__SpaID__3D5E1FD2" FromRole="Spa" ToRole="DichVuSuDung" />
+          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuD__SpaID__412EB0B6" FromRole="Spa" ToRole="DichVuSuDung" />
+        </EntityType>
+        <EntityType Name="TinhTrangPhong">
+          <Key>
+            <PropertyRef Name="IDTinhTrang" />
+          </Key>
+          <Property Name="IDTinhTrang" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenTinhTrang" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="DatPhong" Relationship="Self.FK__DatPhong__IDTinh__48CFD27E" FromRole="TinhTrangPhong" ToRole="DatPhong" />
+          <NavigationProperty Name="Phong" Relationship="Self.FK__Phong__IDTinhTra__300424B4" FromRole="TinhTrangPhong" ToRole="Phong" />
         </EntityType>
         <EntityType Name="Xe">
           <Key>
@@ -578,9 +648,9 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <Property Name="SoChoNgoi" Type="Int32" />
           <Property Name="GiaXe" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="ImageXe" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuDu__XeID__3B75D760" FromRole="Xe" ToRole="DichVuSuDung" />
+          <NavigationProperty Name="DichVuSuDung" Relationship="Self.FK__DichVuSuDu__XeID__3F466844" FromRole="Xe" ToRole="DichVuSuDung" />
         </EntityType>
-        <Association Name="FK__NhanVien__ChucVu__33D4B598">
+        <Association Name="FK__NhanVien__ChucVu__37A5467C">
           <End Role="ChucVu" Type="Self.ChucVu" Multiplicity="0..1" />
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="*" />
           <ReferentialConstraint>
@@ -592,7 +662,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DatPhong__IDDich__4222D4EF">
+        <Association Name="FK__DatPhong__IDDich__45F365D3">
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="0..1" />
           <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -604,7 +674,19 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DatPhong__NguoiD__4316F928">
+        <Association Name="FK__DatPhong__IDTinh__48CFD27E">
+          <End Role="TinhTrangPhong" Type="Self.TinhTrangPhong" Multiplicity="0..1" />
+          <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TinhTrangPhong">
+              <PropertyRef Name="IDTinhTrang" />
+            </Principal>
+            <Dependent Role="DatPhong">
+              <PropertyRef Name="IDTinhTrang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DatPhong__NguoiD__46E78A0C">
           <End Role="NguoiDung" Type="Self.NguoiDung" Multiplicity="0..1" />
           <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -616,7 +698,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DatPhong__PhongI__440B1D61">
+        <Association Name="FK__DatPhong__PhongI__47DBAE45">
           <End Role="Phong" Type="Self.Phong" Multiplicity="0..1" />
           <End Role="DatPhong" Type="Self.DatPhong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -628,7 +710,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__HoaDo__3E52440B">
+        <Association Name="FK__DichVuSuD__HoaDo__4222D4EF">
           <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -640,7 +722,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__MonAn__3C69FB99">
+        <Association Name="FK__DichVuSuD__MonAn__403A8C7D">
           <End Role="MonAn" Type="Self.MonAn" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -652,7 +734,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__Nguoi__3F466844">
+        <Association Name="FK__DichVuSuD__Nguoi__4316F928">
           <End Role="NguoiDung" Type="Self.NguoiDung" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -664,7 +746,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__NhanV__3A81B327">
+        <Association Name="FK__DichVuSuD__NhanV__3E52440B">
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -676,7 +758,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuD__SpaID__3D5E1FD2">
+        <Association Name="FK__DichVuSuD__SpaID__412EB0B6">
           <End Role="Spa" Type="Self.Spa" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -688,7 +770,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DichVuSuDu__XeID__3B75D760">
+        <Association Name="FK__DichVuSuDu__XeID__3F466844">
           <End Role="Xe" Type="Self.Xe" Multiplicity="0..1" />
           <End Role="DichVuSuDung" Type="Self.DichVuSuDung" Multiplicity="*" />
           <ReferentialConstraint>
@@ -700,7 +782,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HoaDon__NguoiDun__36B12243">
+        <Association Name="FK__HoaDon__NguoiDun__3A81B327">
           <End Role="NguoiDung" Type="Self.NguoiDung" Multiplicity="0..1" />
           <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
@@ -712,7 +794,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HoaDon__PhongID__37A5467C">
+        <Association Name="FK__HoaDon__PhongID__3B75D760">
           <End Role="Phong" Type="Self.Phong" Multiplicity="0..1" />
           <End Role="HoaDon" Type="Self.HoaDon" Multiplicity="*" />
           <ReferentialConstraint>
@@ -724,7 +806,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__LichLamVi__NhanV__60A75C0F">
+        <Association Name="FK__LichLamVi__NhanV__52593CB8">
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="1" />
           <End Role="LichLamViec" Type="Self.LichLamViec" Multiplicity="*" />
           <ReferentialConstraint>
@@ -736,7 +818,19 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Luong__NhanVienI__46E78A0C">
+        <Association Name="FK__Phong__IDLoai__30F848ED">
+          <End Role="LoaiPhong" Type="Self.LoaiPhong" Multiplicity="0..1" />
+          <End Role="Phong" Type="Self.Phong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LoaiPhong">
+              <PropertyRef Name="IDLoai" />
+            </Principal>
+            <Dependent Role="Phong">
+              <PropertyRef Name="IDLoai" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Luong__NhanVienI__4BAC3F29">
           <End Role="NhanVien" Type="Self.NhanVien" Multiplicity="1" />
           <End Role="Luong" Type="Self.Luong" Multiplicity="*" />
           <ReferentialConstraint>
@@ -745,6 +839,18 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             </Principal>
             <Dependent Role="Luong">
               <PropertyRef Name="NhanVienID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Phong__IDTinhTra__300424B4">
+          <End Role="TinhTrangPhong" Type="Self.TinhTrangPhong" Multiplicity="0..1" />
+          <End Role="Phong" Type="Self.Phong" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TinhTrangPhong">
+              <PropertyRef Name="IDTinhTrang" />
+            </Principal>
+            <Dependent Role="Phong">
+              <PropertyRef Name="IDTinhTrang" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -761,62 +867,75 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
           <EntitySet Name="NhanVien" EntityType="Self.NhanVien" />
           <EntitySet Name="Phong" EntityType="Self.Phong" />
           <EntitySet Name="Spa" EntityType="Self.Spa" />
+          <EntitySet Name="TinhTrangPhong" EntityType="Self.TinhTrangPhong" />
           <EntitySet Name="Xe" EntityType="Self.Xe" />
-          <AssociationSet Name="FK__NhanVien__ChucVu__33D4B598" Association="Self.FK__NhanVien__ChucVu__33D4B598">
+          <AssociationSet Name="FK__NhanVien__ChucVu__37A5467C" Association="Self.FK__NhanVien__ChucVu__37A5467C">
             <End Role="ChucVu" EntitySet="ChucVu" />
             <End Role="NhanVien" EntitySet="NhanVien" />
           </AssociationSet>
-          <AssociationSet Name="FK__DatPhong__IDDich__4222D4EF" Association="Self.FK__DatPhong__IDDich__4222D4EF">
+          <AssociationSet Name="FK__DatPhong__IDDich__45F365D3" Association="Self.FK__DatPhong__IDDich__45F365D3">
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
             <End Role="DatPhong" EntitySet="DatPhong" />
           </AssociationSet>
-          <AssociationSet Name="FK__DatPhong__NguoiD__4316F928" Association="Self.FK__DatPhong__NguoiD__4316F928">
+          <AssociationSet Name="FK__DatPhong__IDTinh__48CFD27E" Association="Self.FK__DatPhong__IDTinh__48CFD27E">
+            <End Role="TinhTrangPhong" EntitySet="TinhTrangPhong" />
+            <End Role="DatPhong" EntitySet="DatPhong" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DatPhong__NguoiD__46E78A0C" Association="Self.FK__DatPhong__NguoiD__46E78A0C">
             <End Role="NguoiDung" EntitySet="NguoiDung" />
             <End Role="DatPhong" EntitySet="DatPhong" />
           </AssociationSet>
-          <AssociationSet Name="FK__DatPhong__PhongI__440B1D61" Association="Self.FK__DatPhong__PhongI__440B1D61">
+          <AssociationSet Name="FK__DatPhong__PhongI__47DBAE45" Association="Self.FK__DatPhong__PhongI__47DBAE45">
             <End Role="Phong" EntitySet="Phong" />
             <End Role="DatPhong" EntitySet="DatPhong" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__HoaDo__3E52440B" Association="Self.FK__DichVuSuD__HoaDo__3E52440B">
+          <AssociationSet Name="FK__DichVuSuD__HoaDo__4222D4EF" Association="Self.FK__DichVuSuD__HoaDo__4222D4EF">
             <End Role="HoaDon" EntitySet="HoaDon" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__MonAn__3C69FB99" Association="Self.FK__DichVuSuD__MonAn__3C69FB99">
+          <AssociationSet Name="FK__DichVuSuD__MonAn__403A8C7D" Association="Self.FK__DichVuSuD__MonAn__403A8C7D">
             <End Role="MonAn" EntitySet="MonAn" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__Nguoi__3F466844" Association="Self.FK__DichVuSuD__Nguoi__3F466844">
+          <AssociationSet Name="FK__DichVuSuD__Nguoi__4316F928" Association="Self.FK__DichVuSuD__Nguoi__4316F928">
             <End Role="NguoiDung" EntitySet="NguoiDung" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__NhanV__3A81B327" Association="Self.FK__DichVuSuD__NhanV__3A81B327">
+          <AssociationSet Name="FK__DichVuSuD__NhanV__3E52440B" Association="Self.FK__DichVuSuD__NhanV__3E52440B">
             <End Role="NhanVien" EntitySet="NhanVien" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuD__SpaID__3D5E1FD2" Association="Self.FK__DichVuSuD__SpaID__3D5E1FD2">
+          <AssociationSet Name="FK__DichVuSuD__SpaID__412EB0B6" Association="Self.FK__DichVuSuD__SpaID__412EB0B6">
             <End Role="Spa" EntitySet="Spa" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__DichVuSuDu__XeID__3B75D760" Association="Self.FK__DichVuSuDu__XeID__3B75D760">
+          <AssociationSet Name="FK__DichVuSuDu__XeID__3F466844" Association="Self.FK__DichVuSuDu__XeID__3F466844">
             <End Role="Xe" EntitySet="Xe" />
             <End Role="DichVuSuDung" EntitySet="DichVuSuDung" />
           </AssociationSet>
-          <AssociationSet Name="FK__HoaDon__NguoiDun__36B12243" Association="Self.FK__HoaDon__NguoiDun__36B12243">
+          <AssociationSet Name="FK__HoaDon__NguoiDun__3A81B327" Association="Self.FK__HoaDon__NguoiDun__3A81B327">
             <End Role="NguoiDung" EntitySet="NguoiDung" />
             <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__HoaDon__PhongID__37A5467C" Association="Self.FK__HoaDon__PhongID__37A5467C">
+          <AssociationSet Name="FK__HoaDon__PhongID__3B75D760" Association="Self.FK__HoaDon__PhongID__3B75D760">
             <End Role="Phong" EntitySet="Phong" />
             <End Role="HoaDon" EntitySet="HoaDon" />
           </AssociationSet>
-          <AssociationSet Name="FK__LichLamVi__NhanV__60A75C0F" Association="Self.FK__LichLamVi__NhanV__60A75C0F">
+          <AssociationSet Name="FK__LichLamVi__NhanV__52593CB8" Association="Self.FK__LichLamVi__NhanV__52593CB8">
             <End Role="NhanVien" EntitySet="NhanVien" />
             <End Role="LichLamViec" EntitySet="LichLamViec" />
           </AssociationSet>
-          <AssociationSet Name="FK__Luong__NhanVienI__46E78A0C" Association="Self.FK__Luong__NhanVienI__46E78A0C">
+          <AssociationSet Name="FK__Phong__IDLoai__30F848ED" Association="Self.FK__Phong__IDLoai__30F848ED">
+            <End Role="LoaiPhong" EntitySet="LoaiPhong" />
+            <End Role="Phong" EntitySet="Phong" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Luong__NhanVienI__4BAC3F29" Association="Self.FK__Luong__NhanVienI__4BAC3F29">
             <End Role="NhanVien" EntitySet="NhanVien" />
             <End Role="Luong" EntitySet="Luong" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Phong__IDTinhTra__300424B4" Association="Self.FK__Phong__IDTinhTra__300424B4">
+            <End Role="TinhTrangPhong" EntitySet="TinhTrangPhong" />
+            <End Role="Phong" EntitySet="Phong" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -844,6 +963,8 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
                 <ScalarProperty Name="NgayTraPhong" ColumnName="NgayTraPhong" />
                 <ScalarProperty Name="NguoiDungID" ColumnName="NguoiDungID" />
                 <ScalarProperty Name="IDDichVuSuDung" ColumnName="IDDichVuSuDung" />
+                <ScalarProperty Name="IDTinhTrang" ColumnName="IDTinhTrang" />
+                <ScalarProperty Name="ImagePhong" ColumnName="ImagePhong" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -919,7 +1040,7 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
                 <ScalarProperty Name="MonAnID" ColumnName="MonAnID" />
                 <ScalarProperty Name="TenMon" ColumnName="TenMon" />
                 <ScalarProperty Name="GiaMon" ColumnName="GiaMon" />
-                <ScalarProperty Name="IDBan" ColumnName="IDBan" />
+                <ScalarProperty Name="SoLuongMon" ColumnName="SoLuongMon" />
                 <ScalarProperty Name="ImageMonAn" ColumnName="ImageMonAn" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -956,8 +1077,8 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
             <EntityTypeMapping TypeName="QLKSModel.Phong">
               <MappingFragment StoreEntitySet="Phong">
                 <ScalarProperty Name="PhongID" ColumnName="PhongID" />
-                <ScalarProperty Name="TinhTrang" ColumnName="TinhTrang" />
-                <ScalarProperty Name="LoaiP" ColumnName="LoaiP" />
+                <ScalarProperty Name="IDTinhTrang" ColumnName="IDTinhTrang" />
+                <ScalarProperty Name="IDLoai" ColumnName="IDLoai" />
                 <ScalarProperty Name="Gia" ColumnName="Gia" />
                 <ScalarProperty Name="ImagePhong" ColumnName="ImagePhong" />
               </MappingFragment>
@@ -972,6 +1093,14 @@ warning 6035: The relationship 'FK__Phong__LoaiP__2D27B809' has columns that are
                 <ScalarProperty Name="GiaDichVu" ColumnName="GiaDichVu" />
                 <ScalarProperty Name="ThoiGianDichVu" ColumnName="ThoiGianDichVu" />
                 <ScalarProperty Name="ImageSpa" ColumnName="ImageSpa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TinhTrangPhong">
+            <EntityTypeMapping TypeName="QLKSModel.TinhTrangPhong">
+              <MappingFragment StoreEntitySet="TinhTrangPhong">
+                <ScalarProperty Name="IDTinhTrang" ColumnName="IDTinhTrang" />
+                <ScalarProperty Name="TenTinhTrang" ColumnName="TenTinhTrang" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

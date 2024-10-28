@@ -10,7 +10,6 @@
             <i class="fas fa-arrow-left"></i> Trở Về
         </a>
     </div>
-
     @using (Html.BeginForm("Edit", "LoginUser", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
@@ -134,26 +133,25 @@
     #UploadImage {
         display: none;
     }
-
     #file-chosen {
         display: inline-block;
         margin-top: 10px;
         font-size: 14px;
-        color: #7f8c8d;
+        color: #7f8c8d; 
     }
-
     .avatar-image {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
+        width: 150px; 
+        height: 150px; 
+        border-radius: 50%; 
         object-fit: cover;
         margin-top: 10px;
     }
 
     .avatar-icon {
-        font-size: 120px;
+        font-size: 120px; 
         color: #3498db;
     }
+
 </style>
 <link rel="stylesheet" href="~/Content/EditLoginUser.css">
 <!-- Add Font Awesome for icons -->
