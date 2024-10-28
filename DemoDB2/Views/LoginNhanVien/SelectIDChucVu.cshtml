@@ -1,3 +1,4 @@
 ﻿@model DemoDB2.Models.ChucVu
 @Html.DropDownListFor(model => model.ChucVuID,
 new SelectList(Model.ListChucVu.OrderBy(model => model.TenChucVu), "ChucVuID", "TenChucVu"), "--Select Cate--")
+ 
