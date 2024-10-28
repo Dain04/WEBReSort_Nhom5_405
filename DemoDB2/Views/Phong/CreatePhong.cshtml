@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="form-group row mb-3">
-                            @Html.Label("IDTinhTrang", "Tình Trạng Phòng", new { @class = "col-sm-3 col-form-label" })
+                            @Html.Label("IDTinhTrang", "Tình Trạng Phòng", new { @class = "col-sm-3 col-form-label" }) 
                             <div class="col-sm-9">
                                 @Html.DropDownListFor(model => model.IDTinhTrang, ViewBag.TinhTrangPhongList as SelectList, "Chọn tình trạng phòng", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.IDTinhTrang, "", new { @class = "text-danger" })

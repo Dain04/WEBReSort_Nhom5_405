@@ -8,7 +8,7 @@ using PagedList;
 using System.Data.Entity;
 
 namespace DemoDB2.Controllers
-{
+{ 
     public class PhongController : Controller
     {
         QLKSEntities database = new QLKSEntities();
