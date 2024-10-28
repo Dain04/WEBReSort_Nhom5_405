@@ -133,7 +133,6 @@ namespace DemoDB2.Controllers
                 {
                     existingMonAn.TenMon = monAn.TenMon;
                     existingMonAn.GiaMon = monAn.GiaMon;
-                    // Cập nhật các trường khác nếu cần
 
                     if (monAn.UploadImage != null && monAn.UploadImage.ContentLength > 0)
                     {
