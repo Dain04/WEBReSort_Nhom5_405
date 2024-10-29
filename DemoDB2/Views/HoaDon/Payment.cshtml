@@ -112,7 +112,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("ConfirmPayment", "HoaDon", new { id = Model.HoaDonID }, FormMethod.Post, new { id = "paymentForm" }))
+@using (Html.BeginForm("IndexKH", "HoaDon", new { id = Model.HoaDonID }, FormMethod.Post, new { id = "paymentForm" }))
 {
     @Html.AntiForgeryToken()
 }

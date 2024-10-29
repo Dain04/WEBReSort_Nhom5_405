@@ -51,7 +51,7 @@ namespace DemoDB2.Controllers
             var hoaDon = db.HoaDon
                 .Include(h => h.NguoiDung)
                 .Include(h => h.Phong)
-                .Include(h => h.Phong.LoaiPhong) // Thêm Include LoaiPhong
+                .Include(h => h.Phong.LoaiPhong)
                 .AsNoTracking()
                 .ToList();
 
@@ -68,11 +68,17 @@ namespace DemoDB2.Controllers
                         int soNgayO = (hd.NgayTraPhong.Value - hd.NgayNhanPhong.Value).Days;
                         hd.TongTien = phong.Gia * soNgayO;
                     }
+
+                    // Set default payment status if null
+                    if (string.IsNullOrEmpty(hd.TrangThaiThanhToan))
+                    {
+                        hd.TrangThaiThanhToan = "Chưa thanh toán";
+                    }
                 }
             }
-
             return View(hoaDon);
         }
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -296,44 +302,6 @@ namespace DemoDB2.Controllers
             }
             base.Dispose(disposing);
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ConfirmPayment(int id)
-        //{
-        //    var hoaDon = db.HoaDon.Find(id);
-        //    if (hoaDon == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-
-        //    using (var transaction = db.Database.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            hoaDon.TrangThaiThanhToan = "Đã thanh toán";
-
-        //            // Cập nhật TinhTrang của Phòng
-        //            var phong = db.Phong.Find(hoaDon.PhongID);
-        //            if (phong != null)
-        //            {
-        //                phong.TinhTrangPhong = true; // true đại diện cho "Trống"
-        //            }
-
-        //            db.SaveChanges();
-        //            transaction.Commit();
-
-        //            TempData["SuccessMessage"] = "Thanh toán thành công!";
-        //            return RedirectToAction("IndexKH");
-        //        }
-        //        catch (Exception)
-        //        {
-        //            transaction.Rollback();
-        //            TempData["ErrorMessage"] = "Có lỗi xảy ra trong quá trình thanh toán.";
-        //            return RedirectToAction("IndexKH");
-        //        }
-        //    }
-        //}
-
         public ActionResult Payment(int id)
         {
             var hoaDon = db.HoaDon.Find(id);
@@ -369,5 +337,48 @@ namespace DemoDB2.Controllers
             ViewBag.TongTien = tongTien;
             return View(hoaDon);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmPayment(int id)
+        {
+            var hoaDon = db.HoaDon.Find(id);
+            if (hoaDon == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Cập nhật trạng thái thanh toán của hóa đơn
+            hoaDon.TrangThaiThanhToan = "Đã thanh toán";
+
+            // Cập nhật trạng thái phòng
+            if (hoaDon.PhongID.HasValue)
+            {
+                var phong = db.Phong.Find(hoaDon.PhongID.Value);
+                if (phong != null)
+                {
+                    // Tìm trạng thái "Đã thanh toán" trong bảng TinhTrangPhong
+                    var tinhTrangDaThanhToan = db.TinhTrangPhong.FirstOrDefault(t => t.TenTinhTrang == "Đã thanh toán");
+                    if (tinhTrangDaThanhToan != null)
+                    {
+                        phong.IDTinhTrang = tinhTrangDaThanhToan.IDTinhTrang;
+                        db.Entry(phong).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Không tìm thấy trạng thái phòng 'Đã thanh toán'.";
+                        return RedirectToAction("IndexKH");
+                    }
+                }
+            }
+
+            // Lưu thay đổi
+            db.Entry(hoaDon).State = EntityState.Modified;
+            db.SaveChanges();
+
+            TempData["SuccessMessage"] = "Thanh toán thành công!";
+            return RedirectToAction("IndexKH");
+        }
+
     }
 }
+
