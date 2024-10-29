@@ -357,7 +357,7 @@ namespace DemoDB2.Controllers
                 if (phong != null)
                 {
                     // Tìm trạng thái "Đã thanh toán" trong bảng TinhTrangPhong
-                    var tinhTrangDaThanhToan = db.TinhTrangPhong.FirstOrDefault(t => t.TenTinhTrang == "Đã thanh toán");
+                    var tinhTrangDaThanhToan = db.TinhTrangPhong.FirstOrDefault(t => t.IDTinhTrang == "7");
                     if (tinhTrangDaThanhToan != null)
                     {
                         phong.IDTinhTrang = tinhTrangDaThanhToan.IDTinhTrang;
