@@ -20,7 +20,7 @@
             <ul>
                 @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    <li>@modelError.ErrorMessage</li>
+                    <li>@modelError.ErrorMessage</li> 
                 }
             </ul>
         </div>

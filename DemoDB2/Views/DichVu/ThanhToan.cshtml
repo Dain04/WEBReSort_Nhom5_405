@@ -16,7 +16,7 @@
                     <table class="table table-borderless">
                         @foreach (var item in Model.MonAn)
                         {
-                            <tr>
+                            <tr> 
                                 <td>@item.TenMon</td>
                                 <td>@item.SoLuong x @string.Format("{0:N0} VND", item.GiaMon)</td>
                                 <td class="text-right">@string.Format("{0:N0} VND", item.GiaMon * item.SoLuong)</td>

@@ -7,7 +7,7 @@
     <div>
         <label>Chọn Phòng:</label>
         <select name="PhongID">
-            @foreach (var phong in Model)
+            @foreach (var phong in Model) 
             {
                 <option value="@phong.PhongID">Phòng @phong.PhongID - @phong.Gia.Value.ToString("N0") VNĐ</option>
             }

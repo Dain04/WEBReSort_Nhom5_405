@@ -11,7 +11,7 @@
     {
         @Html.AntiForgeryToken()
         <table class="table-bordered">
-       
+        
             <tr>
                 <td>@Html.LabelFor(model => model.HieuXe ,"Hiệu Xe")</td>
                 <td>@Html.EditorFor(model => model.HieuXe,new { htmlAttributes = new { @class = "form-control" } })</td>

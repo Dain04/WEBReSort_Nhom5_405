@@ -14,7 +14,7 @@
             @Html.ActionLink("Thêm xe mới", "CreateXe", null, new { @class = "btn btn-success" })
         </div>
         @using (Html.BeginForm("ViewXe", "DichVu", FormMethod.Get, new { @class = "form-inline" }))
-        {
+        { 
             <div class="input-group">
                 <input type="text" name="_name" class="form-control" placeholder="Tìm kiếm..." />
                 <div class="input-group-append">
