@@ -55,7 +55,7 @@
                                     </td>
                                     <td>
                                         @Html.ActionLink("Chi tiết", "DetailsKH", new { id = item.HoaDonID }, new { @class = "btn btn-info btn-sm" })
-                                        @if (item.TrangThaiThanhToan != "   " && item.Phong != null && item.Phong.IDTinhTrang != 7) 
+                                        @if (item.TrangThaiThanhToan != "Đã thanh toán" && item.Phong != null && item.Phong.IDTinhTrang == 3)
                                         {
                                             @Html.ActionLink("Thanh toán", "Payment", new { id = item.HoaDonID }, new { @class = "btn btn-success btn-sm ml-1" })
                                         }

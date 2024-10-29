@@ -356,22 +356,19 @@ namespace DemoDB2.Controllers
                 var phong = db.Phong.Find(hoaDon.PhongID.Value);
                 if (phong != null)
                 {
-                    // Tìm trạng thái "Đã thanh toán" trong bảng TinhTrangPhong
-                    var tinhTrangDaThanhToan = db.TinhTrangPhong.FirstOrDefault(t => t.IDTinhTrang == "7");
-                    if (tinhTrangDaThanhToan != null)
+                    // Cập nhật trạng thái phòng thành "Đã thanh toán" (ID = 7)
+                    phong.IDTinhTrang = 7; 
+                    db.Entry(phong).State = EntityState.Modified;
+
+                    // Cập nhật trạng thái trong bảng DatPhong
+                    var datPhong = db.DatPhong.FirstOrDefault(dp => dp.PhongID == hoaDon.PhongID);
+                    if (datPhong != null)
                     {
-                        phong.IDTinhTrang = tinhTrangDaThanhToan.IDTinhTrang;
-                        db.Entry(phong).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        TempData["ErrorMessage"] = "Không tìm thấy trạng thái phòng 'Đã thanh toán'.";
-                        return RedirectToAction("IndexKH");
+                        datPhong.IDTinhTrang = 7; 
+                        db.Entry(datPhong).State = EntityState.Modified;
                     }
                 }
             }
-
-            // Lưu thay đổi
             db.Entry(hoaDon).State = EntityState.Modified;
             db.SaveChanges();
 
