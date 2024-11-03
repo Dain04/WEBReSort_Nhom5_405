@@ -161,7 +161,7 @@
             @Html.ActionLink("HARMONY", "TrangChuNV", "HomeNV", new { area = "" }, new { @class = "navbar-brand" })
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    @if (Session["NameUser"] == null)
+                    @if (Session["NhanVienName"] == null)
                     {
                         @*<li><a href="/LoginUser/RegisterUser">ĐĂNG KÝ</a></li>*@
                         <li><a href="/LoginNhanVien/LoginNV">ĐĂNG NHẬP</a></li>
@@ -170,7 +170,7 @@
                     {
                         <li><a href="/LoginNhanVien/ProfileNV">HỒ SƠ</a></li>
                         <li class="format-hello">
-                            <span>Hello @Session["NameUser"]</span>
+                            <span>Hello @Session["NhanVienName"]</span>
                         </li>
                         <li><a href="/LoginUser/LogOutUser">ĐĂNG XUẤT</a></li>
                     }
