@@ -8,10 +8,159 @@ using PagedList;
 using System.Data.Entity;
 
 namespace DemoDB2.Controllers
-{ 
+{
+    [Route("api/phong")]
     public class PhongController : Controller
     {
         QLKSEntities database = new QLKSEntities();
+
+        // API: Lấy danh sách tất cả các phòng
+        [HttpGet]
+        public JsonResult GetPhongList(int? TinhTrangID)
+        {
+            var phongs = database.Phong
+                .Include(p => p.LoaiPhong)
+                .Include(p => p.TinhTrangPhong);
+
+            if (TinhTrangID.HasValue)
+            {
+                phongs = phongs.Where(p => p.IDTinhTrang == TinhTrangID.Value);
+            }
+
+            var phongList = phongs.Select(p => new
+            {
+                p.PhongID,
+                p.Gia,
+                LoaiPhong = p.LoaiPhong.TenLoai,
+                TinhTrang = p.TinhTrangPhong.TenTinhTrang,
+                p.ImagePhong
+            }).ToList();
+
+            return Json(phongList, JsonRequestBehavior.AllowGet);
+        }
+
+
+        // API: Lấy thông tin chi tiết của một phòng theo ID
+        [HttpGet]
+        public JsonResult GetPhongDetails(int id)
+        {
+            var phong = database.Phong
+                .Include(p => p.LoaiPhong)
+                .Include(p => p.TinhTrangPhong)
+                .Where(p => p.PhongID == id)
+                .Select(p => new
+                {
+                    p.PhongID,
+                    p.Gia,
+                    LoaiPhong = p.LoaiPhong.TenLoai,
+                    TinhTrang = p.TinhTrangPhong.TenTinhTrang,
+                    p.ImagePhong
+                })
+                .FirstOrDefault();
+
+            if (phong == null)
+            {
+                return Json(new { error = "Phong not found" }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(phong, JsonRequestBehavior.AllowGet);
+        }
+
+
+        // API: Thêm mới một phòng
+        [HttpPost]
+        public JsonResult CreatePhongApi(Phong pro)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Handle image upload (if any)
+                    if (pro.UploadImage != null && pro.UploadImage.ContentLength > 0)
+                    {
+                        string filename = Path.GetFileNameWithoutExtension(pro.UploadImage.FileName);
+                        string extension = Path.GetExtension(pro.UploadImage.FileName);
+                        filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                        string path = Path.Combine(Server.MapPath("~/Content/images/"), filename);
+                        pro.ImagePhong = "~/Content/images/" + filename;
+                        pro.UploadImage.SaveAs(path);
+                    }
+
+                    database.Phong.Add(pro);
+                    database.SaveChanges();
+                    return Json(new { success = true, message = "Room created successfully" });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+            }
+
+            return Json(new { success = false, message = "Invalid model state" });
+        }
+    
+
+        // API: Cập nhật thông tin một phòng
+        [HttpPost]
+        public JsonResult EditPhongApi(Phong phong)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingPhong = database.Phong.Find(phong.PhongID);
+                if (existingPhong == null)
+                {
+                    return Json(new { success = false, message = "Phong not found" });
+                }
+
+                // Update properties
+                existingPhong.Gia = phong.Gia;
+                existingPhong.IDLoai = phong.IDLoai;
+                existingPhong.IDTinhTrang = phong.IDTinhTrang;
+
+                // Handle image upload
+                if (phong.UploadImage != null && phong.UploadImage.ContentLength > 0)
+                {
+                    string filename = Path.GetFileNameWithoutExtension(phong.UploadImage.FileName);
+                    string extension = Path.GetExtension(phong.UploadImage.FileName);
+                    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+                    string path = Path.Combine(Server.MapPath("~/Content/images/"), filename);
+                    phong.ImagePhong = "~/Content/images/" + filename;
+                    phong.UploadImage.SaveAs(path);
+                }
+                else
+                {
+                    phong.ImagePhong = existingPhong.ImagePhong;
+                }
+
+                database.Entry(existingPhong).State = EntityState.Modified;
+                database.SaveChanges();
+                return Json(new { success = true, message = "Room updated successfully" });
+            }
+            return Json(new { success = false, message = "Invalid model state" });
+        }
+
+
+        // API: Xóa một phòng theo ID
+        [HttpPost]
+        public JsonResult DeletePhongApi(int id)
+        {
+            try
+            {
+                var phong = database.Phong.Find(id);
+                if (phong == null)
+                {
+                    return Json(new { success = false, message = "Room not found" });
+                }
+
+                database.Phong.Remove(phong);
+                database.SaveChanges();
+                return Json(new { success = true, message = "Room deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
 
         public ActionResult SelectLoai()
         {

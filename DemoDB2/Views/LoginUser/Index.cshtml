@@ -173,3 +173,25 @@
         margin-bottom: 20px;
     }
 </style>
+<script>
+    function loginUser() {
+        var email = $('#userEmail').val();
+        var password = $('#userPassword').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/Login/LoginUser',
+            data: { Email: email, MatKhau: password },
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('An error occurred while logging in.');
+            }
+        });
+    }
+</script>

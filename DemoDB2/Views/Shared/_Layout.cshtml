@@ -21,7 +21,7 @@
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    @if (Session["NameUser"] == null)
+                    @if (Session["USER_EMAIL"] == null)
                     {
                         <li><a href="/Home/AboutUs">ABOUT US</a></li>
                         <li class="dropdown">
@@ -64,9 +64,9 @@
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                @if (Session["ProfileImage"] != null)
+                                @if (Session["USER_PROFILE_IMAGE"] != null)
                                 {
-                                    <img src="@Url.Content(Session["ProfileImage"].ToString())" alt="Avatar" class="avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                    <img src="@Url.Content(Session["USER_PROFILE_IMAGE"].ToString())" alt="Avatar" class="avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
                                 }
                                 else
                                 {

@@ -121,4 +121,26 @@
         color: red;
     }
 </style>
+<script>
+    function loginEmployee() {
+        var email = $('#employeeEmail').val();
+        var password = $('#employeePassword').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/Login/LoginEmployee',
+            data: { Email: email, MatKhau: password },
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('An error occurred while logging in.');
+            }
+        });
+    }
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">

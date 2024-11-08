@@ -30,21 +30,6 @@
                     <td><i class="fas fa-user-tag"></i> Tên Chức Vụ</td>
                     <td>@Model.TenChucVu</td>
                 </tr>
-                @*<tr>
-                    <td><i class="fas fa-money-bill-wave"></i> Lương mới nhất</td>
-                    <td>
-                        @if (ViewBag.LuongMoiNhat != null)
-                        {
-                            <span>@string.Format("{0:N0} VND", ViewBag.LuongMoiNhat.TongLuong)</span>
-                            <br />
-                            <small>(Tháng @ViewBag.LuongMoiNhat.Thang/@ViewBag.LuongMoiNhat.Nam)</small>
-                        }
-                        else
-                        {
-                            <span>Chưa có thông tin lương</span>
-                        }
-                    </td>
-                </tr>*@
                 <tr>
                     <td><i class="fas fa-map-marker-alt"></i> Vị trí</td>
                     <td>@Model.DiaChi</td>
