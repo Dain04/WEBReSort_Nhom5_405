@@ -86,41 +86,9 @@
 </div>
 
 @Html.PagedListPager(Model, page => Url.Action("ViewPhongTieuChuan", new { page }))
-<div id="roomList"></div>
+
 <script src="~/Content/PhongList.js"></script>
 <script>
-    // Hàm load danh sách phòng sử dụng API
-    function loadRooms() {
-        $.ajax({
-            url: '/api/phong/GetPhongList',
-            method: 'GET',
-            success: function (data) {
-                let html = '';
-                data.forEach(room => {
-                    html += `
-                    <div class="room-item">
-                        <h3>${room.LoaiPhong}</h3>
-                        <p>Giá: ${room.Gia}</p>
-                        <p>Tình trạng: ${room.TinhTrang}</p>
-                        <img src="${room.ImagePhong}" alt="${room.LoaiPhong}" />
-                    </div>
-                `;
-                });
-                $('#roomList').html(html);
-            },
-            error: function () {
-                $('#roomList').html('<p>Không thể tải danh sách phòng.</p>');
-            }
-        });
-    }
-
-    // Gọi hàm loadRooms() khi trang đã tải xong
-    $(document).ready(function () {
-        loadRooms();
-    });
-
-
-
     $(document).ready(function () {
         $('.btn-book').click(function (e) {
             e.preventDefault();

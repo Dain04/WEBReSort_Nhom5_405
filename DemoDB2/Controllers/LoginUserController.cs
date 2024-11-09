@@ -20,76 +20,26 @@ namespace DemoDB2.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult LoginAcount(NguoiDung _user)
         {
-            var check = database.NguoiDung.FirstOrDefault(s => s.Email == _user.Email && s.MatKhau == _user.MatKhau);
+            var check = database.NguoiDung.Where(s => s.Email == _user.Email && s.MatKhau == _user.MatKhau).FirstOrDefault();
             if (check == null)
             {
                 ViewBag.ErrorInfo = "Sai thông tin đăng nhập";
                 return View("Index");
             }
-
-            System.Diagnostics.Debug.WriteLine($"User logging in: {_user.Email}");
-
-            // Set Session với kiểm tra null
-            database.Configuration.ValidateOnSaveEnabled = false;
-            if (check.NguoiDungID != 0) // Kiểm tra ID hợp lệ
+            else
             {
-                Session[SessionManager.USER_ID] = check.NguoiDungID;
-                Session[SessionManager.USER_EMAIL] = _user.Email;
-                Session[SessionManager.USER_PASSWORD] = check.MatKhau;
-                Session[SessionManager.USER_PROFILE_IMAGE] = check.ImageUser ?? "/Content/Images/default-avatar.png";
-
-                // Debug để kiểm tra
-                System.Diagnostics.Debug.WriteLine($"Set USER_ID in Session: {check.NguoiDungID}");
-                System.Diagnostics.Debug.WriteLine($"Set USER_EMAIL in Session: {_user.Email}");
+                database.Configuration.ValidateOnSaveEnabled = false;
+                Session["NameUser"] = _user.Email;
+                Session["ID"] = check.NguoiDungID;
+                Session["ProfileImage"] = check.ImageUser ?? "/Content/Images/default-avatar.png";
+                return RedirectToAction("TrangChu", "Home");
             }
-
-            return RedirectToAction("TrangChu", "Home");
         }
-        public ActionResult LogOutUser()
-        {
-            System.Diagnostics.Debug.WriteLine("User logging out");
-            if (SessionManager.IsUserLoggedIn())
-            {
-                SessionManager.ClearUserSession();
-            }
-            return RedirectToAction("Index", "LoginUser");
-        }
-        public new ActionResult Profile()
-        {
-            // Kiểm tra đăng nhập
-            if (!SessionManager.IsUserLoggedIn())
-            {
-                return RedirectToAction("Index", "LoginUser");
-            }
 
-            // Lấy thông tin từ Session với null checking
-            var userEmail = Session[SessionManager.USER_EMAIL]?.ToString();
-            var userId = Session[SessionManager.USER_ID];
-
-            // Kiểm tra null cho cả email và id
-            if (string.IsNullOrEmpty(userEmail) || userId == null)
-            {
-                return RedirectToAction("Index", "LoginUser");
-            }
-
-            // Convert userId sang int sau khi đã kiểm tra null
-            int id = Convert.ToInt32(userId);
-
-            // Tìm user trong database
-            NguoiDung user = database.NguoiDung
-                .Where(s => s.Email == userEmail && s.NguoiDungID == id)
-                .FirstOrDefault();
-
-            if (user == null)
-            {
-                return RedirectToAction("Index", "LoginUser");
-            }
-
-            return View(user);
-        }
         public ActionResult RegisterUser()
         {
             return View();
@@ -146,9 +96,30 @@ namespace DemoDB2.Controllers
             return View(_user);
         }
 
-     
+        public ActionResult LogOutUser()
+        {
+            Session.Abandon();
+            return RedirectToAction("Index", "LoginUser");
+        }
 
-      
+        public new ActionResult Profile()
+        {
+            if (Session["NameUser"] == null || Session["ID"] == null)
+            {
+                return RedirectToAction("Index", "LoginUser");
+            }
+
+            string nameUser = (string)Session["NameUser"];
+            int id = (int)Session["ID"];
+
+            NguoiDung user = database.NguoiDung.Where(s => s.Email == nameUser && s.NguoiDungID == id).FirstOrDefault();
+
+            if (user == null)
+            {
+                return RedirectToAction("Index", "LoginUser");
+            }
+            return View(user);
+        }
 
         public ActionResult Edit(int id)
         {
@@ -269,6 +240,7 @@ namespace DemoDB2.Controllers
 
             // Kiểm tra xem người dùng đã tồn tại trong cơ sở dữ liệu chưa
             var user = database.NguoiDung.FirstOrDefault(u => u.Email == loginInfo.Email);
+
             if (user == null)
             {
                 // Tạo người dùng mới nếu chưa tồn tại
@@ -277,9 +249,8 @@ namespace DemoDB2.Controllers
                     Email = loginInfo.Email,
                     TenNguoiDung = loginInfo.DefaultUserName ?? "Unknown",
                     MatKhau = "123", // Đặt một mật khẩu mặc định
-                    ImageUser = "/Content/Images/default-avatar.png" // Thêm ảnh mặc định
+                                                    
                 };
-
                 database.NguoiDung.Add(user);
                 try
                 {
@@ -294,22 +265,18 @@ namespace DemoDB2.Controllers
                             System.Diagnostics.Debug.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
                         }
                     }
-                    return RedirectToAction("Error", "Home");
+                    // Log the error or handle it appropriately
+                    return RedirectToAction("Error", "Home"); // Redirect to an error page
                 }
             }
 
             // Đăng nhập người dùng
             AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = false }, loginInfo.ExternalIdentity);
 
-            // Thiết lập các biến session sử dụng SessionManager
-            Session[SessionManager.USER_ID] = user.NguoiDungID;
-            Session[SessionManager.USER_EMAIL] = user.Email;
-            Session[SessionManager.USER_PASSWORD] = user.MatKhau;
-            Session[SessionManager.USER_PROFILE_IMAGE] = user.ImageUser ?? "/Content/Images/default-avatar.png";
-
-            // Debug logging
-            System.Diagnostics.Debug.WriteLine($"Google login - Set USER_ID in Session: {user.NguoiDungID}");
-            System.Diagnostics.Debug.WriteLine($"Google login - Set USER_EMAIL in Session: {user.Email}");
+            // Thiết lập các biến session
+            Session["NameUser"] = user.Email;
+            Session["ID"] = user.NguoiDungID;
+          
 
             return RedirectToAction("TrangChu", "Home");
         }

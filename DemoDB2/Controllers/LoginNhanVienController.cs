@@ -19,37 +19,36 @@ namespace DemoDB2.Controllers
         {
             return View();
         }
-         [HttpPost]
-    public ActionResult LoginNV(NhanVien _user)
-    {
-        var check = database.NhanVien.FirstOrDefault(s => s.Email == _user.Email && s.MatKhau == _user.MatKhau);
-        if (check == null)
+        [HttpPost]
+        public ActionResult LoginNV(NhanVien _user)
         {
-            ViewBag.ErrorInfo = "Sai thông tin đăng nhập";
-            return View("LoginNV");
+            var check = database.NhanVien.Where(s => s.Email == _user.Email && s.MatKhau == _user.MatKhau).FirstOrDefault();
+            if (check == null)
+            {
+                ViewBag.ErrorInfo = "Sai thông tin đăng nhập";
+                return View("LoginNV");
+            }
+            else
+            {
+                // Debug để kiểm tra thông tin nhân viên
+                System.Diagnostics.Debug.WriteLine($"Đăng nhập thành công: {check.Email}");
+
+                database.Configuration.ValidateOnSaveEnabled = false;
+                Session["NhanVienName"] = _user.Email;
+                Session["PasswordUser"] = _user.MatKhau;
+                Session["NhanVienID"] = check.NhanVienID;
+                Session["ChucVuID"] = check.ChucVuID;
+                Session["TenChucVu"] = check.ChucVu.TenChucVu;
+
+                return RedirectToAction("TrangChuNV", "HomeNV");
+            }
         }
 
-        System.Diagnostics.Debug.WriteLine($"NhanVien logging in: {_user.Email}");
-
-        database.Configuration.ValidateOnSaveEnabled = false;
-        Session[SessionManager.NV_EMAIL] = _user.Email;
-        Session[SessionManager.NV_PASSWORD] = _user.MatKhau;
-        Session[SessionManager.NV_ID] = check.NhanVienID;
-        Session[SessionManager.NV_CHUCVU_ID] = check.ChucVuID;
-        Session[SessionManager.NV_TENCHUCVU] = check.ChucVu.TenChucVu;
-
-        return RedirectToAction("TrangChuNV", "HomeNV");
-    }
-
-    public ActionResult LogOutNV()
-    {
-        System.Diagnostics.Debug.WriteLine("NhanVien logging out");
-        if (SessionManager.IsNhanVienLoggedIn())
+        public ActionResult LogOutNV()
         {
-            SessionManager.ClearNhanVienSession();
+            Session.Abandon();
+            return RedirectToAction("LoginNV", "LoginNhanVien");
         }
-        return RedirectToAction("LoginNV", "LoginNhanVien");
-    }
         public ActionResult RegisterNhanVien()
         {
             ViewBag.ListChucVu = database.ChucVu.ToList();
@@ -124,37 +123,35 @@ namespace DemoDB2.Controllers
             se_cate.ListChucVu = database.ChucVu.ToList<ChucVu>();
             return PartialView("SelectIDChucVu", se_cate);
         }
-
+       
         public ActionResult ProfileNV()
         {
-            System.Diagnostics.Debug.WriteLine($"NV_EMAIL: {Session[SessionManager.NV_EMAIL]}");
-            System.Diagnostics.Debug.WriteLine($"NV_ID: {Session[SessionManager.NV_ID]}");
-
-            if (!SessionManager.IsNhanVienLoggedIn())
+            if (Session["NhanVienName"] == null || Session["PasswordUser"] == null)
             {
-                System.Diagnostics.Debug.WriteLine("Nhân viên chưa đăng nhập");
                 return RedirectToAction("LoginNV", "LoginNhanVien");
             }
 
-            // Lấy thông tin từ Session sử dụng SessionManager keys
-            string nvEmail = (string)Session[SessionManager.NV_EMAIL];
-            int nvId = (int)Session[SessionManager.NV_ID];
+            string nameUser = (string)Session["NhanVienName"];
+            if (Session["NhanVienID"] == null)
+            {
+                return RedirectToAction("LoginNV", "LoginNhanVien");
+            }
+            int id = (int)Session["NhanVienID"];
 
             var user = database.NhanVien
                 .Include(nv => nv.ChucVu)
-                .FirstOrDefault(s => s.Email == nvEmail && s.NhanVienID == nvId);
+                .FirstOrDefault(s => s.Email == nameUser && s.NhanVienID == id);
 
             if (user == null)
             {
                 return RedirectToAction("LoginNV", "LoginNhanVien");
             }
 
-            // Gán thông tin chức vụ
+
             user.TenChucVu = user.ChucVu?.TenChucVu;
 
-            // Lấy thông tin lương mới nhất
             var luongMoiNhat = database.Luong
-                .Where(l => l.NhanVienID == nvId)
+                .Where(l => l.NhanVienID == id)
                 .OrderByDescending(l => l.Nam)
                 .ThenByDescending(l => l.Thang)
                 .FirstOrDefault();
@@ -251,7 +248,7 @@ namespace DemoDB2.Controllers
         }
         public ActionResult ViewNV()
         {
-            if (Session["NV_CHUCVU_ID"] == null || (int)Session["NV_CHUCVU_ID"] != 1)
+            if (Session["ChucVuID"] == null || (int)Session["ChucVuID"] != 1)
             {
                 ViewBag.ErrorMessage = "Bạn không có quyền truy cập vào trang này.";
                 return View("AccessDenied");
@@ -311,7 +308,7 @@ namespace DemoDB2.Controllers
         }
         public ActionResult CustomerManagement()
         {
-            if (Session["NV_CHUCVU_ID"] == null || (int)Session["NV_CHUCVU_ID"] != 1)
+            if (Session["ChucVuID"] == null || (int)Session["ChucVuID"] != 1)
             {
                 ViewBag.ErrorMessage = "Bạn không có quyền truy cập vào trang này.";
                 return View("AccessDenied");
