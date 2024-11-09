@@ -14,7 +14,12 @@ namespace DemoDB2.Controllers
     {
         QLKSEntities database = new QLKSEntities();
         // GET: LoginNhanVien
-       
+        public ActionResult SelectIDChucVu()
+        {
+            ChucVu se_cate = new ChucVu();
+            se_cate.ListChucVu = database.ChucVu.ToList<ChucVu>();
+            return PartialView("SelectIDChucVu", se_cate);
+        }
         public ActionResult LoginNV()
         {
             return View();
@@ -30,31 +35,21 @@ namespace DemoDB2.Controllers
             }
             else
             {
-                // Debug để kiểm tra thông tin nhân viên
-                System.Diagnostics.Debug.WriteLine($"Đăng nhập thành công: {check.Email}");
-
                 database.Configuration.ValidateOnSaveEnabled = false;
-                Session["NhanVienName"] = _user.Email;
+                Session["NameUser"] = _user.Email;
                 Session["PasswordUser"] = _user.MatKhau;
                 Session["NhanVienID"] = check.NhanVienID;
                 Session["ChucVuID"] = check.ChucVuID;
                 Session["TenChucVu"] = check.ChucVu.TenChucVu;
-
                 return RedirectToAction("TrangChuNV", "HomeNV");
             }
-        }
-
-        public ActionResult LogOutNV()
-        {
-            Session.Abandon();
-            return RedirectToAction("LoginNV", "LoginNhanVien");
         }
         public ActionResult RegisterNhanVien()
         {
             ViewBag.ListChucVu = database.ChucVu.ToList();
             return View();
         }
-       
+
         [HttpPost]
         public ActionResult RegisterNhanVien(NhanVien _user, string ConfirmPassword)
         {
@@ -117,21 +112,19 @@ namespace DemoDB2.Controllers
             }
             return View(_user);
         }
-        public ActionResult SelectIDChucVu()
+        public ActionResult LogOutNV()
         {
-            ChucVu se_cate = new ChucVu();
-            se_cate.ListChucVu = database.ChucVu.ToList<ChucVu>();
-            return PartialView("SelectIDChucVu", se_cate);
+            Session.Abandon();
+            return RedirectToAction("LoginNV", "LoginNhanVien");
         }
-       
         public ActionResult ProfileNV()
         {
-            if (Session["NhanVienName"] == null || Session["PasswordUser"] == null)
+            if (Session["NameUser"] == null || Session["PasswordUser"] == null)
             {
                 return RedirectToAction("LoginNV", "LoginNhanVien");
             }
 
-            string nameUser = (string)Session["NhanVienName"];
+            string nameUser = (string)Session["NameUser"];
             if (Session["NhanVienID"] == null)
             {
                 return RedirectToAction("LoginNV", "LoginNhanVien");

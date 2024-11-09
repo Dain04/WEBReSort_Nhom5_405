@@ -10,7 +10,7 @@ namespace DemoDB2.Controllers
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext.Session["NhanVienName"] == null)
+            if (filterContext.HttpContext.Session["NameUser"] == null)
             {
                 filterContext.Result = new RedirectResult("~/LoginNhanVien/LoginNV");
             }
