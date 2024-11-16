@@ -8,6 +8,7 @@ namespace DemoDB2.ViewModels
         public string TenMon { get; set; }
         public decimal GiaMon { get; set; }
         public int SoLuong { get; set; }
+        public string ImageMonAn { get; set; }
 
     }
 }

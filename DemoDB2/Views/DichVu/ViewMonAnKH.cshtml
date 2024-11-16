@@ -48,9 +48,6 @@
                     <div class="card-body">
                         <h5 class="card-title">@item.TenMon</h5>
                         <p class="card-text">Giá: @string.Format("{0:N0} VND", item.GiaMon)</p>
-                        @*<button class="btn btn-primary btn-block order-btn" data-id="@item.MonAnID" data-name="@item.TenMon" data-price="@item.GiaMon">
-                                <i class="fas fa-utensils"></i> Đặt món
-                            </button>*@
                         <button class="btn btn-primary add-to-cart" data-id="@item.MonAnID" data-name="@item.TenMon" data-price="@item.GiaMon">Thêm vào giỏ hàng</button>
                     </div>
                 </div>
@@ -62,7 +59,7 @@
     body {
         background-color: #f8f9fa;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+       
 
     .container {
         max-width: 1200px;
@@ -174,37 +171,6 @@
     }
 </style>
 
-@*<script>
-    $(document).ready(function() {
-        $('.order-btn').click(function() {
-            var monAnId = $(this).data('id');
-            var tenMon = $(this).data('name');
-            var giaMon = $(this).data('price');
-
-            $.ajax({
-                url: '@Url.Action("DatMon", "DichVu")',
-                type: 'POST',
-                data: {
-                    monAnId: monAnId,
-                    tenMon: tenMon,
-                    giaMon: giaMon
-                },
-                success: function(response) {
-                    if (response.success) {
-                        alert('Đã thêm món ' + tenMon + ' vào giỏ hàng');
-                        // Cập nhật số lượng món trong giỏ hàng trên giao diện
-                        $('#gioHangCount').text(response.gioHangCount);
-                    } else {
-                        alert('Có lỗi xảy ra khi thêm món vào giỏ hàng.');
-                    }
-                },
-                error: function() {
-                    alert('Có lỗi xảy ra khi kết nối với server.');
-                }
-            });
-        });
-    });
-    </script>*@
 <script>
 $('.add-to-cart').click(function() {
     var monAnId = $(this).data('id');

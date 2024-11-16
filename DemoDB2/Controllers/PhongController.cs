@@ -175,7 +175,7 @@ namespace DemoDB2.Controllers
             }
 
             // Thêm điều kiện để không hiển thị các phòng có tình trạng "Chờ xác nhận" (ID = 2)
-            phongs = phongs.Where(p => p.IDTinhTrang != 2);
+            phongs = phongs.Where(p => p.IDTinhTrang ==1);
 
             var pagedPhongs = phongs.OrderBy(p => p.PhongID).ToPagedList(pageNumber, pageSize);
 

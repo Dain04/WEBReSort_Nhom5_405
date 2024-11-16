@@ -143,6 +143,10 @@ namespace DemoDB2.Controllers
                         existingMonAn.ImageMonAn = "~/Content/images/" + filename;
                         monAn.UploadImage.SaveAs(path);
                     }
+                    else
+                    {
+                        existingMonAn.ImageMonAn = existingMonAn.ImageMonAn;
+                    }
 
                     database.Entry(existingMonAn).State = EntityState.Modified;
                     database.SaveChanges();
@@ -559,13 +563,67 @@ namespace DemoDB2.Controllers
         public ActionResult XemGioHang()
         {
             var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
+            foreach (var item in gioHang)
+            {
+                var monAn = database.MonAn.FirstOrDefault(m => m.MonAnID == item.MonAnId);
+                if (monAn != null)
+                {
+                    item.ImageMonAn = monAn.ImageMonAn;
+                }
+            }
             return View(gioHang);
         }
         [HttpPost]
-        public ActionResult CapNhatGioHang(int monAnId, int soLuong)
+        public ActionResult ThemVaoGioHang(int monAnId)
+        {
+            var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
+
+            // Tìm món ăn trong CSDL
+            var monAn = database.MonAn.FirstOrDefault(m => m.MonAnID == monAnId);
+            if (monAn == null)
+                return HttpNotFound();
+
+            // Kiểm tra xem món ăn đã có trong giỏ hàng chưa
+            var monAnTrongGio = gioHang.FirstOrDefault(m => m.MonAnId == monAnId);
+            if (monAnTrongGio != null)
+            {
+                monAnTrongGio.SoLuong++;
+            }
+            else
+            {
+                // Thêm món ăn mới vào giỏ hàng
+                gioHang.Add(new GioHangViewModel
+                {
+                    MonAnId = monAn.MonAnID,
+                    TenMon = monAn.TenMon,
+                    GiaMon = monAn.GiaMon ?? 0,
+                    SoLuong = 1,
+                    ImageMonAn = monAn.ImageMonAn  // Thêm đường dẫn ảnh
+                });
+            }
+
+            Session["GioHang"] = gioHang;
+            return RedirectToAction("XemGioHang");
+        }
+        [HttpPost]
+        public ActionResult XoaMonKhoiGio(int monAnId)
         {
             var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
             var monAnTrongGio = gioHang.FirstOrDefault(m => m.MonAnId == monAnId);
+            if (monAnTrongGio != null)
+            {
+                gioHang.Remove(monAnTrongGio);
+                Session["GioHang"] = gioHang;
+            }
+            return Json(new { success = true, total = gioHang.Sum(m => m.GiaMon * m.SoLuong) });
+        }
+
+        [HttpPost]
+        public ActionResult CapNhatSoLuong(int monAnId, int soLuong)
+        {
+            var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
+            var monAnTrongGio = gioHang.FirstOrDefault(m => m.MonAnId == monAnId);
+
             if (monAnTrongGio != null)
             {
                 if (soLuong > 0)
@@ -576,9 +634,19 @@ namespace DemoDB2.Controllers
                 {
                     gioHang.Remove(monAnTrongGio);
                 }
+                Session["GioHang"] = gioHang;
             }
-            Session["GioHang"] = gioHang;
-            return Json(new { success = true, gioHangCount = gioHang.Sum(m => m.SoLuong) });
+
+            var total = gioHang.Sum(m => m.GiaMon * m.SoLuong);
+            var itemTotal = monAnTrongGio != null ? monAnTrongGio.GiaMon * monAnTrongGio.SoLuong : 0;
+
+            return Json(new
+            {
+                success = true,
+                total = total,
+                itemTotal = itemTotal,
+                gioHangCount = gioHang.Sum(m => m.SoLuong)
+            });
         }
         public ActionResult ThanhToan()
         {

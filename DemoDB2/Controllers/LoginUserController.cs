@@ -33,7 +33,7 @@ namespace DemoDB2.Controllers
             else
             {
                 database.Configuration.ValidateOnSaveEnabled = false;
-                Session["NameUser"] = _user.Email;
+                Session["NameUser1"] = _user.Email;
                 Session["ID"] = check.NguoiDungID;
                 Session["ProfileImage"] = check.ImageUser ?? "/Content/Images/default-avatar.png";
                 return RedirectToAction("TrangChu", "Home");
@@ -104,12 +104,12 @@ namespace DemoDB2.Controllers
 
         public new ActionResult Profile()
         {
-            if (Session["NameUser"] == null || Session["ID"] == null)
+            if (Session["NameUser1"] == null || Session["ID"] == null)
             {
                 return RedirectToAction("Index", "LoginUser");
             }
 
-            string nameUser = (string)Session["NameUser"];
+            string nameUser = (string)Session["NameUser1"];
             int id = (int)Session["ID"];
 
             NguoiDung user = database.NguoiDung.Where(s => s.Email == nameUser && s.NguoiDungID == id).FirstOrDefault();
@@ -274,7 +274,7 @@ namespace DemoDB2.Controllers
             AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = false }, loginInfo.ExternalIdentity);
 
             // Thiết lập các biến session
-            Session["NameUser"] = user.Email;
+            Session["NameUser1"] = user.Email;
             Session["ID"] = user.NguoiDungID;
           
 

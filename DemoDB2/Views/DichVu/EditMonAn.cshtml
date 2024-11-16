@@ -11,7 +11,7 @@
                     <h4 class="mb-0">Thông tin Món Ăn</h4>
                 </div>
                 <div class="card-body">
-                    @using (Html.BeginForm("AddMonAn", "DichVu", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("EditMonAn", "DichVu", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
