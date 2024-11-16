@@ -8,11 +8,12 @@ using PagedList;
 using System.Data.Entity;
 
 namespace DemoDB2.Controllers
-{ 
+{
+   
     public class PhongController : Controller
     {
         QLKSEntities database = new QLKSEntities();
-
+        
         public ActionResult SelectLoai()
         {
             LoaiPhong se_cate = new LoaiPhong();
@@ -175,7 +176,7 @@ namespace DemoDB2.Controllers
             }
 
             // Thêm điều kiện để không hiển thị các phòng có tình trạng "Chờ xác nhận" (ID = 2)
-            phongs = phongs.Where(p => p.IDTinhTrang ==1);
+            phongs = phongs.Where(p => p.IDTinhTrang == 1);
 
             var pagedPhongs = phongs.OrderBy(p => p.PhongID).ToPagedList(pageNumber, pageSize);
 
@@ -303,7 +304,7 @@ namespace DemoDB2.Controllers
                     // Cập nhật trạng thái phòng thành "Chờ xác nhận" (ID = 2)
                     phong.IDTinhTrang = 2; // Giả sử ID 2 là trạng thái "Chờ xác nhận"
                     database.Entry(phong).State = EntityState.Modified;
-                    datPhong.ImagePhong = phong.ImagePhong; 
+                    datPhong.ImagePhong = phong.ImagePhong;
                     datPhong.IDTinhTrang = phong.IDTinhTrang;
                 }
 
