@@ -9,5 +9,7 @@ namespace DemoDB2.ViewModels
     {
         public List<GioHangXeViewModel> Xe { get; set; }
         public decimal TongTien { get; set; }
+        public string TenKhachHang { get; set; }
+        public string SoDienThoai { get; set; }
     }
 }

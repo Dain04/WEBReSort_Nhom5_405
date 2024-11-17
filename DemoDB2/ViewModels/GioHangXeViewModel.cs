@@ -11,5 +11,6 @@ namespace DemoDB2.ViewModels
         public string HieuXe { get; set; }
         public decimal GiaXe { get; set; }
         public int SoLuong { get; set; }
+
     }
 }

@@ -384,6 +384,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ChiTietHoaDonViewModel.cs" />
+    <Compile Include="ViewModels\PhieuDatXe.cs" />
     <Compile Include="ViewModels\GioHangXeViewModel.cs" />
     <Compile Include="ViewModels\ChiTietHoaDonXeViewModel.cs" />
     <Compile Include="ViewModels\GioHangViewModel.cs" />
@@ -553,6 +554,7 @@
     <Content Include="Views\TinhTrangPhong\EditTinhTrangPhong.cshtml" />
     <Content Include="Views\LoginUser\PhieuDatPhong.cshtml" />
     <Content Include="Views\Phong\ChiTietDatPhong.cshtml" />
+    <Content Include="Views\DichVu\DanhSachPhieuDatXe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

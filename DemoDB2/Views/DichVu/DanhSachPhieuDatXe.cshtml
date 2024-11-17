@@ -1,0 +1,35 @@
+﻿@model List<DemoDB2.ViewModels.PhieuDatXe>
+
+@{
+    ViewBag.Title = "Danh Sách Phiếu Đặt Xe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Danh Sách Phiếu Đặt Xe</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Khách Hàng</th>
+                <th>Số Điện Thoại</th>
+                <th>Tổng Tiền</th>
+                <th>Phương Thức Thanh Toán</th>
+                <th>Ngày Đặt</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var phieu in Model) // Lặp qua danh sách phiếu đặt xe
+            {
+                <tr>
+                    <td>@phieu.Id</td>
+                    <td>@phieu.TenKhachHang</td>
+                    <td>@phieu.SoDienThoai</td>
+                    <td>@string.Format("{0:N0} VND", phieu.TongTien)</td>
+                    <td>@phieu.PhuongThucThanhToan</td>
+                    <td>@phieu.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
