@@ -319,10 +319,12 @@
     <Compile Include="Controllers\LoaiPhongController.cs" />
     <Compile Include="Controllers\LoginNhanVienController.cs" />
     <Compile Include="Controllers\LoginUserController.cs" />
+    <Compile Include="Controllers\NhanVienApiController.cs" />
     <Compile Include="Controllers\PhongApiController.cs" />
     <Compile Include="Controllers\Startup.cs" />
     <Compile Include="Controllers\PhongController.cs" />
     <Compile Include="Controllers\TinhTrangPhongController.cs" />
+    <Compile Include="Controllers\UserApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -1,5 +1,3 @@
-
-
 namespace DemoDB2.Models
 {
     using System;

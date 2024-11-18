@@ -14,37 +14,7 @@ namespace DemoDB2.Controllers
     {
         private QLKSEntities database = new QLKSEntities();
 
-        // GET: api/phong/GetPhongList
-        [Route("GetPhongList")]
-        [HttpGet]
-        public IHttpActionResult GetPhongList(int? TinhTrangID, int page = 1, int pageSize = 10)
-        {
-            var phongs = database.Phong
-                .Include(p => p.LoaiPhong)
-                .Include(p => p.TinhTrangPhong);
-
-            // Lọc theo tình trạng
-            if (TinhTrangID.HasValue)
-            {
-                phongs = phongs.Where(p => p.IDTinhTrang == TinhTrangID.Value);
-            }
-
-            var phongList = phongs
-                .OrderBy(p => p.PhongID)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(p => new
-                {
-                    p.PhongID,
-                    p.Gia,
-                    p.IDLoai, // Thêm IDLoai vào response
-                    LoaiPhong = p.LoaiPhong.TenLoai.Trim(),
-                    TinhTrang = p.TinhTrangPhong.TenTinhTrang.Trim(),
-                    p.ImagePhong,
-                }).ToList();
-
-            return Ok(phongList);
-        }
+        
         // GET: api/phong/GetPhongDetails/5
         [Route("GetPhongDetails/{id}")]
         [HttpGet]
@@ -353,56 +323,56 @@ namespace DemoDB2.Controllers
             }
         }
 
-        //// GET: api/phong/GetBookings - Lấy danh sách đặt phòng
-        //[Route("GetBookings")]
-        //[HttpGet]
-        //public IHttpActionResult GetBookings(int? tinhTrangID = null)
-        //{
-        //    try
-        //    {
-        //        var query = database.DatPhong
-        //            .Include(d => d.Phong)
-        //            .Include(d => d.NguoiDung)
-        //            .Include(d => d.DichVuSuDung)
-        //            .Include(d => d.TinhTrangPhong)
-        //            .AsQueryable();
+        // GET: api/phong/GetBookings - Lấy danh sách đặt phòng
+        [Route("GetBookings")]
+        [HttpGet]
+        public IHttpActionResult GetBookings(int? tinhTrangID = null)
+        {
+            try
+            {
+                var query = database.DatPhong
+                    .Include(d => d.Phong)
+                    .Include(d => d.NguoiDung)
+                    .Include(d => d.DichVuSuDung)
+                    .Include(d => d.TinhTrangPhong)
+                    .AsQueryable();
 
-        //        if (tinhTrangID.HasValue)
-        //        {
-        //            query = query.Where(d => d.IDTinhTrang == tinhTrangID);
-        //        }
+                if (tinhTrangID.HasValue)
+                {
+                    query = query.Where(d => d.IDTinhTrang == tinhTrangID);
+                }
 
-        //        var bookings = query.Select(d => new
-        //        {
-        //            d.DatPhongID,
-        //            d.PhongID,
-        //            d.NgayDatPhong,
-        //            d.NgayNhanPhong,
-        //            d.NgayTraPhong,
-        //            d.NguoiDungID,
-        //            KhachHang = new
-        //            {
-        //                d.NguoiDung.TenNguoiDung,
-        //                d.NguoiDung.Email,
-        //                d.NguoiDung.SoDienThoai
-        //            },
-        //            Phong = new
-        //            {
-        //                d.Phong.Gia,
-        //                LoaiPhong = d.Phong.LoaiPhong.TenLoai,
-        //                d.ImagePhong
-        //            },
+                var bookings = query.Select(d => new
+                {
+                    d.DatPhongID,
+                    d.PhongID,
+                    d.NgayDatPhong,
+                    d.NgayNhanPhong,
+                    d.NgayTraPhong,
+                    d.NguoiDungID,
+                    KhachHang = new
+                    {
+                        d.NguoiDung.TenNguoiDung,
+                        d.NguoiDung.Email,
+                        d.NguoiDung.SoDienThoai
+                    },
+                    Phong = new
+                    {
+                        d.Phong.Gia,
+                        LoaiPhong = d.Phong.LoaiPhong.TenLoai,
+                        d.ImagePhong
+                    },
 
-        //            TinhTrang = d.TinhTrangPhong.TenTinhTrang
-        //        }).ToList();
+                    TinhTrang = d.TinhTrangPhong.TenTinhTrang
+                }).ToList();
 
-        //        return Ok(bookings);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return InternalServerError(ex);
-        //    }
-        //}
+                return Ok(bookings);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
 
         // GET: api/phong/GetBookingDetails/5 - Lấy chi tiết đặt phòng
         [Route("GetBookingDetails/{id}")]
