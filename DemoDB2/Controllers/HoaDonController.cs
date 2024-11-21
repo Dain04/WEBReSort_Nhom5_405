@@ -341,44 +341,44 @@ namespace DemoDB2.Controllers
             ViewBag.TongTien = tongTien;
             return View(hoaDon);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ConfirmPayment(int id)
-        {
-            var hoaDon = db.HoaDon.Find(id);
-            if (hoaDon == null)
-            {
-                return HttpNotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult ConfirmPayment(int id)
+        //{
+        //    var hoaDon = db.HoaDon.Find(id);
+        //    if (hoaDon == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
 
-            // Cập nhật trạng thái thanh toán của hóa đơn
-            hoaDon.TrangThaiThanhToan = "Đã thanh toán";
+        //    // Cập nhật trạng thái thanh toán của hóa đơn
+        //    hoaDon.TrangThaiThanhToan = "Đã thanh toán";
 
-            // Cập nhật trạng thái phòng
-            if (hoaDon.PhongID.HasValue)
-            {
-                var phong = db.Phong.Find(hoaDon.PhongID.Value);
-                if (phong != null)
-                {
-                    // Cập nhật trạng thái phòng thành "Đã thanh toán" (ID = 7)
-                    phong.IDTinhTrang = 7; 
-                    db.Entry(phong).State = EntityState.Modified;
+        //    // Cập nhật trạng thái phòng
+        //    if (hoaDon.PhongID.HasValue)
+        //    {
+        //        var phong = db.Phong.Find(hoaDon.PhongID.Value);
+        //        if (phong != null)
+        //        {
+        //            // Cập nhật trạng thái phòng thành "Đã thanh toán" (ID = 7)
+        //            phong.IDTinhTrang = 7; 
+        //            db.Entry(phong).State = EntityState.Modified;
 
-                    // Cập nhật trạng thái trong bảng DatPhong
-                    var datPhong = db.DatPhong.FirstOrDefault(dp => dp.PhongID == hoaDon.PhongID);
-                    if (datPhong != null)
-                    {
-                        datPhong.IDTinhTrang = 7; 
-                        db.Entry(datPhong).State = EntityState.Modified;
-                    }
-                }
-            }
-            db.Entry(hoaDon).State = EntityState.Modified;
-            db.SaveChanges();
+        //            // Cập nhật trạng thái trong bảng DatPhong
+        //            var datPhong = db.DatPhong.FirstOrDefault(dp => dp.PhongID == hoaDon.PhongID);
+        //            if (datPhong != null)
+        //            {
+        //                datPhong.IDTinhTrang = 7; 
+        //                db.Entry(datPhong).State = EntityState.Modified;
+        //            }
+        //        }
+        //    }
+        //    db.Entry(hoaDon).State = EntityState.Modified;
+        //    db.SaveChanges();
 
-            TempData["SuccessMessage"] = "Thanh toán thành công!";
-            return RedirectToAction("IndexKH");
-        }
+        //    TempData["SuccessMessage"] = "Thanh toán thành công!";
+        //    return RedirectToAction("IndexKH");
+        //}
 
         // thanh toán Vnpay
         protected string UrlPayment (int TypePaymentVN, String orderCode,int HoadonId)
@@ -418,18 +418,7 @@ namespace DemoDB2.Controllers
             vnpay.AddRequestData("vnp_Command", "pay");
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
             vnpay.AddRequestData("vnp_Amount", (tongTien).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
-            /*if (TypePaymentVN == 1)
-            {
-                vnpay.AddRequestData("vnp_BankCode", "VNPAYQR");
-            }
-            else if (TypePaymentVN == 2)
-            {
-                vnpay.AddRequestData("vnp_BankCode", "VNBANK");
-            }
-            else if (TypePaymentVN == 3)
-            {
-                vnpay.AddRequestData("vnp_BankCode", "INTCARD");
-            }*/
+      
 
             vnpay.AddRequestData("vnp_CreateDate", hoaDon.NgayTaoHD.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", "VND");
