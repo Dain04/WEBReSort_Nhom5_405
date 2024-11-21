@@ -143,10 +143,6 @@ namespace DemoDB2.Controllers
                         existingMonAn.ImageMonAn = "~/Content/images/" + filename;
                         monAn.UploadImage.SaveAs(path);
                     }
-                    else
-                    {
-                        existingMonAn.ImageMonAn = existingMonAn.ImageMonAn;
-                    }
 
                     database.Entry(existingMonAn).State = EntityState.Modified;
                     database.SaveChanges();
@@ -563,67 +559,13 @@ namespace DemoDB2.Controllers
         public ActionResult XemGioHang()
         {
             var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
-            foreach (var item in gioHang)
-            {
-                var monAn = database.MonAn.FirstOrDefault(m => m.MonAnID == item.MonAnId);
-                if (monAn != null)
-                {
-                    item.ImageMonAn = monAn.ImageMonAn;
-                }
-            }
             return View(gioHang);
         }
         [HttpPost]
-        public ActionResult ThemVaoGioHang(int monAnId)
-        {
-            var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
-
-            // Tìm món ăn trong CSDL
-            var monAn = database.MonAn.FirstOrDefault(m => m.MonAnID == monAnId);
-            if (monAn == null)
-                return HttpNotFound();
-
-            // Kiểm tra xem món ăn đã có trong giỏ hàng chưa
-            var monAnTrongGio = gioHang.FirstOrDefault(m => m.MonAnId == monAnId);
-            if (monAnTrongGio != null)
-            {
-                monAnTrongGio.SoLuong++;
-            }
-            else
-            {
-                // Thêm món ăn mới vào giỏ hàng
-                gioHang.Add(new GioHangViewModel
-                {
-                    MonAnId = monAn.MonAnID,
-                    TenMon = monAn.TenMon,
-                    GiaMon = monAn.GiaMon ?? 0,
-                    SoLuong = 1,
-                    ImageMonAn = monAn.ImageMonAn  // Thêm đường dẫn ảnh
-                });
-            }
-
-            Session["GioHang"] = gioHang;
-            return RedirectToAction("XemGioHang");
-        }
-        [HttpPost]
-        public ActionResult XoaMonKhoiGio(int monAnId)
+        public ActionResult CapNhatGioHang(int monAnId, int soLuong)
         {
             var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
             var monAnTrongGio = gioHang.FirstOrDefault(m => m.MonAnId == monAnId);
-            if (monAnTrongGio != null)
-            {
-                gioHang.Remove(monAnTrongGio);
-                Session["GioHang"] = gioHang;
-            }
-            return Json(new { success = true, total = gioHang.Sum(m => m.GiaMon * m.SoLuong) });
-        }
-
-        [HttpPost]
-        public ActionResult CapNhatSoLuong(int monAnId, int soLuong)
-        {
-            var gioHang = Session["GioHang"] as List<GioHangViewModel> ?? new List<GioHangViewModel>();
-            var monAnTrongGio = gioHang.FirstOrDefault(m => m.MonAnId == monAnId);
-
             if (monAnTrongGio != null)
             {
                 if (soLuong > 0)
@@ -634,19 +576,9 @@ namespace DemoDB2.Controllers
                 {
                     gioHang.Remove(monAnTrongGio);
                 }
-                Session["GioHang"] = gioHang;
             }
-
-            var total = gioHang.Sum(m => m.GiaMon * m.SoLuong);
-            var itemTotal = monAnTrongGio != null ? monAnTrongGio.GiaMon * monAnTrongGio.SoLuong : 0;
-
-            return Json(new
-            {
-                success = true,
-                total = total,
-                itemTotal = itemTotal,
-                gioHangCount = gioHang.Sum(m => m.SoLuong)
-            });
+            Session["GioHang"] = gioHang;
+            return Json(new { success = true, gioHangCount = gioHang.Sum(m => m.SoLuong) });
         }
         public ActionResult ThanhToan()
         {
@@ -692,18 +624,11 @@ namespace DemoDB2.Controllers
         [HttpPost]
         public ActionResult DatXe(int xeId, string hieuXe, decimal giaXe)
         {
-            if (xeId <= 0 || string.IsNullOrEmpty(hieuXe) || giaXe <= 0)
-            {
-                return Json(new { success = false, message = "Thông tin xe không hợp lệ." });
-            }
-
             var gioHang = Session["GioHangXe"] as List<GioHangXeViewModel> ?? new List<GioHangXeViewModel>();
             var xeTrongGio = gioHang.FirstOrDefault(x => x.XeId == xeId);
-
             if (xeTrongGio != null)
             {
                 xeTrongGio.SoLuong++;
-                TempData["SuccessMessage"] = "Cập nhật số lượng xe thành công.";
             }
             else
             {
@@ -714,11 +639,9 @@ namespace DemoDB2.Controllers
                     GiaXe = giaXe,
                     SoLuong = 1
                 });
-                TempData["SuccessMessage"] = "Đặt xe thành công.";
             }
-
             Session["GioHangXe"] = gioHang;
-            return Json(new { success = true, message = TempData["SuccessMessage"], gioHangCount = gioHang.Sum(x => x.SoLuong) });
+            return Json(new { success = true, message = "Chọn xe thành công", gioHangCount = gioHang.Sum(x => x.SoLuong) });
         }
 
         public ActionResult ThanhToanXe()
@@ -729,55 +652,25 @@ namespace DemoDB2.Controllers
                 Xe = gioHang,
                 TongTien = gioHang.Sum(x => x.GiaXe * x.SoLuong)
             };
-
-            ViewBag.PaymentMethods = new List<string> { "Chuyển Khoản", "Thẻ Tín Dụng", "Tiền Mặt" };
             return View(chiTietHoaDon);
         }
 
-        private static List<PhieuDatXe> danhSachPhieuDatXe = new List<PhieuDatXe>();
-
         [HttpPost]
-        public ActionResult XacNhanThanhToanXe(string phuongThucThanhToan, string tenKhachHang, string soDienThoai)
+        public ActionResult XacNhanThanhToanXe(string phuongThucThanhToan)
         {
             try
             {
-                if (string.IsNullOrEmpty(phuongThucThanhToan) || string.IsNullOrEmpty(tenKhachHang) || string.IsNullOrEmpty(soDienThoai))
-                {
-                    return Json(new { success = false, message = "Vui lòng cung cấp đầy đủ thông tin." });
-                }
-
-                var gioHang = Session["GioHangXe"] as List<GioHangXeViewModel> ?? new List<GioHangXeViewModel>();
-                var tongTien = gioHang.Sum(x => x.GiaXe * x.SoLuong);
-
-                // Tạo phiếu đặt xe
-                var phieuDatXe = new PhieuDatXe
-                {
-                    Id = danhSachPhieuDatXe.Count + 1, // Tạo ID cho phiếu (có thể thay bằng cơ sở dữ liệu)
-                    TenKhachHang = tenKhachHang,
-                    SoDienThoai = soDienThoai,
-                    Xe = gioHang,
-                    TongTien = tongTien,
-                    PhuongThucThanhToan = phuongThucThanhToan,
-                    NgayDat = DateTime.Now,
-                    
-                };
-
-                // Lưu phiếu vào danh sách
-                danhSachPhieuDatXe.Add(phieuDatXe);
-
-                Session["GioHangXe"] = null; // Xóa giỏ hàng sau khi thanh toán thành công
+                // Xử lý thanh toán ở đây
+                Session["GioHangXe"] = null;
                 TempData["ThongBaoThanhCong"] = "Đặt xe thành công! Tài xế sẽ liên lạc lại với bạn.";
                 return Json(new { success = true, redirectUrl = Url.Action("ViewXeKH") });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Đã xảy ra lỗi: " + ex.Message });
+                return Json(new { success = false, message = ex.Message });
             }
         }
-        public ActionResult DanhSachPhieuDatXe()
-        {
-            return View(danhSachPhieuDatXe);
-        }
+      
         [HttpGet]
         public ActionResult DeleteSpa(int id)
         {

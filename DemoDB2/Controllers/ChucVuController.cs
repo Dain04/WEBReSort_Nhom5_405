@@ -23,7 +23,6 @@ namespace DemoDB2.Controllers
             return View(chucVu);
         }
       
-      
         // GET: ChucVu/CreateChucVu
         public ActionResult CreateChucVu()
         {
@@ -51,6 +50,7 @@ namespace DemoDB2.Controllers
 
             return View(chucVu);
         }
+
         public ActionResult EditChucVu(int? id)
         {
             if (id == null)

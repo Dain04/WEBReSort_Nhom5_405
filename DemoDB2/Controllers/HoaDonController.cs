@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Odbc;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Web;
 using System.Web.Mvc;
 using DemoDB2.Models;
+using DemoDB2.Models.Payments;
 
 namespace DemoDB2.Controllers
 {
@@ -14,7 +18,7 @@ namespace DemoDB2.Controllers
     public class HoaDonController : Controller
     {
         private QLKSEntities db = new QLKSEntities();
-
+        string paymentUrl;
         // GET: HoaDon
         public ActionResult Index()
         {
@@ -40,7 +44,7 @@ namespace DemoDB2.Controllers
                     }
                 }
             }
-
+            
             return View(hoaDon);
         }
 
@@ -376,6 +380,90 @@ namespace DemoDB2.Controllers
             return RedirectToAction("IndexKH");
         }
 
+        // thanh toán Vnpay
+        protected string UrlPayment (int TypePaymentVN, String orderCode,int HoadonId)
+            {
+            var hoaDon = db.HoaDon.Find(HoadonId);
+            var phong = db.Phong.Find(hoaDon.PhongID);
+            ViewBag.GiaPhong = phong?.Gia;
+            // Tính số ngày ở
+            int soNgayO = (hoaDon.NgayTraPhong.Value - hoaDon.NgayNhanPhong.Value).Days;
+
+            // Tính tổng tiền
+            int tongTien = (int)(ViewBag.GiaPhong * soNgayO);
+            hoaDon.Code = orderCode;
+            //Get Config Info
+            string vnp_Returnurl = ConfigurationManager.AppSettings["vnp_Returnurl"]; //URL nhan ket qua tra ve (thành công hoặc thất bại)
+            string vnp_Url = ConfigurationManager.AppSettings["vnp_Url"]; //URL thanh toan cua VNPAY 
+            string vnp_TmnCode = ConfigurationManager.AppSettings["vnp_TmnCode"]; //Ma định danh merchant kết nối (Terminal Id)
+            string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"]; //Secret Key
+
+            //Get payment input
+
+            Random random = new Random();
+            hoaDon.OrderVnPayID = DateTime.Now.Ticks; // Kết hợp ticks với số ngẫu nhiên // Giả lập mã giao dịch hệ thống merchant gửi sang VNPAY
+            hoaDon.TongTien = tongTien; // Giả lập số tiền thanh toán hệ thống merchant gửi sang VNPAY 100,000 VND
+            hoaDon.TrangThaiThanhToan = "0"; //0: Trạng thái thanh toán "chờ thanh toán" hoặc "Pending" khởi tạo giao dịch chưa có IPN
+            hoaDon.NgayTaoHD = DateTime.Now;
+            //Save order to db
+
+
+
+
+
+            //Build URL for VNPAY
+            VnPayLibrary vnpay = new VnPayLibrary();
+            
+            vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (tongTien).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
+            /*if (TypePaymentVN == 1)
+            {
+                vnpay.AddRequestData("vnp_BankCode", "VNPAYQR");
+            }
+            else if (TypePaymentVN == 2)
+            {
+                vnpay.AddRequestData("vnp_BankCode", "VNBANK");
+            }
+            else if (TypePaymentVN == 3)
+            {
+                vnpay.AddRequestData("vnp_BankCode", "INTCARD");
+            }*/
+
+            vnpay.AddRequestData("vnp_CreateDate", hoaDon.NgayTaoHD.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress());
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + hoaDon.OrderVnPayID);
+            vnpay.AddRequestData("vnp_OrderType", "other");
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
+            vnpay.AddRequestData("vnp_TxnRef", hoaDon.OrderVnPayID.ToString());
+
+            
+
+            string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+            //log.InfoFormat("VNPAY URL: {0}", paymentUrl);
+            //Response.Redirect(paymentUrl);
+            this.paymentUrl = paymentUrl;
+            return paymentUrl;
+        }
+
+        public ActionResult StartPayment(int typePaymentVN, string orderCode, int HoadonId)
+        {
+            // Gọi phương thức UrlPayment
+            UrlPayment(typePaymentVN, orderCode,HoadonId);
+            return Redirect(paymentUrl); // Chuyển hướng đến trang kết quả thanh toán (có thể thay đổi theo nhu cầu)
+        }
+        public void PaymentResult(string paymentUrl) {
+            if (string.IsNullOrEmpty(paymentUrl)) {
+                Console.WriteLine("url khong ton tai");
+            }
+            else {
+                Response.Redirect(paymentUrl);
+            }
+            
+        }
     }
 }
 
