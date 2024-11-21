@@ -3,7 +3,12 @@
     ViewBag.Title = "Danh sách hóa đơn (Khách hàng)";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
 <div class="container mt-4">
     <h2 class="text-center mb-4">Danh sách hóa đơn (Khách hàng)</h2>
 
@@ -49,7 +54,7 @@
                                     <td>@(item.NgayTraPhong.HasValue ? item.NgayTraPhong.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                                     <td>@(item.TongTien.HasValue ? string.Format("{0:N0} VNĐ", item.TongTien.Value) : "N/A")</td>
                                     <td>
-                                        <span class="badge badge-@(item.TrangThaiThanhToan == "Đã thanh toán" ? "success" : "warning")">
+                                        <span class="badge badge-@(item.TrangThaiThanhToan == "Ðã thanh toán" ? "success" : "warning")">
                                             @item.TrangThaiThanhToan
                                         </span>
                                     </td>
@@ -58,7 +63,7 @@
                                         @if (item.TrangThaiThanhToan != "Đã thanh toán" && item.Phong != null && item.Phong.IDTinhTrang == 3)
                                         {
                                             @Html.ActionLink("Thanh toán", "Payment", new { id = item.HoaDonID }, new { @class = "btn btn-success btn-sm ml-1" })
-                                            
+
                                         }
                                     </td>
                                 </tr>

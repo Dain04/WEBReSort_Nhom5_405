@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Odbc;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -341,45 +342,65 @@ namespace DemoDB2.Controllers
             ViewBag.TongTien = tongTien;
             return View(hoaDon);
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ConfirmPayment(int id)
-        //{
-        //    var hoaDon = db.HoaDon.Find(id);
-        //    if (hoaDon == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
+        public ActionResult ConfirmPayment()
+        {
+            if (Request.QueryString.Count > 0)
+            {
+                string vnp_HashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"];
+                var vnpayData = Request.QueryString;
+                VnPayLibrary vnpay = new VnPayLibrary();
 
-        //    // Cập nhật trạng thái thanh toán của hóa đơn
-        //    hoaDon.TrangThaiThanhToan = "Đã thanh toán";
+                foreach (string s in vnpayData)
+                {
+                    if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
+                    {
+                        vnpay.AddResponseData(s, vnpayData[s]);
+                    }
+                }
 
-        //    // Cập nhật trạng thái phòng
-        //    if (hoaDon.PhongID.HasValue)
-        //    {
-        //        var phong = db.Phong.Find(hoaDon.PhongID.Value);
-        //        if (phong != null)
-        //        {
-        //            // Cập nhật trạng thái phòng thành "Đã thanh toán" (ID = 7)
-        //            phong.IDTinhTrang = 7; 
-        //            db.Entry(phong).State = EntityState.Modified;
+                // Kiểm tra kết quả thanh toán
+                long orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
+                var hoaDon = db.HoaDon.Find(orderId);
 
-        //            // Cập nhật trạng thái trong bảng DatPhong
-        //            var datPhong = db.DatPhong.FirstOrDefault(dp => dp.PhongID == hoaDon.PhongID);
-        //            if (datPhong != null)
-        //            {
-        //                datPhong.IDTinhTrang = 7; 
-        //                db.Entry(datPhong).State = EntityState.Modified;
-        //            }
-        //        }
-        //    }
-        //    db.Entry(hoaDon).State = EntityState.Modified;
-        //    db.SaveChanges();
+                if (hoaDon != null)
+                {
+                    // Check if bill is already paid to prevent duplicate processing
+                    if (hoaDon.TrangThaiThanhToan == "Ðã thanh toán")
+                    {
+                        TempData["Message"] = "Hóa đơn đã được thanh toán trước đó.";
+                        return RedirectToAction("IndexKH");
+                    }
 
-        //    TempData["SuccessMessage"] = "Thanh toán thành công!";
-        //    return RedirectToAction("IndexKH");
-        //}
+                    if (vnpay.GetResponseData("vnp_ResponseCode") == "00")
+                    {
+                        // Thanh toán thành công
+                        hoaDon.TrangThaiThanhToan = "Ðã thanh toán";
+                        hoaDon.NgayChinhSua = DateTime.Now;
 
+                        if (hoaDon.Phong != null)
+                        {
+                            // Thay vì trực tiếp set về 1, kiểm tra trạng thái hiện tại
+                            // Ví dụ: chỉ đặt về trạng thái trống nếu phòng đang được đặt
+                            var currentPhongStatus = hoaDon.Phong.IDTinhTrang;
+                            if (currentPhongStatus == 2) // Giả sử 2 là trạng thái đang được đặt
+                            {
+                                hoaDon.Phong.IDTinhTrang = 1; // Trạng thái trống
+                            }
+                        }
+
+                        db.SaveChanges();
+
+                        TempData["Message"] = "Thanh toán thành công!";
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Thanh toán không thành công!";
+                    }
+                }
+            }
+
+            return RedirectToAction("IndexKH");
+        }
         // thanh toán Vnpay
         protected string UrlPayment (int TypePaymentVN, String orderCode,int HoadonId)
             {
@@ -406,11 +427,6 @@ namespace DemoDB2.Controllers
             hoaDon.TrangThaiThanhToan = "0"; //0: Trạng thái thanh toán "chờ thanh toán" hoặc "Pending" khởi tạo giao dịch chưa có IPN
             hoaDon.NgayTaoHD = DateTime.Now;
             //Save order to db
-
-
-
-
-
             //Build URL for VNPAY
             VnPayLibrary vnpay = new VnPayLibrary();
             

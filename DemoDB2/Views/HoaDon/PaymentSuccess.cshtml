@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "PaymentSuccess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>PaymentSuccess</h2>
+<div class="container">
+    <div class="alert alert-success">
+        <h4>Thanh toán thành công!</h4>
+        <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+    </div>
+    @Html.ActionLink("Quay lại trang chủ", "IndexKH", null, new { @class = "btn btn-primary" })
+</div>
