@@ -50,7 +50,7 @@
                     </div>
                     <div class="room-info">
                         <h3>Phòng @phong.PhongID</h3>
-                        <p class="room-price">Giá: @String.Format("{0:N0} VNĐ", phong.Gia)</p>
+                        <p class="room-price">Giá tiền: @phong.Gia VND</p>
 
                         @* Thêm hiển thị tình trạng phòng *@
                         <p class="room-status @(phong.TinhTrangPhong?.TenTinhTrang?.ToLower().Replace(" ", "-"))">

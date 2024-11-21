@@ -41,7 +41,11 @@
                             <td>@(item.NgayTraPhong.HasValue ? item.NgayTraPhong.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                             <td>@item.TinhTrangPhong.TenTinhTrang</td>
                             <td>
-                                @if (item.IDTinhTrang == 3) // Kiểm tra trạng thái phòng
+                                @if (item.IDTinhTrang == 7) // Kiểm tra trạng thái đã thanh toán
+                                {
+                                    <span class="text-success">Bạn đã thanh toán</span>
+                                }
+                                else if (item.IDTinhTrang == 3) // Kiểm tra trạng thái phòng
                                 {
                                     <a href="@Url.Action("IndexKH", "HoaDon", new { id = item.DatPhongID })" class="btn btn-success">
                                         <i class="fas fa-credit-card"></i> Thanh toán
@@ -52,6 +56,7 @@
                                     <span class="text-danger">Chờ nhân viên xác nhận đặt phòng</span>
                                 }
                             </td>
+
                         </tr>
                     }
                 </tbody>

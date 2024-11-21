@@ -21,7 +21,7 @@
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    @if (Session["NameUser1"] == null)
+                    @if (Session["NameUser"] == null)
                     {
                         <li><a href="/Home/AboutUs">ABOUT US</a></li>
                         <li class="dropdown">
@@ -49,11 +49,11 @@
                                 DỊCH VỤ <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/Home/DetailPhongThuong"><i class="fas fa-bed"></i> Giới Thiệu Phòng NORMAL</a></li>
+                                <li><a href="/Home/DetailPhongThuong"><i class="fas fa-bed"></i> Giới Thiệu Phòng Tiêu Chuẩn</a></li>
                                 <li><a href="/Home/DetailPhongVip"><i class="fas fa-star"></i> Giới Thiệu Phòng VIP</a></li>
                                 <li><a href="/DichVu/ViewMonAnKH"><i class="fas fa-utensils"></i> Nhà Hàng</a></li>
                                 <li><a href="/DichVu/ViewXeKH"><i class="fas fa-car"></i> Thuê Xe</a></li>
-                                <li><a href="###"><i class="fas fa-spa"></i> Spa</a></li>
+                                <li><a href="/DichVu/ViewSpaKH"><i class="fas fa-spa"></i> Spa</a></li>
                             </ul>
                         </li>
 

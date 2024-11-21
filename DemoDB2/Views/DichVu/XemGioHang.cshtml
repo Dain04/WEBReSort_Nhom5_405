@@ -1,4 +1,6 @@
 ﻿@model List<DemoDB2.ViewModels.GioHangViewModel>
+@using DemoDB2.Models
+
 @{
     ViewBag.Title = "Giỏ Hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,9 +14,8 @@
             <thead>
                 <tr>
                     <th>Tên Món</th>
-                    <th>Hình Ảnh</th>
                     <th>Giá</th>
-                    <th>Số Lượng</th>
+                    <th>Số Lượng</th> 
                     <th>Tổng</th>
                     <th></th>
                 </tr>
@@ -22,191 +23,72 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr class="cart-item" data-id="@item.MonAnId">
+                    <tr>
                         <td>@item.TenMon</td>
+                        <td>@string.Format("{0:N0} VND", item.GiaMon)</td>
                         <td>
-                            @if (!string.IsNullOrEmpty(item.ImageMonAn))
-                            {
-                                <img src="@Url.Content(item.ImageMonAn)"
-                                     alt="@item.TenMon"
-                                     class="product-image"
-                                     onerror="this.src='@Url.Content("~/Content/images/no-image.jpg")'" />
-                            }
-                            else
-                            {
-                                <img src="@Url.Content("~/Content/images/no-image.jpg")"
-                                     alt="No Image Available"
-                                     class="product-image" />
-                            }
+                            <input type="number" class="form-control quantity-input" data-id="@item.MonAnId" value="@item.SoLuong" min="0" style="width: 70px;">
                         </td>
-                        <td class="item-price">@string.Format("{0:N0} VND", item.GiaMon)</td>
+                        <td>@string.Format("{0:N0} VND", item.GiaMon * item.SoLuong)</td>
                         <td>
-                            <div class="quantity-control">
-                                <button class="btn btn-sm btn-secondary decrease-quantity">-</button>
-                                <input type="number"
-                                       class="form-control quantity-input"
-                                       value="@item.SoLuong"
-                                       min="1"
-                                       style="width: 60px;" />
-                                <button class="btn btn-sm btn-secondary increase-quantity">+</button>
-                            </div>
-                        </td>
-                        <td class="item-total">@string.Format("{0:N0} VND", item.GiaMon * item.SoLuong)</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm remove-item">
-                                <i class="fas fa-trash"></i> Xóa
-                            </button>
+                            <button class="btn btn-danger btn-sm remove-item" data-id="@item.MonAnId">Xóa</button>
                         </td>
                     </tr>
                 }
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right"><strong>Tổng cộng:</strong></td>
-                    <td colspan="2" class="cart-total">
-                        <strong>@string.Format("{0:N0} VND", Model.Sum(m => m.GiaMon * m.SoLuong))</strong>
-                    </td>
+                    <td colspan="3" class="text-right"><strong>Tổng cộng:</strong></td>
+                    <td><strong>@string.Format("{0:N0} VND", Model.Sum(m => m.GiaMon * m.SoLuong))</strong></td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>
-
-        <div class="mt-3">
-            <a href="@Url.Action("ThanhToan", "DichVu")" class="btn btn-primary">
-                <i class="fas fa-credit-card"></i> Thanh Toán
-            </a>
-            <a href="@Url.Action("ViewMonAnKH", "DichVu")" class="btn btn-secondary">
-                <i class="fas fa-shopping-cart"></i> Tiếp tục mua hàng
-            </a>
-        </div>
-    }
+        <a href="@Url.Action("ThanhToan", "DichVu")" class="btn btn-primary">Thanh Toán</a> }
     else
     {
-        <div class="text-center">
-            <p class="lead">Giỏ hàng của bạn đang trống</p>
-            <a href="@Url.Action("ViewMonAnKH","DichVu")" class="btn btn-primary">
-                <i class="fas fa-shopping-cart"></i> Tiếp tục mua hàng
+        <p style="font-size:20px">Giỏ hàng của bạn đang trống. <a href="@Url.Action("ViewMonAnKH","DichVu")"> Thêm vào giỏ hàng ngay</a></p> 
+            <a href="@Url.Action("ViewMonAnKH","DichVu")">
+                <img src="https://i.pinimg.com/236x/92/8b/b3/928bb331a32654ba76a4fc84386f3851.jpg">
             </a>
-        </div>
-    }
-</div>
+            }
+    </div>
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            // Hàm định dạng số tiền
-            function formatMoney(amount) {
-                return new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                }).format(amount);
-            }
+        $(document).ready(function() {
+            $('.quantity-input').change(function() {
+                var monAnId = $(this).data('id');
+                var soLuong = $(this).val();
+                capNhatGioHang(monAnId, soLuong);
+            });
 
-            // Hàm cập nhật số lượng
-            function updateQuantity(monAnId, soLuong) {
+            $('.remove-item').click(function() {
+                var monAnId = $(this).data('id');
+                capNhatGioHang(monAnId, 0);
+            });
+
+            function capNhatGioHang(monAnId, soLuong) {
                 $.ajax({
-                    url: '@Url.Action("CapNhatSoLuong", "DichVu")',
+                    url: '@Url.Action("CapNhatGioHang", "DichVu")',
                     type: 'POST',
                     data: { monAnId: monAnId, soLuong: soLuong },
-                    success: function (result) {
-                        if (result.success) {
-                            // Cập nhật tổng tiền của món
-                            var row = $('.cart-item[data-id="' + monAnId + '"]');
-                            row.find('.item-total').text(formatMoney(result.itemTotal));
-
-                            // Cập nhật tổng tiền giỏ hàng
-                            $('.cart-total strong').text(formatMoney(result.total));
-
-                            // Nếu số lượng = 0, xóa dòng
-                            if (soLuong <= 0) {
-                                row.remove();
-                                if ($('.cart-item').length === 0) {
-                                    location.reload(); // Tải lại trang nếu giỏ hàng trống
-                                }
-                            }
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert('Có lỗi xảy ra khi cập nhật giỏ hàng.');
                         }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi kết nối với server.');
                     }
                 });
             }
 
-            // Xử lý nút giảm số lượng
-            $('.decrease-quantity').click(function () {
-                var row = $(this).closest('.cart-item');
-                var input = row.find('.quantity-input');
-                var currentValue = parseInt(input.val());
-                if (currentValue > 1) {
-                    input.val(currentValue - 1);
-                    updateQuantity(row.data('id'), currentValue - 1);
-                }
-            });
-
-            // Xử lý nút tăng số lượng
-            $('.increase-quantity').click(function () {
-                var row = $(this).closest('.cart-item');
-                var input = row.find('.quantity-input');
-                var currentValue = parseInt(input.val());
-                input.val(currentValue + 1);
-                updateQuantity(row.data('id'), currentValue + 1);
-            });
-
-            // Xử lý khi nhập số lượng trực tiếp
-            $('.quantity-input').change(function () {
-                var row = $(this).closest('.cart-item');
-                var soLuong = parseInt($(this).val());
-                if (soLuong < 1) {
-                    $(this).val(1);
-                    soLuong = 1;
-                }
-                updateQuantity(row.data('id'), soLuong);
-            });
-
-            // Xử lý nút xóa
-            $('.remove-item').click(function () {
-                var row = $(this).closest('.cart-item');
-                var monAnId = row.data('id');
-
-                if (confirm('Bạn có chắc muốn xóa món ăn này khỏi giỏ hàng?')) {
-                    $.ajax({
-                        url: '@Url.Action("XoaMonKhoiGio", "DichVu")',
-                        type: 'POST',
-                        data: { monAnId: monAnId },
-                        success: function (result) {
-                            if (result.success) {
-                                row.remove();
-                                $('.cart-total strong').text(formatMoney(result.total));
-
-                                if ($('.cart-item').length === 0) {
-                                    location.reload();
-                                }
-                            }
-                        }
-                    });
-                }
+            $('#checkout-btn').click(function() {
+                alert('Chức năng thanh toán chưa được triển khai.');
             });
         });
     </script>
 }
-
-<style>
-    .quantity-control {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .quantity-input {
-        text-align: center;
-    }
-
-    .product-image {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        transition: transform 0.2s ease-in-out;
-    }
-
-        .product-image:hover {
-            transform: scale(1.1);
-        }
-</style>
