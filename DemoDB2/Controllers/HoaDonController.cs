@@ -307,6 +307,7 @@ namespace DemoDB2.Controllers
             }
             base.Dispose(disposing);
         }
+        // Action Payment hiện tại của bạn
         public ActionResult Payment(int id)
         {
             var hoaDon = db.HoaDon.Find(id);
@@ -315,16 +316,19 @@ namespace DemoDB2.Controllers
                 return HttpNotFound();
             }
 
+            // Lưu ID hóa đơn vào TempData để sử dụng sau này
+            TempData["HoaDonID"] = id;
+
             if (hoaDon.TrangThaiThanhToan == "Đã thanh toán")
             {
                 TempData["ErrorMessage"] = "Hóa đơn này đã được thanh toán.";
                 return RedirectToAction("IndexKH");
             }
 
-            // Generate a fake QR code (in reality, this would be generated based on payment information)
+            // Phần code còn lại của action Payment giữ nguyên
             string qrCodeData = $"PAYMENT:{hoaDon.HoaDonID}:{hoaDon.TongTien}";
             ViewBag.QRCodeData = qrCodeData;
-            // Load các thông tin liên quan
+
             var khachHang = db.NguoiDung.Find(hoaDon.KhachHangID);
             var phong = db.Phong.Find(hoaDon.PhongID);
 
@@ -332,17 +336,16 @@ namespace DemoDB2.Controllers
             ViewBag.LoaiPhong = phong?.LoaiPhong;
             ViewBag.GiaPhong = phong?.Gia;
 
-            // Tính số ngày ở
             int soNgayO = (hoaDon.NgayTraPhong.Value - hoaDon.NgayNhanPhong.Value).Days;
-
-            // Tính tổng tiền
             decimal tongTien = (decimal)(ViewBag.GiaPhong * soNgayO);
 
             ViewBag.SoNgayO = soNgayO;
             ViewBag.TongTien = tongTien;
+
             return View(hoaDon);
         }
-        public ActionResult ConfirmPayment()
+
+        public ActionResult PaymentSuccess()
         {
             if (Request.QueryString.Count > 0)
             {
@@ -358,45 +361,55 @@ namespace DemoDB2.Controllers
                     }
                 }
 
-                // Kiểm tra kết quả thanh toán
-                long orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
-                var hoaDon = db.HoaDon.Find(orderId);
+                string vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
 
-                if (hoaDon != null)
+                if (vnp_ResponseCode == "00")
                 {
-                    // Check if bill is already paid to prevent duplicate processing
-                    if (hoaDon.TrangThaiThanhToan == "Ðã thanh toán")
+                    return View();
+                }
+            }
+
+            TempData["ErrorMessage"] = "Có lỗi xảy ra trong quá trình thanh toán";
+            return RedirectToAction("IndexKH");
+        }
+
+        public ActionResult ConfirmPayment()
+        {
+            // Lấy ID hóa đơn từ TempData đã lưu trong Payment
+            if (TempData["HoaDonID"] != null)
+            {
+                int hoaDonId = (int)TempData["HoaDonID"];
+                var hoaDon = db.HoaDon
+                    .Include(h => h.Phong) // Include Phong để có thể cập nhật
+                    .FirstOrDefault(h => h.HoaDonID == hoaDonId);
+
+                if (hoaDon != null && hoaDon.Phong != null)
+                {
+                    // Cập nhật trạng thái thanh toán của hóa đơn
+                    hoaDon.TrangThaiThanhToan = "Đã thanh toán";
+
+                    // Lấy phòng từ hóa đơn và cập nhật trạng thái
+                    var phong = hoaDon.Phong;
+                    phong.IDTinhTrang = 4; // Cập nhật trạng thái phòng thành "Đã đặt"
+
+                    try
                     {
-                        TempData["Message"] = "Hóa đơn đã được thanh toán trước đó.";
-                        return RedirectToAction("IndexKH");
-                    }
-
-                    if (vnpay.GetResponseData("vnp_ResponseCode") == "00")
-                    {
-                        // Thanh toán thành công
-                        hoaDon.TrangThaiThanhToan = "Ðã thanh toán";
-                        hoaDon.NgayChinhSua = DateTime.Now;
-
-                        if (hoaDon.Phong != null)
-                        {
-                            // Thay vì trực tiếp set về 1, kiểm tra trạng thái hiện tại
-                            // Ví dụ: chỉ đặt về trạng thái trống nếu phòng đang được đặt
-                            var currentPhongStatus = hoaDon.Phong.IDTinhTrang;
-                            if (currentPhongStatus == 2) // Giả sử 2 là trạng thái đang được đặt
-                            {
-                                hoaDon.Phong.IDTinhTrang = 1; // Trạng thái trống
-                            }
-                        }
-
                         db.SaveChanges();
-
-                        TempData["Message"] = "Thanh toán thành công!";
+                        TempData["SuccessMessage"] = "Xác nhận thanh toán thành công!";
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        TempData["Message"] = "Thanh toán không thành công!";
+                        TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật trạng thái: " + ex.Message;
                     }
                 }
+                else
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy thông tin hóa đơn hoặc phòng!";
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin hóa đơn!";
             }
 
             return RedirectToAction("IndexKH");
