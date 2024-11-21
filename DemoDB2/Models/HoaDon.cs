@@ -23,6 +23,16 @@ namespace DemoDB2.Models
         public Nullable<int> NguoiDungID { get; set; }
         public Nullable<int> NhanVienID { get; set; }
         public string TrangThaiThanhToan { get; set; }
+
+
+        public long OrderVnPayID { get; set; }
+        public string Code { get; set; }
+        public string TenNguoiDung { get; set; }
+        public DateTime NgayTaoHD { get; set; }
+        public DateTime NgayChinhSua { get; set; }
+
+
+
         public bool IsPaid => TrangThaiThanhToan == "Đã thanh toán";
 
 
