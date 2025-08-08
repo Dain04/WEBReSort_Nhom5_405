@@ -1,0 +1,19 @@
+﻿@model IEnumerable<DemoDB2.Models.HoaDon>
+@{
+    ViewBag.Title = "OrderSuccess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="bg0 p-t-104 p-b-116">
+    <div class="container">
+        <center style="height: 300px; padding-top: 10px;">
+            <h1 class="mtext-114 text-success" style="font-weight:bold">Đặt Hàng Thành Công!</h1>
+            <div class="pt-4 mtext-108">
+                <p>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi</p>
+                <p>Chúng tôi sẽ gửi thông tin lịch trình cụ thể cho bạn sớm nhất có thể!</p>
+            </div>
+        </center>
+        <a href="@Url.Action("TrangChu", "Home")">Quay lại trang chủ</a>
+    </div>
+</section>
+

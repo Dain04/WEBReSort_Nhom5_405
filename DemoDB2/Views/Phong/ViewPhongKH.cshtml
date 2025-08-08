@@ -1,0 +1,52 @@
+﻿@using DemoDB2.Models
+@using PagedList
+@using PagedList.Mvc
+@model IPagedList<Phong>
+
+
+<div class="room-list-container">
+    <div class="header">
+        <h2>@ViewBag.Title</h2>
+    </div>
+
+  
+
+    <div class="room-grid">
+        @foreach (var phong in Model)
+        {
+            <div class="room-card">
+                <div class="room-image">
+                    @if (!string.IsNullOrEmpty(phong.ImagePhong))
+                    {
+                        <img src="@Url.Content(phong.ImagePhong)" alt="Hình ảnh phòng @phong.PhongID" />
+                    }
+                    else
+                    {
+                        <div class="no-image">Không có hình ảnh</div> 
+                    }
+                </div>
+                <div class="room-info">
+                    <h3>Phòng @phong.PhongID</h3>
+                    <p class="room-price">Giá: @phong.Gia</p>
+                    <a href="@Url.Action("DatPhong", new { id = phong.PhongID })" class="btn btn-book" data-id="@phong.PhongID" data-price="@phong.Gia">Đặt Phòng</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Html.PagedListPager(Model, page => Url.Action("ViewPhongKH", new { page, LoaiPhongID = ViewBag.LoaiPhongID }))
+
+<script src="~/Content/PhongList.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.btn-book').click(function (e) {
+            e.preventDefault();
+            var phongId = $(this).data('id');
+            var giaPhong = $(this).data('price');
+
+            alert('Bạn đã đặt phòng: ' + phongId + '\nGiá: ' + giaPhong + ' VND');
+            window.location.href = $(this).attr('href');
+        });
+    });
+</script>

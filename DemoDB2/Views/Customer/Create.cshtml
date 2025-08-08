@@ -1,0 +1,134 @@
+﻿@model DemoDB2.Models.KhachHang
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<h4 class="tt">
+  <span style="font-family: monospace;">Thanh toán bằng</span>
+</h4>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    <h4 class="chu1">Điền thông tin của bạn </h4>
+
+    <br />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.KhachHangID, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.KhachHangID, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.KhachHangID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.QuocGia, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.QuocGia, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.QuocGia, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CanCuocCongDan, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CanCuocCongDan, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CanCuocCongDan, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    
+    
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+
+
+}
+<img src="~/content/images/zlpay.png" class="hinh1">
+<button id="btn1" class="btn btn-primary btn-sm rounded-circle" style="position:absolute; top:240px; right:720px;"></button>
+
+<img src="~/content/images/momo.jpg" class="hinh2">
+<button id="btn2" class="btn btn-primary btn-sm rounded-circle" style="position: absolute; top: 340px; right: 720px;"></button>
+
+<img src="~/content/images/visa1.png" class="hinh3">
+<button id="btn3" class="btn btn-primary btn-sm rounded-circle" style="position: absolute; top: 440px; right: 720px;"></button>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script>
+
+    document.getElementById("btn1").onclick = function () {
+        this.classList.toggle("active");
+        document.getElementById("btn2").classList.remove("active");
+        document.getElementById("btn3").classList.remove("active");
+    };
+
+    document.getElementById("btn2").onclick = function () {
+        document.getElementById("btn1").classList.remove("active");
+        this.classList.toggle("active");
+        document.getElementById("btn3").classList.remove("active");
+    };
+
+    document.getElementById("btn3").onclick = function () {
+        document.getElementById("btn1").classList.remove("active");
+        document.getElementById("btn2").classList.remove("active");
+        this.classList.toggle("active");
+    };
+
+</script>
+<style>
+
+    .tt {
+        text-align: center;
+    }
+    .btn {
+        border-color: black;
+        background-color: white;
+    }
+
+    .chu1 {
+        margin-left: 300px;
+    }
+
+    .hinh1 {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 200px;
+        right: 750px;
+    }
+
+    .hinh2 {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 300px;
+        right: 750px;
+    }
+
+    .hinh3 {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 400px;
+        right: 750px;
+    }
+   
+</style>
+
+
+

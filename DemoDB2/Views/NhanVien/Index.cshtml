@@ -1,0 +1,13 @@
+﻿@{
+    //ViewBag.Title = "FormLogin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model DemoDB2.Models.NhanVien
+
+<h2>Thông tin Nhân Viên</h2>
+
+<p><strong>ID:</strong> @Model.NhanVienID</p>
+<p><strong>Tên:</strong> @Model.Ten</p>
+<p><strong>Địa chỉ:</strong> @Model.DiaChi</p>
+<p><strong>Số điện thoại:</strong> @Model.SoDienThoai</p>
+<p><strong>Email:</strong> @Model.Email</p>

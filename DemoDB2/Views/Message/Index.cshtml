@@ -1,0 +1,15 @@
+﻿@{
+    //ViewBag.Title = "FormLogin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = "Gửi Thông Báo";
+}
+
+<h2>✅ Hệ thống gửi thông báo</h2>
+<ul>
+    <li><a href="@Url.Action("SendUrgentEmail", "Message")">Gửi Email khẩn cấp</a></li>
+    <li><a href="@Url.Action("SendNormalSms", "Message")">Gửi SMS thông thường</a></li>
+    <li><a href="@Url.Action("SendUrgentPush", "Message")">Gửi Push Notification khẩn cấp</a></li>
+</ul>
+

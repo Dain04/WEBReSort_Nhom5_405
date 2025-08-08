@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title - HARMONY</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    @RenderSection("Styles", required: false)
+    <link href="~/Content/cskh.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Times New Roman ;/*kiêu chữ*/
+          
+          
+        }
+
+        .navbar-inverse {
+            background: linear-gradient(to top, rgba(0,0,0,0.3), black);
+            border: none;
+            height: 50px;
+        }
+
+            .navbar-inverse .navbar-brand {
+                color: white;
+            }
+
+            .navbar-inverse .nav > li > a { 
+                color: white;
+                font-size: 14px;
+                text-align: center;
+                padding-top: 15px;
+            }
+
+        .navbar-brand::before {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background-image: url('/Content/images/logo4.png');
+            background-size: cover;
+            vertical-align: middle;
+        }
+
+        .navbar-collapse {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .toolbar {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 70px;
+            height: 130px;
+        }
+
+            .toolbar img {
+                width: 100%;
+                height: auto;
+            }
+
+        #div-footer {
+            position: fixed;
+            text-align: center;
+            bottom: 0;
+            left: 0;
+            padding-top: 13px;
+            height: 45px;
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        .text1 {
+            font-size: 17px;
+        }
+
+        li.format-hello {
+            padding-top: 15px;
+            color: white;
+        }
+        /*////////////////////////////////*/
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 50px;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            padding-top: 60px;
+            transition: 0.5s;
+        }
+
+            .sidebar a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-size: 18px;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+            }
+
+                .sidebar a:hover {
+                    color: #f1f1f1;
+                }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+            margin-left: 0;
+        }
+
+        /* New styles for toggle button */
+        #sidebarToggle {
+            font-size: 30px;
+            cursor: pointer;
+            position: fixed;
+            top: 60px;
+            left: 10px;
+            z-index: 2;
+        }
+        /*////////////////////////////////*/
+        .dropdown-btn {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .dropdown-container {
+            display: none;
+            background-color: #262626;
+            padding-left: 8px;
+        }
+
+            .dropdown-container a {
+                padding: 8px 8px 8px 50px;
+            }
+
+        /* Optional: Style the caret down icon */
+        .fa-caret-down {
+            float: right;
+            padding-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            @Html.ActionLink("HARMONY", "TrangChuNV", "HomeNV", new { area = "" }, new { @class = "navbar-brand" })
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    @if (Session["NameUser"] == null)
+                    {
+                        @*<li><a href="/LoginUser/RegisterUser">ĐĂNG KÝ</a></li>*@
+                        <li><a href="/LoginNhanVien/LoginNV">ĐĂNG NHẬP</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/LoginNhanVien/ProfileNV">HỒ SƠ</a></li>
+                        <li class="format-hello">
+                            <span>Hello @Session["NameUser"]</span>
+                        </li>
+                        <li><a href="/LoginUser/LogOutUser">ĐĂNG XUẤT</a></li>
+                    }
+                </ul>
+                <div class="toolbar">
+                    <a href="https://www.facebook.com/profile.php?id=61566362344881">
+                        <img src="https://png.pngtree.com/png-vector/20230316/ourmid/pngtree-admin-and-customer-service-job-vacancies-vector-png-image_6650726.png" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+    <span id="sidebarToggle" onclick="toggleSidebar()">&#9776;</span>
+    <div id="mySidebar" class="sidebar">
+        <a href="@Url.Action("TrangChuNV", "HomeNV")"><i class="fa fa-home"></i> Trang chủ</a>
+        <a href="@Url.Action("CustomerManagement", "LoginNhanVien")"><i class="fa fa-user"></i> Quản lý khách hàng</a>
+        <a href="@Url.Action("ViewNV", "LoginNhanVien")"><i class="fa fa-user"></i> Quản lý Nhân viên</a>
+        <a href="@Url.Action("ViewMonAn", "DichVu")"><i class="fa fa-cutlery"></i> Quản lý món ăn</a>
+        <a href="@Url.Action("ViewXe", "DichVu")"><i class="fa fa-car"></i> Quản lý xe</a>
+        <a href="@Url.Action("ViewSpa","DichVu")"><i class="fas fa-spa"></i> Quản lý Spa</a>
+        <a href="@Url.Action("ViewPhong", "Phong")"><i class="fa fa-bed"></i> Quản lý phòng</a>
+        <a href="@Url.Action("ViewLoaiPhong", "LoaiPhong")"><i class="fa fa-building-o"></i> Quản lý loại phòng</a>
+        <a href="@Url.Action("Index", "HoaDon")"><i class="fa fa-file-text-o"></i> Quản lý hóa đơn</a>
+        <a href="@Url.Action("XemLichLamViec", "LichLamViec")"><i class="fa fa-calendar"></i> Lịch Làm Việc</a>
+        <a href="@Url.Action("ViewListTinhTrangP", "TinhTrangPhong")"><i class="fa fa-calendar-check-o"></i> Quản Lý Tình Trạng Phòng</a>
+
+
+        <button class="dropdown-btn">
+            <i class="fa fa-cog"></i> Cài đặt
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-container">
+            <a href="@Url.Action("ViewChucVu", "ChucVu")">Chức Vụ</a>
+        </div>
+    </div>
+
+
+    <div id="main">
+        <div class="container body-content">
+            @RenderBody()
+        </div>
+    </div>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("mySidebar");
+            var main = document.getElementById("main");
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0";
+                main.style.marginLeft = "0";
+            } else {
+                sidebar.style.width = "250px";
+                main.style.marginLeft = "250px";
+            }
+        }
+        /////dropmenu cài đặt
+        var dropdown = document.getElementsByClassName("dropdown-btn");
+        var i;
+
+        for (i = 0; i < dropdown.length; i++) {
+            dropdown[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.display === "block") {
+                    dropdownContent.style.display = "none";
+                } else {
+                    dropdownContent.style.display = "block";
+                }
+            });
+        }
+    </script>
+    <!---sidebar menu-->
+
+    <div id="div-footer">
+        <h4 class="text1">XIN CHÂN THÀNH CẢM ƠN QUÝ KHÁCH ĐÃ TIN TƯỞNG VÀ LỰA CHỌN RESORT HARMONY!</h4>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

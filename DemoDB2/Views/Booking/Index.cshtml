@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<button id="btnCalculate">Tính giá</button>
+<p>Giá cuối cùng: <span id="finalPrice"></span></p>
+
+<script>
+    document.getElementById("btnCalculate").addEventListener("click", function () {
+        $.get("/Booking/CalculatePrice", { roomId: 1, isMember: true, isHoliday: false }, function (data) {
+            document.getElementById("finalPrice").innerText = data.FinalPrice;
+        });
+    });
+</script>

@@ -1,0 +1,160 @@
+﻿@model DemoDB2.Models.NguoiDung
+@{
+    ViewBag.Title = "Chỉnh sửa thông tin người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Chỉnh sửa thông tin cá nhân</h1>
+        <a href="@Url.Action("Profile","LoginUser")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Trở Về
+        </a>
+    </div>
+    @using (Html.BeginForm("Edit", "LoginUser", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.NguoiDungID)
+        <div class="profile-content">
+            <div class="profile-avatar">
+                @if (!string.IsNullOrEmpty(Model.ImageUser))
+                {
+                    <img src="@Url.Content(Model.ImageUser)" alt="Profile Picture" class="avatar-image" />
+                }
+                else
+                {
+                    <i class="fas fa-user-circle avatar-icon"></i>
+                }
+
+                <div class="mt-2">
+                    <label for="UploadImage" class="custom-file-upload">
+                        <i class="fas fa-upload"></i> Chọn ảnh
+                    </label>
+                    <input type="file" name="UploadImage" id="UploadImage" accept="image/*" />
+                    <span id="file-chosen" class="file-status">Chưa chọn file nào</span>
+
+                </div>
+            </div>
+            <div class="profile-info">
+                <table class="profile-table">
+                    <tr>
+                        <td><i class="fas fa-user"></i> Tên người dùng</td>
+                        <td>
+                            @Html.EditorFor(model => model.TenNguoiDung, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TenNguoiDung, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-map-marker-alt"></i> Địa chỉ</td>
+                        <td>
+                            @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-phone"></i> Số điện thoại</td>
+                        <td>
+                            @Html.EditorFor(model => model.SoDienThoai, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.SoDienThoai, "", new { @class = "text-danger" })
+                            <small class="text-muted">Số điện thoại phải có 10 số</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-envelope"></i> Email</td>
+                        <td>
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-key"></i> Mật khẩu mới (để trống nếu không thay đổi)</td>
+                        <td>
+                            @Html.Password("newPassword", "", new { @class = "form-control", placeholder = "Nhập mật khẩu mới" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-key"></i> Xác nhận mật khẩu mới</td>
+                        <td>
+                            @Html.Password("confirmNewPassword", "", new { @class = "form-control", placeholder = "Xác nhận mật khẩu mới" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Lưu thay đổi
+            </button>
+            <a href="@Url.Action("Profile", "LoginUser")" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Hủy
+            </a>
+        </div>
+    }
+</div>
+<script>
+    const actualBtn = document.getElementById('UploadImage');
+    const fileChosen = document.getElementById('file-chosen');
+
+    actualBtn.addEventListener('change', function () {
+        fileChosen.textContent = this.files[0] ? this.files[0].name : 'Chưa chọn file nào';
+    });
+
+    /*Số điện thoại*/
+    $(document).ready(function () {
+        $('#SoDienThoai').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
+    });
+</script>
+<style>
+
+    .profile-avatar {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        background-color: #f8f9fa;
+        color: #495057;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+        .custom-file-upload:hover {
+            background-color: #e9ecef;
+        }
+
+    #UploadImage {
+        display: none;
+    }
+    #file-chosen {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #7f8c8d; 
+    }
+    .avatar-image {
+        width: 150px; 
+        height: 150px; 
+        border-radius: 50%; 
+        object-fit: cover;
+        margin-top: 10px;
+    }
+
+    .avatar-icon {
+        font-size: 120px; 
+        color: #3498db;
+    }
+
+</style>
+<link rel="stylesheet" href="~/Content/EditLoginUser.css">
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<!-- Add Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
